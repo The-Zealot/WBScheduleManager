@@ -10,6 +10,8 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
+#include "employee.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -31,5 +33,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    Employee _employee1;
+    Employee _employee2;
+    quint64 _salary;
 };
 #endif // MAINWINDOW_H

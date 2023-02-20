@@ -1,16 +1,12 @@
 #ifndef EMPLOYEE_H
 #define EMPLOYEE_H
 
-#include <QObject>
-#include <QColor>
+#include <QString>
 
-class Employee
+struct Employee
 {
-public:
-    Employee();
-private:
-    QString _name;
-    QColor _color;
+    QString name;
+    QString colorHex;
 };
 
 #endif // EMPLOYEE_H

@@ -9,6 +9,16 @@ MainWindow::MainWindow(QWidget *parent)
 
     this->setFixedSize(this->size());
 
+    readJson();
+    payAndClear();
+
+    ui->widgetColor->setStyleSheet("border: 1px solid; background: " + _employee1.colorHex);
+    ui->widgetColor2->setStyleSheet("border: 1px solid; background: " + _employee2.colorHex);
+    ui->editEmployee1->setText(_employee1.name);
+    ui->editEmployee2->setText(_employee2.name);
+
+    ui->editSalary->setText(QVariant(_salary).toString());
+
     ui->comboBox->addItem("2/2");
     ui->comboBox->addItem("4/2");
     ui->comboBox->addItem("5/2");
@@ -18,25 +28,19 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->editSalary->setValidator(new QRegularExpressionValidator(QRegularExpression("[1-9][0-9]{0,3}")));
 
-    QString temp_Employee_1 = "Иванов И.";
-    QString temp_Employee_2 = "Петров П.";
-
     ui->textEdit->setReadOnly(true);
     ui->textEdit->setText(QString("Смен отработано:\nСотрудник %1: %2 (%3 руб.)\nСотрудник %4: %5 (%6 руб.)")
-                          .arg(temp_Employee_1)
+                          .arg(ui->editEmployee1->text())
                           .arg("2")
                           .arg("2000")
-                          .arg(temp_Employee_2)
+                          .arg(ui->editEmployee2->text())
                           .arg("2")
                           .arg("2000"));
 
     connect(ui->widgetColor, &QPushButton::clicked, this, &MainWindow::takeColor);
     connect(ui->widgetColor2, &QPushButton::clicked, this, &MainWindow::takeColor);
     connect(ui->comboBox, &QComboBox::currentIndexChanged, this, &MainWindow::changeShedle);
-    connect(ui->buttonPay, &QPushButton::clicked, this, &MainWindow::payAndClear);
-
-    readJson();
-    payAndClear();
+//    connect(ui->buttonPay, &QPushButton::clicked, this, &MainWindow::payAndClear);
 }
 
 MainWindow::~MainWindow()
@@ -52,16 +56,22 @@ void MainWindow::takeColor()
     QObject* obj = sender();
     QVariant color = QColorDialog::getColor(Qt::white, this, "Выбор цвета");
     qDebug() << "Hex color:" << color.toString();
+    if (obj->objectName() == "widgetColor")
+        _employee1.colorHex = color.toString();
+    else
+        _employee2.colorHex = color.toString();
     qobject_cast<QWidget*>(obj)->setStyleSheet("border: 1px solid; background: " + color.toString());
+
+    changeShedle();
 }
 
 void MainWindow::changeShedle()
 {
-    QTextCharFormat redDay, blackDay;
-    redDay.setForeground(Qt::black);
-    redDay.setBackground(QColor(0, 128, 128));
-    blackDay.setForeground(Qt::black);
-    blackDay.setBackground(QColor(240, 128, 0));
+    QTextCharFormat first, second;
+    first.setForeground(Qt::black);
+    first.setBackground(QColor(_employee1.colorHex));
+    second.setForeground(Qt::black);
+    second.setBackground(QColor(_employee2.colorHex));
 
     QStringList list = ui->comboBox->currentText().split("/");
 
@@ -79,11 +89,11 @@ void MainWindow::changeShedle()
         }
     };
 
-    reformatCalendar(QDate(2021, 12, 1), 1, 1, blackDay, 1000);
+    reformatCalendar(QDate(2021, 12, 1), 1, 1, second, 1000);
     QDate date = ui->dateEdit->date();
-    reformatCalendar(date, DAYS_FIRST_EMPLOYEE, DAYS_ALL_EMPLOYEE, redDay);
+    reformatCalendar(date, DAYS_FIRST_EMPLOYEE, DAYS_ALL_EMPLOYEE, first);
     date = ui->dateEdit->date().addDays(DAYS_FIRST_EMPLOYEE);
-    reformatCalendar(date, DAYS_SECOND_EMPLOYEE, DAYS_ALL_EMPLOYEE, blackDay);
+    reformatCalendar(date, DAYS_SECOND_EMPLOYEE, DAYS_ALL_EMPLOYEE, second);
 
 
 }
@@ -110,9 +120,12 @@ void MainWindow::writeJson()
     }
     QJsonObject jObject;
 
-    jObject["Employee_1"] = ui->editEmployee1->text();
-    jObject["Employee_2"] = ui->editEmployee2->text();
-    jObject["startDate"]  = ui->dateEdit->date().toString();
+    jObject["Employee_1"]   = ui->editEmployee1->text();
+    jObject["Employee_2"]   = ui->editEmployee2->text();
+    jObject["color_1"]      = _employee1.colorHex;
+    jObject["color_2"]      = _employee2.colorHex;
+    jObject["startDate"]    = ui->dateEdit->date().toString();
+    jObject["salary"]       = ui->editSalary->text().toInt();
 
     QJsonDocument jDoc(jObject);
     json.write(jDoc.toJson());
@@ -130,8 +143,11 @@ void MainWindow::readJson()
     QJsonObject jObject = QJsonDocument::fromJson(json.readAll()).object();
     json.close();
 
-    ui->editEmployee1->setText(jObject["Employee_1"].toString());
-    ui->editEmployee2->setText(jObject["Employee_2"].toString());
+    _employee1.name     = jObject["Employee_1"].toString();
+    _employee2.name     = jObject["Employee_2"].toString();
+    _employee1.colorHex = jObject["color_1"].toString();
+    _employee2.colorHex = jObject["color_2"].toString();
+    _salary             = jObject["salary"].toInt();
     ui->dateEdit->setDate(QDate::fromString(jObject["startDate"].toString()));
 }
 
