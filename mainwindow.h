@@ -28,15 +28,23 @@ private slots:
     void takeColor();
     void changeShedle();
     void payAndClear();
-    void writeJson();
-    void readJson();
 
 private:
+    void calculateWorks();
+    void writeJson();
+    void readJson();
+    void readSchedleList();
+    void loadCalendarStyle();
+
     Ui::MainWindow *ui;
     Employee _employee1;
     Employee _employee2;
+
     quint64 _salary;
+    quint32 _daysOfFirstEmployee;
+    quint32 _daysOfSecondEmployee;
 
     QTime _currentTime;
+    QDate _lastPayday;
 };
 #endif // MAINWINDOW_H
