@@ -12,6 +12,10 @@ MainWindow::MainWindow(QWidget *parent)
     readJson();
     payAndClear();
 
+    _currentTime = QTime::currentTime();
+
+    ui->widgetColor->setFocusPolicy(Qt::NoFocus);
+    ui->widgetColor2->setFocusPolicy(Qt::NoFocus);
     ui->widgetColor->setStyleSheet("border: 1px solid; background: " + _employee1.colorHex);
     ui->widgetColor2->setStyleSheet("border: 1px solid; background: " + _employee2.colorHex);
     ui->editEmployee1->setText(_employee1.name);
@@ -29,13 +33,15 @@ MainWindow::MainWindow(QWidget *parent)
     ui->editSalary->setValidator(new QRegularExpressionValidator(QRegularExpression("[1-9][0-9]{0,3}")));
 
     ui->textEdit->setReadOnly(true);
-    ui->textEdit->setText(QString("Смен отработано:\nСотрудник %1: %2 (%3 руб.)\nСотрудник %4: %5 (%6 руб.)")
+    ui->textEdit->setText(QString("Смен отработано:\nСотрудник %1: %2 (%3 руб.)\nСотрудник %4: %5 (%6 руб.)\n\n"
+                                    "Текущая дата и время: %7\n")
                           .arg(ui->editEmployee1->text())
                           .arg("2")
                           .arg("2000")
                           .arg(ui->editEmployee2->text())
                           .arg("2")
-                          .arg("2000"));
+                          .arg("2000")
+                          .arg(QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm")));
 
     connect(ui->widgetColor, &QPushButton::clicked, this, &MainWindow::takeColor);
     connect(ui->widgetColor2, &QPushButton::clicked, this, &MainWindow::takeColor);

@@ -36,5 +36,7 @@ private:
     Employee _employee1;
     Employee _employee2;
     quint64 _salary;
+
+    QTime _currentTime;
 };
 #endif // MAINWINDOW_H
