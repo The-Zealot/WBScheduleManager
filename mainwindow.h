@@ -23,7 +23,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
+    
 private slots:
     void takeColor();
     void changeShedle();
@@ -31,6 +31,7 @@ private slots:
 
 private:
     void calculateWorks();
+    void fillTextBrowse();
     void writeJson();
     void readJson();
     void readSchedleList();
@@ -44,7 +45,6 @@ private:
     quint32 _daysOfFirstEmployee;
     quint32 _daysOfSecondEmployee;
 
-    QTime _currentTime;
     QDate _lastPayday;
 };
 #endif // MAINWINDOW_H

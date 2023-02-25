@@ -12,8 +12,6 @@ MainWindow::MainWindow(QWidget *parent)
     readJson();
     readSchedleList();
 
-    _currentTime = QTime::currentTime();
-
     _daysOfFirstEmployee = 0;
     _daysOfSecondEmployee = 0;
 
@@ -33,21 +31,14 @@ MainWindow::MainWindow(QWidget *parent)
 
     calculateWorks();
     ui->textEdit->setReadOnly(true);
-    ui->textEdit->setText(QString("Смен отработано:\nСотрудник %1: %2 (%3 руб.)\nСотрудник %4: %5 (%6 руб.)\n\n"
-                                    "Текущая дата и время: %7\nДата последней выплаты: %8")
-                          .arg(ui->editEmployee1->text())
-                          .arg(_daysOfFirstEmployee)
-                          .arg(_daysOfFirstEmployee * ui->editSalary->text().toInt())
-                          .arg(ui->editEmployee2->text())
-                          .arg(_daysOfSecondEmployee)
-                          .arg(_daysOfSecondEmployee * ui->editSalary->text().toInt())
-                          .arg(QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm"))
-                          .arg(_lastPayday.toString("dd.MM.yyyy")));
+    fillTextBrowse();
 
     connect(ui->widgetColor, &QPushButton::clicked, this, &MainWindow::takeColor);
     connect(ui->widgetColor2, &QPushButton::clicked, this, &MainWindow::takeColor);
     connect(ui->comboBox, &QComboBox::currentIndexChanged, this, &MainWindow::changeShedle);
     connect(ui->buttonPay, &QPushButton::clicked, this, &MainWindow::payAndClear);
+    connect(ui->dateEdit, &QDateEdit::dateChanged, [this](){ changeShedle(); });
+    connect(ui->editSalary, &QLineEdit::textEdited, [this](){ fillTextBrowse(); });
 }
 
 MainWindow::~MainWindow()
@@ -76,15 +67,17 @@ void MainWindow::changeShedle()
 {
     if (ui->comboBox->currentText() == "")
     {
-        qDebug() << "Can't parse comboBox.currentText()";
+        qDebug() << "Can't parse comboBox->currentText()";
         return;
     }
 
-    QTextCharFormat first, second;
+    QTextCharFormat first, second, nobody;
     first.setForeground(Qt::black);
     first.setBackground(QColor(_employee1.colorHex));
     second.setForeground(Qt::black);
     second.setBackground(QColor(_employee2.colorHex));
+    nobody.setForeground(Qt::black);
+    nobody.setBackground(Qt::gray);
 
     QStringList list = ui->comboBox->currentText().split("/");
 
@@ -102,11 +95,15 @@ void MainWindow::changeShedle()
         }
     };
 
-    reformatCalendar(QDate(2021, 12, 1), 1, 1, second, 1000);
+    QDate openWBPoint(2021, 12, 1);
+    reformatCalendar(openWBPoint, 1, 1, nobody, openWBPoint.daysTo(QDate::currentDate().addYears(1)) + 30);
     QDate date = ui->dateEdit->date();
     reformatCalendar(date, DAYS_FIRST_EMPLOYEE, DAYS_ALL_EMPLOYEE, first);
     date = ui->dateEdit->date().addDays(DAYS_FIRST_EMPLOYEE);
     reformatCalendar(date, DAYS_SECOND_EMPLOYEE, DAYS_ALL_EMPLOYEE, second);
+
+    calculateWorks();
+    fillTextBrowse();
 }
 
 void MainWindow::payAndClear()
@@ -116,12 +113,17 @@ void MainWindow::payAndClear()
         _lastPayday = QDate::currentDate().addDays(-1);
     else
         _lastPayday = QDate::currentDate();
+
+    calculateWorks();
+    fillTextBrowse();
 }
 
 void MainWindow::calculateWorks()
 {
     int END_OF_DAY = 21;
     int days = _lastPayday.daysTo(QDate::currentDate());
+    _daysOfFirstEmployee = 0;
+    _daysOfSecondEmployee = 0;
 
     if (QTime::currentTime().hour() >= END_OF_DAY)
         days++;
@@ -139,6 +141,20 @@ void MainWindow::calculateWorks()
     }
 
     qDebug() << QString("Смен у первого сотрудника - %1, у второго - %2").arg(_daysOfFirstEmployee).arg(_daysOfSecondEmployee) << days;
+}
+
+void MainWindow::fillTextBrowse()
+{
+    ui->textEdit->setText(QString("Смен отработано:\nСотрудник %1: %2 (%3 руб.)\nСотрудник %4: %5 (%6 руб.)\n\n"
+                                    "Текущая дата: %7\nДата последней выплаты: %8")
+                          .arg(ui->editEmployee1->text())
+                          .arg(_daysOfFirstEmployee)
+                          .arg(_daysOfFirstEmployee * ui->editSalary->text().toInt())
+                          .arg(ui->editEmployee2->text())
+                          .arg(_daysOfSecondEmployee)
+                          .arg(_daysOfSecondEmployee * ui->editSalary->text().toInt())
+                          .arg(QDateTime::currentDateTime().toString("dd.MM.yyyy"))
+                          .arg(_lastPayday.toString("dd.MM.yyyy")));
 }
 
 void MainWindow::writeJson()
