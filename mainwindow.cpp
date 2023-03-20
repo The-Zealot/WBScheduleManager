@@ -9,6 +9,14 @@ MainWindow::MainWindow(QWidget *parent)
 
     this->setFixedSize(this->size());
 
+    ui->buttonPay->setEnabled(false);                                                               // to remove button
+
+    _db = QSqlDatabase::addDatabase("QSQLITE");
+    _db.setDatabaseName("./schedle.db");
+    _model = new QSqlTableModel(this, _db);
+    _model->setTable("Employees");
+    ui->tableView->setModel(_model);
+
     readJson();
     readSchedleList();
 
@@ -25,7 +33,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->editSalary->setText(QVariant(_salary).toString());
 
     ui->calendarWidget->setDateRange(QDate(2021, 12, 1), QDate::currentDate().addYears(1));
-    changeShedle();
+    changeSchedle();
 
     ui->editSalary->setValidator(new QRegularExpressionValidator(QRegularExpression("[1-9][0-9]{0,3}")));
 
@@ -34,10 +42,45 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->widgetColor, &QPushButton::clicked, this, &MainWindow::takeColor);
     connect(ui->widgetColor2, &QPushButton::clicked, this, &MainWindow::takeColor);
-    connect(ui->comboBox, &QComboBox::currentIndexChanged, this, &MainWindow::changeShedle);
+//    connect(ui->comboBox, &QComboBox::currentIndexChanged, this, &MainWindow::changeShedle);              // to remove
+//    connect(ui->dateEdit, &QDateEdit::dateChanged, [this](){ changeShedle(); });                          // to remove
     connect(ui->buttonPay, &QPushButton::clicked, this, &MainWindow::payAndClear);
-    connect(ui->dateEdit, &QDateEdit::dateChanged, [this](){ changeShedle(); });
     connect(ui->editSalary, &QLineEdit::textEdited, [this](){ fillTextBrowse(); });
+
+    connect(ui->toolButtonArrow, &QAbstractButton::clicked, this, &MainWindow::setStatusBarMessage);
+    connect(ui->toolButtonEmployees, &QAbstractButton::clicked, this, &MainWindow::setStatusBarMessage);
+    connect(ui->toolButtonSalary, &QAbstractButton::clicked, this, &MainWindow::setStatusBarMessage);
+    connect(ui->toolButtonPaymentTarget, &QAbstractButton::clicked, this, &MainWindow::setStatusBarMessage);
+    connect(ui->toolButtonPaymentGeneral, &QAbstractButton::clicked, [this](){
+        AlertWidget::showAlert("Выплачиваем выплаты...");
+        payAndClear();
+    });
+    connect(ui->toolButtonClear, &QAbstractButton::clicked, this, &MainWindow::setStatusBarMessage);
+    connect(ui->toolButtonCalculate, &QAbstractButton::clicked, [this](){
+        AlertWidget::showAlert("Делаем перерасчет!");
+        changeSchedle();
+    });
+    connect(ui->toolButtonSave, &QAbstractButton::clicked, [](){
+         AlertWidget::showAlert("Изменения сохранены");
+    });
+
+    ui->toolButtonArrow->setIcon(QIcon(":/image/toolBar/arrow.png"));
+    ui->toolButtonEmployees->setIcon(QIcon(":/image/toolBar/employee.png"));
+    ui->toolButtonSalary->setIcon(QIcon(":/image/toolBar/salary.png"));
+    ui->toolButtonPaymentTarget->setIcon(QIcon(":/image/toolBar/paymentTarget.png"));
+    ui->toolButtonPaymentGeneral->setIcon(QIcon(":/image/toolBar/paymentGeneral.png"));
+    ui->toolButtonClear->setIcon(QIcon(":/image/toolBar/clear.png"));
+    ui->toolButtonCalculate->setIcon(QIcon(":/image/toolBar/calculator.png"));
+    ui->toolButtonSave->setIcon(QIcon(":/image/toolBar/save.png"));
+
+    ui->toolButtonArrow->setToolTip("Выделение");
+    ui->toolButtonEmployees->setToolTip("Выбрать сотрудника");
+    ui->toolButtonSalary->setToolTip("Установить ставку");
+    ui->toolButtonPaymentTarget->setToolTip("Оплатить конкретную смену");
+    ui->toolButtonPaymentGeneral->setToolTip("Оплатить все смены");
+    ui->toolButtonClear->setToolTip("Сбросить день");
+    ui->toolButtonCalculate->setToolTip("Перерасчет графика");
+    ui->toolButtonSave->setToolTip("Сохранить");
 }
 
 MainWindow::~MainWindow()
@@ -60,10 +103,10 @@ void MainWindow::takeColor()
         _employee2.colorHex = color.toString();
     obj->setStyleSheet("border: 1px solid; background: " + color.toString());
 
-    changeShedle();
+    changeSchedle();
 }
 
-void MainWindow::changeShedle()
+void MainWindow::changeSchedle()
 {
     if (ui->comboBox->currentText() == "")
     {
@@ -119,6 +162,13 @@ void MainWindow::payAndClear()
 
     calculateWorks();
     fillTextBrowse();
+}
+
+void MainWindow::setStatusBarMessage()
+{
+    QWidget* button = qobject_cast<QWidget*>(sender());
+
+    ui->statusBar->showMessage(button->objectName() + " is active");
 }
 
 void MainWindow::calculateWorks()

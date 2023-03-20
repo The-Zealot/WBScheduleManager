@@ -9,8 +9,11 @@
 #include <QMessageBox>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QSqlDatabase>
+#include <QSqlTableModel>
 
 #include "employee.h"
+#include "alertwidget.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -26,8 +29,9 @@ public:
     
 private slots:
     void takeColor();
-    void changeShedle();
+    void changeSchedle();
     void payAndClear();
+    void setStatusBarMessage();
 
 private:
     void calculateWorks();
@@ -46,5 +50,8 @@ private:
     quint32 _daysOfSecondEmployee;
 
     QDate _lastPayday;
+
+    QSqlDatabase _db;
+    QSqlTableModel* _model;
 };
 #endif // MAINWINDOW_H
