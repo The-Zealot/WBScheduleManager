@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/image/toolBar">
+        <file alias="arrow.png">toolBar/icons/arrow.png</file>
+        <file alias="clear.png">toolBar/icons/clear.png</file>
+        <file alias="employee.png">toolBar/icons/employee.png</file>
+        <file alias="paymentGeneral.png">toolBar/icons/paymentGeneral.png</file>
+        <file alias="paymentTarget.png">toolBar/icons/paymentTarget.png</file>
+        <file alias="salary.png">toolBar/icons/salary.png</file>
+        <file alias="calculator.png">toolBar/icons/calculate.png</file>
+        <file alias="save.png">toolBar/icons/save.png</file>
+    </qresource>
+</RCC>
