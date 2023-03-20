@@ -30,7 +30,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->editSalary->setValidator(new QRegularExpressionValidator(QRegularExpression("[1-9][0-9]{0,3}")));
 
     calculateWorks();
-    ui->textEdit->setReadOnly(true);
     fillTextBrowse();
 
     connect(ui->widgetColor, &QPushButton::clicked, this, &MainWindow::takeColor);
@@ -51,14 +50,15 @@ MainWindow::~MainWindow()
 
 void MainWindow::takeColor()
 {
-    QObject* obj = sender();
+    QWidget* obj = qobject_cast<QWidget*>(sender());
+
     QVariant color = QColorDialog::getColor(Qt::white, this, "Выбор цвета");
     qDebug() << "Hex color:" << color.toString();
     if (obj->objectName() == "widgetColor")
         _employee1.colorHex = color.toString();
     else
         _employee2.colorHex = color.toString();
-    qobject_cast<QWidget*>(obj)->setStyleSheet("border: 1px solid; background: " + color.toString());
+    obj->setStyleSheet("border: 1px solid; background: " + color.toString());
 
     changeShedle();
 }
@@ -70,6 +70,16 @@ void MainWindow::changeShedle()
         qDebug() << "Can't parse comboBox->currentText()";
         return;
     }
+
+    auto reformatCalendar = [this](QDate startDate, int employeeDayCount, int allEmployeeDays, QTextCharFormat format, int lengthReformat){
+        for (int i = 0; i < lengthReformat; i += allEmployeeDays)
+        {
+            for (int j = 0; j < employeeDayCount; j++)
+            {
+                ui->calendarWidget->setDateTextFormat(startDate.addDays(i + j), format);
+            }
+        }
+    };
 
     QTextCharFormat first, second, nobody;
     first.setForeground(Qt::black);
@@ -85,22 +95,15 @@ void MainWindow::changeShedle()
     int DAYS_SECOND_EMPLOYEE    = list.at(1).toInt();
     int DAYS_ALL_EMPLOYEE       = DAYS_FIRST_EMPLOYEE + DAYS_SECOND_EMPLOYEE;
 
-    auto reformatCalendar = [&](QDate startDate, int employeeDayCount, int allEmployeeDays, QTextCharFormat format, int lengthReformat = 365){
-        for (int i = 0; i < lengthReformat; i += allEmployeeDays)
-        {
-            for (int j = 0; j < employeeDayCount; j++)
-            {
-                ui->calendarWidget->setDateTextFormat(startDate.addDays(i + j), format);
-            }
-        }
-    };
-
     QDate openWBPoint(2021, 12, 1);
-    reformatCalendar(openWBPoint, 1, 1, nobody, openWBPoint.daysTo(QDate::currentDate().addYears(1)) + 30);
+    reformatCalendar(openWBPoint, 1, 1, nobody, openWBPoint.daysTo(QDate::currentDate().addYears(1)));
+
     QDate date = ui->dateEdit->date();
-    reformatCalendar(date, DAYS_FIRST_EMPLOYEE, DAYS_ALL_EMPLOYEE, first);
+    int yearAhead = date.daysTo(QDate::currentDate().addYears(1));
+
+    reformatCalendar(date, DAYS_FIRST_EMPLOYEE, DAYS_ALL_EMPLOYEE, first, yearAhead);
     date = ui->dateEdit->date().addDays(DAYS_FIRST_EMPLOYEE);
-    reformatCalendar(date, DAYS_SECOND_EMPLOYEE, DAYS_ALL_EMPLOYEE, second);
+    reformatCalendar(date, DAYS_SECOND_EMPLOYEE, DAYS_ALL_EMPLOYEE, second, yearAhead);
 
     calculateWorks();
     fillTextBrowse();
@@ -120,10 +123,10 @@ void MainWindow::payAndClear()
 
 void MainWindow::calculateWorks()
 {
-    int END_OF_DAY = 21;
-    int days = _lastPayday.daysTo(QDate::currentDate());
-    _daysOfFirstEmployee = 0;
-    _daysOfSecondEmployee = 0;
+    int END_OF_DAY          = 21;
+    int days                = _lastPayday.daysTo(QDate::currentDate());
+    _daysOfFirstEmployee    = 0;
+    _daysOfSecondEmployee   = 0;
 
     if (QTime::currentTime().hour() >= END_OF_DAY)
         days++;
@@ -145,7 +148,7 @@ void MainWindow::calculateWorks()
 
 void MainWindow::fillTextBrowse()
 {
-    ui->textEdit->setText(QString("Смен отработано:\nСотрудник %1: %2 (%3 руб.)\nСотрудник %4: %5 (%6 руб.)\n\n"
+    ui->textBrowser->setText(QString("Смен отработано:\nСотрудник %1: %2 (%3 руб.)\nСотрудник %4: %5 (%6 руб.)\n\n"
                                     "Текущая дата: %7\nДата последней выплаты: %8")
                           .arg(ui->editEmployee1->text())
                           .arg(_daysOfFirstEmployee)
@@ -223,6 +226,3 @@ void MainWindow::loadCalendarStyle()
     ui->calendarWidget->setStyleSheet(file.readAll());
     file.close();
 }
-
-
-
