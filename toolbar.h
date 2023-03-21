@@ -8,10 +8,15 @@ class ToolBar
 public:
     enum Tools
     {
-        Arrow, EmployeeBrush, PaymentBrush
+        Arrow, EmployeeTool, SalaryTool, PaymentTool, ClearTool
     };
 
     ToolBar();
+    void setTool(Tools tool);
+    Tools getTool();
+
+private:
+    Tools _currentTool;
 };
 
 #endif // TOOLBAR_H
