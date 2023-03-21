@@ -11,9 +11,14 @@
 #include <QJsonObject>
 #include <QSqlDatabase>
 #include <QSqlTableModel>
+#include <QSqlQuery>
+#include <QSqlRecord>
+#include <QSqlField>
 
 #include "employee.h"
+#include "employeedialog.h"
 #include "alertwidget.h"
+#include "toolbar.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -42,16 +47,22 @@ private:
     void loadCalendarStyle();
 
     Ui::MainWindow *ui;
+    EmployeeDialog* _dialog;
     Employee _employee1;
     Employee _employee2;
+    Employee _employee;
+    ToolBar _toolBar;
 
     quint64 _salary;
     quint32 _daysOfFirstEmployee;
     quint32 _daysOfSecondEmployee;
 
     QDate _lastPayday;
+    QDate _openWBPoint;
 
     QSqlDatabase _db;
-    QSqlTableModel* _model;
+    QSqlTableModel* _modelEmployee;
+    QSqlTableModel* _modelSchedle;
+    QSqlQuery* _query;
 };
 #endif // MAINWINDOW_H

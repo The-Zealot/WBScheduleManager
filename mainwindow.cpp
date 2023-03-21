@@ -13,15 +13,38 @@ MainWindow::MainWindow(QWidget *parent)
 
     _db = QSqlDatabase::addDatabase("QSQLITE");
     _db.setDatabaseName("./schedle.db");
-    _model = new QSqlTableModel(this, _db);
-    _model->setTable("Employees");
-    ui->tableView->setModel(_model);
+    if (!_db.open())
+    {
+        qDebug() << "Cannot open database" << _db.databaseName();
+        QMessageBox::warning(this, "Внимание!", "Не удалось загрузить информацию о сотрудниках. Возможно, файл schedle.db был поврежден или перемещен.");
+    }
+    else
+    {
+        qDebug() << "Successful opening";
+        qDebug() << "Initialization database components...";
+    }
+    _modelEmployee = new QSqlTableModel(this, _db);
+    _modelEmployee->setTable("Employees");
+    _modelEmployee->select();
+    _modelSchedle = new QSqlTableModel(this, _db);
+    _modelSchedle->setTable("days");
+    _modelSchedle->select();
+    _query = new QSqlQuery(_db);
+
+    ui->tableView->setModel(_modelEmployee);
+    ui->tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+    qDebug() << "Reading file data...";
 
     readJson();
     readSchedleList();
 
     _daysOfFirstEmployee = 0;
     _daysOfSecondEmployee = 0;
+    _dialog = nullptr;
+    _openWBPoint.setDate(2021, 12, 1);
+
+    qDebug() << "Initialization class members...";
 
     ui->widgetColor->setFocusPolicy(Qt::NoFocus);
     ui->widgetColor2->setFocusPolicy(Qt::NoFocus);
@@ -33,12 +56,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->editSalary->setText(QVariant(_salary).toString());
 
     ui->calendarWidget->setDateRange(QDate(2021, 12, 1), QDate::currentDate().addYears(1));
-    changeSchedle();
 
     ui->editSalary->setValidator(new QRegularExpressionValidator(QRegularExpression("[1-9][0-9]{0,3}")));
 
-    calculateWorks();
-    fillTextBrowse();
+    changeSchedle();
 
     connect(ui->widgetColor, &QPushButton::clicked, this, &MainWindow::takeColor);
     connect(ui->widgetColor2, &QPushButton::clicked, this, &MainWindow::takeColor);
@@ -47,21 +68,89 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->buttonPay, &QPushButton::clicked, this, &MainWindow::payAndClear);
     connect(ui->editSalary, &QLineEdit::textEdited, [this](){ fillTextBrowse(); });
 
-    connect(ui->toolButtonArrow, &QAbstractButton::clicked, this, &MainWindow::setStatusBarMessage);
-    connect(ui->toolButtonEmployees, &QAbstractButton::clicked, this, &MainWindow::setStatusBarMessage);
-    connect(ui->toolButtonSalary, &QAbstractButton::clicked, this, &MainWindow::setStatusBarMessage);
-    connect(ui->toolButtonPaymentTarget, &QAbstractButton::clicked, this, &MainWindow::setStatusBarMessage);
+    qDebug() << "Initialization of Toolbar...";
+
+    /////////////////////// toolBar init ///////////////////////
+
+    connect(ui->toolButtonArrow, &QAbstractButton::clicked, [this](){
+        _toolBar.setTool(ToolBar::Arrow);
+        setStatusBarMessage();
+    });
+    connect(ui->toolButtonEmployees, &QAbstractButton::clicked, [this](){
+        EmployeeDialog dialog(this, _modelEmployee, &_employee);
+        if (dialog.exec() == EmployeeDialog::Accepted)
+        {
+            _toolBar.setTool(ToolBar::EmployeeTool);
+            setStatusBarMessage();
+        }
+        else
+        {
+            qDebug() << "Failed";
+        }
+    });
+    connect(ui->toolButtonSalary, &QAbstractButton::clicked, [this](){
+        _toolBar.setTool(ToolBar::SalaryTool);
+        setStatusBarMessage();
+    });
+    connect(ui->toolButtonPaymentTarget, &QAbstractButton::clicked, [this](){
+        _toolBar.setTool(ToolBar::PaymentTool);
+        setStatusBarMessage();
+    });
     connect(ui->toolButtonPaymentGeneral, &QAbstractButton::clicked, [this](){
-        AlertWidget::showAlert("Выплачиваем выплаты...");
         payAndClear();
+        AlertWidget::showAlert("Все смены успешно оплачены!");
     });
-    connect(ui->toolButtonClear, &QAbstractButton::clicked, this, &MainWindow::setStatusBarMessage);
+    connect(ui->toolButtonClear, &QAbstractButton::clicked, [this](){
+        _toolBar.setTool(ToolBar::ClearTool);
+        setStatusBarMessage();
+    });
     connect(ui->toolButtonCalculate, &QAbstractButton::clicked, [this](){
-        AlertWidget::showAlert("Делаем перерасчет!");
         changeSchedle();
+        AlertWidget::showAlert("График перерасчитан!");
     });
-    connect(ui->toolButtonSave, &QAbstractButton::clicked, [](){
-         AlertWidget::showAlert("Изменения сохранены");
+    connect(ui->toolButtonSave, &QAbstractButton::clicked, [this](){
+//        writeJson();
+
+
+        for (int i = 0; i < _openWBPoint.daysTo(QDate::currentDate().addYears(1)); i++)
+        {
+            _query->exec(QString("INSERT INTO days (date, salary) VALUES (\'%1\', %2)").arg(_openWBPoint.addDays(i).toString()).arg(1300));
+            qDebug() << i << "days processed";
+
+//            QDate date = _openWBPoint.addDays(i);
+//            QString colorHex = QVariant(ui->calendarWidget->dateTextFormat(date).background().color()).toString();
+
+//            bool isFinished = false;
+//            bool isPayed    = false;
+
+//            if (date > QDate::currentDate())
+//            {
+//                isFinished = true;
+//            }
+
+//            if (date >= _lastPayday)
+//            {
+//                isPayed = true;
+//            }
+
+//            _modelEmployee->setFilter(QString("WHERE color = \'%1\'").arg(colorHex));
+//            _modelSchedle->select();
+//            QString name = _modelSchedle->data(_modelSchedle->index(0, 0)).toString();
+
+//            QSqlRecord record = _modelSchedle->record();
+//            record.setValue("date", date);
+//            record.setValue("employee", name);
+//            record.setValue("salary", 1300);
+//            record.setValue("isFinished", isFinished);
+//            record.setValue("isPayed", isPayed);
+
+//            _modelSchedle->insertRecord(i, record);
+        }
+//        _modelEmployee->setFilter("");
+
+
+
+        AlertWidget::showAlert("Изменения сохранены");
     });
 
     ui->toolButtonArrow->setIcon(QIcon(":/image/toolBar/arrow.png"));
@@ -85,7 +174,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-    writeJson();
+//    writeJson();                                                                      //  to remove
 
     delete ui->editSalary->validator();
     delete ui;
@@ -138,8 +227,8 @@ void MainWindow::changeSchedle()
     int DAYS_SECOND_EMPLOYEE    = list.at(1).toInt();
     int DAYS_ALL_EMPLOYEE       = DAYS_FIRST_EMPLOYEE + DAYS_SECOND_EMPLOYEE;
 
-    QDate openWBPoint(2021, 12, 1);
-    reformatCalendar(openWBPoint, 1, 1, nobody, openWBPoint.daysTo(QDate::currentDate().addYears(1)));
+
+    reformatCalendar(_openWBPoint, 1, 1, nobody, _openWBPoint.daysTo(QDate::currentDate().addYears(1)));
 
     QDate date = ui->dateEdit->date();
     int yearAhead = date.daysTo(QDate::currentDate().addYears(1));
@@ -166,9 +255,26 @@ void MainWindow::payAndClear()
 
 void MainWindow::setStatusBarMessage()
 {
-    QWidget* button = qobject_cast<QWidget*>(sender());
-
-    ui->statusBar->showMessage(button->objectName() + " is active");
+    switch(_toolBar.getTool())
+    {
+    case ToolBar::Arrow:
+        ui->statusBar->showMessage("Current tool is Selection");
+        break;
+    case ToolBar::EmployeeTool:
+        ui->statusBar->showMessage("Current tool is Employee / " + _employee.name);
+        break;
+    case ToolBar::SalaryTool:
+        ui->statusBar->showMessage("Current tool is Salary");
+        break;
+    case ToolBar::PaymentTool:
+        ui->statusBar->showMessage("Current tool is Payment");
+        break;
+    case ToolBar::ClearTool:
+        ui->statusBar->showMessage("Current tool is Clear");
+        break;
+    default:
+        ui->statusBar->showMessage("Selected unknown tool");
+    }
 }
 
 void MainWindow::calculateWorks()
@@ -192,8 +298,6 @@ void MainWindow::calculateWorks()
             _daysOfSecondEmployee++;
         }
     }
-
-    qDebug() << QString("Смен у первого сотрудника - %1, у второго - %2").arg(_daysOfFirstEmployee).arg(_daysOfSecondEmployee) << days;
 }
 
 void MainWindow::fillTextBrowse()
