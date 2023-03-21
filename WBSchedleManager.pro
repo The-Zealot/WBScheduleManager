@@ -10,6 +10,7 @@ CONFIG += c++11
 
 SOURCES += \
     alertwidget.cpp \
+    employeedialog.cpp \
     main.cpp \
     mainwindow.cpp \
     toolbar.cpp
@@ -17,10 +18,12 @@ SOURCES += \
 HEADERS += \
     alertwidget.h \
     employee.h \
+    employeedialog.h \
     mainwindow.h \
     toolbar.h
 
 FORMS += \
+    employeedialog.ui \
     mainwindow.ui
 
 RC_ICONS = app.ico
