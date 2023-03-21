@@ -23,7 +23,7 @@ AlertWidget::AlertWidget(QWidget *parent, QString message) : QLabel(parent)
 
 void AlertWidget::showAlert(QString message)
 {
-    QTimer* timer = new QTimer;
+    QTimer* timer = new QTimer;                                                                     // Костыль пздц, позорище просто
     AlertWidget* alert = new AlertWidget(nullptr, message);
     connect(timer, &QTimer::timeout, [alert, timer](){
         delete alert;
