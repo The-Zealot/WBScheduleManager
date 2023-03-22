@@ -1,14 +1,16 @@
 #ifndef TOOLBAR_H
 #define TOOLBAR_H
 
-#include <QObject>
-
 class ToolBar
 {
 public:
     enum Tools
     {
-        Arrow, EmployeeTool, SalaryTool, PaymentTool, ClearTool
+        Arrow,
+        EmployeeTool,
+        SalaryTool,
+        PaymentTool,
+        ClearTool,
     };
 
     ToolBar();

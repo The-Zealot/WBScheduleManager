@@ -10,8 +10,8 @@ EmployeeDialog::EmployeeDialog(QWidget *parent, QSqlTableModel* model, Employee*
     this->setModal(true);
     this->setWindowTitle("Выбор сотрудника");
 
-    _model = model;
-    _employee = employee;
+    _model      = model;
+    _employee   = employee;
 
     ui->listView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->listView->setModel(_model);
@@ -21,8 +21,8 @@ EmployeeDialog::EmployeeDialog(QWidget *parent, QSqlTableModel* model, Employee*
         int currentRow = ui->listView->currentIndex().row();
 
         _employee->name     = _model->data(_model->index(currentRow, 0)).toString();
-        _employee->salary   = _model->data(_model->index(currentRow, 1)).toUInt();
         _employee->colorHex = _model->data(_model->index(currentRow, 2)).toString();
+        _employee->salary   = _model->data(_model->index(currentRow, 1)).toUInt();
 
         this->accept();
     });
