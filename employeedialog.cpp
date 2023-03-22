@@ -1,7 +1,7 @@
 #include "employeedialog.h"
 #include "ui_employeedialog.h"
 
-EmployeeDialog::EmployeeDialog(QWidget *parent, QSqlTableModel* model, Employee* employee) :
+EmployeeDialog::EmployeeDialog(QWidget *parent, QSqlTableModel* model, EmployeeShift* employee) :
     QDialog(parent),
     ui(new Ui::EmployeeDialog)
 {

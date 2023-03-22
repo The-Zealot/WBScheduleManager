@@ -15,13 +15,13 @@ class EmployeeDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit EmployeeDialog(QWidget *parent, QSqlTableModel* model, Employee* employee);
+    explicit EmployeeDialog(QWidget *parent, QSqlTableModel* model, EmployeeShift* employee);
     ~EmployeeDialog();
 
 private:
     Ui::EmployeeDialog *ui;
     QSqlTableModel* _model;
-    Employee* _employee;
+    EmployeeShift* _employee;
 };
 
 #endif // EMPLOYEEDIALOG_H
