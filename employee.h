@@ -5,10 +5,9 @@
 
 struct Employee
 {
-    QString name;
-    QString colorHex;
-
-    quint32 salary;
+    QString name        = "";
+    QString colorHex    = "#ffffff";
+    quint32 salary      = 0;
 };
 
 #endif // EMPLOYEE_H
