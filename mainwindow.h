@@ -37,6 +37,7 @@ private slots:
     void changeSchedle();
     void payAndClear();
     void setStatusBarMessage();
+    void editCalendarWidget();
 
 private:
     void calculateWorks();
@@ -45,6 +46,7 @@ private:
     void readJson();
     void readSchedleList();
     void loadCalendarStyle();
+    void loadEditedDaysFromDB();
 
     Ui::MainWindow *ui;
     EmployeeDialog* _dialog;
@@ -52,6 +54,7 @@ private:
     Employee _employee2;
     Employee _employee;
     ToolBar _toolBar;
+    QMap<QDate, Employee> _editedDays;
 
     quint64 _salary;
     quint32 _daysOfFirstEmployee;
