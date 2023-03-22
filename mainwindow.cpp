@@ -43,6 +43,8 @@ MainWindow::MainWindow(QWidget *parent)
     _daysOfSecondEmployee = 0;
     _dialog = nullptr;
     _openWBPoint.setDate(2021, 12, 1);
+    _toolBar.setTool(ToolBar::Arrow);
+    setStatusBarMessage();
 
     qDebug() << "Initialization class members...";
 
@@ -55,7 +57,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->editSalary->setText(QVariant(_salary).toString());
 
-    ui->calendarWidget->setDateRange(QDate(2021, 12, 1), QDate::currentDate().addYears(1));
+    ui->calendarWidget->setDateRange(_openWBPoint, QDate::currentDate().addYears(1));
 
     ui->editSalary->setValidator(new QRegularExpressionValidator(QRegularExpression("[1-9][0-9]{0,3}")));
 
@@ -66,7 +68,10 @@ MainWindow::MainWindow(QWidget *parent)
 //    connect(ui->comboBox, &QComboBox::currentIndexChanged, this, &MainWindow::changeShedle);              // to remove
 //    connect(ui->dateEdit, &QDateEdit::dateChanged, [this](){ changeShedle(); });                          // to remove
     connect(ui->buttonPay, &QPushButton::clicked, this, &MainWindow::payAndClear);
-    connect(ui->editSalary, &QLineEdit::textEdited, [this](){ fillTextBrowse(); });
+    connect(ui->editSalary, &QLineEdit::textEdited, [this](){
+        fillTextBrowse();
+    });
+    connect(ui->calendarWidget, &QCalendarWidget::clicked, this, &MainWindow::editCalendarWidget);
 
     qDebug() << "Initialization of Toolbar...";
 
@@ -105,50 +110,24 @@ MainWindow::MainWindow(QWidget *parent)
         setStatusBarMessage();
     });
     connect(ui->toolButtonCalculate, &QAbstractButton::clicked, [this](){
+        _editedDays.clear();
         changeSchedle();
         AlertWidget::showAlert("График перерасчитан!");
     });
     connect(ui->toolButtonSave, &QAbstractButton::clicked, [this](){
 //        writeJson();
 
-
-        for (int i = 0; i < _openWBPoint.daysTo(QDate::currentDate().addYears(1)); i++)
+        QList<QDate> list = _editedDays.keys();
+        for (auto iter : list)
         {
-            _query->exec(QString("INSERT INTO days (date, salary) VALUES (\'%1\', %2)").arg(_openWBPoint.addDays(i).toString()).arg(1300));
-            qDebug() << i << "days processed";
+            QString date = iter.toString();
+            QString query = QString("INSERT INTO days (date, salary, employee) VALUES (\'%1\', %2, \'%3\')")
+                    .arg(date)
+                    .arg(_editedDays[iter].salary)
+                    .arg(_editedDays[iter].name);
 
-//            QDate date = _openWBPoint.addDays(i);
-//            QString colorHex = QVariant(ui->calendarWidget->dateTextFormat(date).background().color()).toString();
-
-//            bool isFinished = false;
-//            bool isPayed    = false;
-
-//            if (date > QDate::currentDate())
-//            {
-//                isFinished = true;
-//            }
-
-//            if (date >= _lastPayday)
-//            {
-//                isPayed = true;
-//            }
-
-//            _modelEmployee->setFilter(QString("WHERE color = \'%1\'").arg(colorHex));
-//            _modelSchedle->select();
-//            QString name = _modelSchedle->data(_modelSchedle->index(0, 0)).toString();
-
-//            QSqlRecord record = _modelSchedle->record();
-//            record.setValue("date", date);
-//            record.setValue("employee", name);
-//            record.setValue("salary", 1300);
-//            record.setValue("isFinished", isFinished);
-//            record.setValue("isPayed", isPayed);
-
-//            _modelSchedle->insertRecord(i, record);
+            _query->exec(query);
         }
-//        _modelEmployee->setFilter("");
-
-
 
         AlertWidget::showAlert("Изменения сохранены");
     });
@@ -174,22 +153,30 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-//    writeJson();                                                                      //  to remove
-
     delete ui->editSalary->validator();
     delete ui;
 }
 
-void MainWindow::takeColor()
+void MainWindow::takeColor()                                                            // to rework
 {
     QWidget* obj = qobject_cast<QWidget*>(sender());
 
-    QVariant color = QColorDialog::getColor(Qt::white, this, "Выбор цвета");
+    QVariant color;
     qDebug() << "Hex color:" << color.toString();
     if (obj->objectName() == "widgetColor")
+    {
+        color = QColorDialog::getColor(QColor(_employee1.colorHex), this, "Выбор цвета");
+        if (color.isValid())
+            return;
         _employee1.colorHex = color.toString();
+    }
     else
+    {
+        color = QColorDialog::getColor(QColor(_employee2.colorHex), this, "Выбор цвета");               // DRY
+        if (color.isValid())
+            return;
         _employee2.colorHex = color.toString();
+    }
     obj->setStyleSheet("border: 1px solid; background: " + color.toString());
 
     changeSchedle();
@@ -219,7 +206,7 @@ void MainWindow::changeSchedle()
     second.setForeground(Qt::black);
     second.setBackground(QColor(_employee2.colorHex));
     nobody.setForeground(Qt::black);
-    nobody.setBackground(Qt::gray);
+    nobody.setBackground(QColor("#808080"));
 
     QStringList list = ui->comboBox->currentText().split("/");
 
@@ -237,6 +224,13 @@ void MainWindow::changeSchedle()
     date = ui->dateEdit->date().addDays(DAYS_FIRST_EMPLOYEE);
     reformatCalendar(date, DAYS_SECOND_EMPLOYEE, DAYS_ALL_EMPLOYEE, second, yearAhead);
 
+    for (auto iter : _editedDays.keys())
+    {
+        QTextCharFormat format;
+        format.setForeground(Qt::black);
+        format.setBackground(QColor(_editedDays[iter].colorHex));
+        ui->calendarWidget->setDateTextFormat(iter, format);
+    }
     calculateWorks();
     fillTextBrowse();
 }
@@ -275,6 +269,43 @@ void MainWindow::setStatusBarMessage()
     default:
         ui->statusBar->showMessage("Selected unknown tool");
     }
+}
+
+void MainWindow::editCalendarWidget()
+{
+    QDate date = ui->calendarWidget->selectedDate();
+
+    switch(_toolBar.getTool())
+    {
+    case ToolBar::Arrow:
+        AlertWidget::showAlert(_editedDays[date].name + "\n" + QVariant(_editedDays[date].salary).toString());
+        return;
+    case ToolBar::EmployeeTool:
+        _editedDays[date].name      = _employee.name;
+        _editedDays[date].colorHex  = _employee.colorHex;
+        _editedDays[date].salary    = _employee.salary;
+        break;
+    case ToolBar::SalaryTool:
+        _editedDays[date].salary = ui->editSalary->text().toUInt();;
+        break;
+    case ToolBar::PaymentTool:
+        break;
+    case ToolBar::ClearTool:
+        qDebug() << Qt::gray;
+        _editedDays[date].name      = "";
+        _editedDays[date].colorHex  = QVariant(QColor("#808080")).toString();
+        _editedDays[date].salary    = 0;
+        break;
+    default:
+        QMessageBox::critical(this, "Error", "Unkwonw tool selected");
+    }
+
+    changeSchedle();
+
+    qDebug() << "Selected date" << date.toString("dd.MM.yyyy") << "info:";
+    qDebug() << "\tEmployee name is" << _editedDays[date].name;
+    qDebug() << "\tEmployee color is" << _editedDays[date].colorHex;
+    qDebug() << "\tEmployee salary is" << _editedDays[date].salary;
 }
 
 void MainWindow::calculateWorks()
@@ -379,4 +410,9 @@ void MainWindow::loadCalendarStyle()
     }
     ui->calendarWidget->setStyleSheet(file.readAll());
     file.close();
+}
+
+void MainWindow::loadEditedDaysFromDB()
+{
+
 }
