@@ -41,7 +41,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     _daysOfFirstEmployee = 0;
     _daysOfSecondEmployee = 0;
-    _dialog = nullptr;
     _openWBPoint.setDate(2021, 12, 1);
     _toolBar.setTool(ToolBar::Arrow);
     setStatusBarMessage();
@@ -61,6 +60,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->editSalary->setValidator(new QRegularExpressionValidator(QRegularExpression("[1-9][0-9]{0,3}")));
 
+    loadEditedDaysFromDB();
     changeSchedle();
 
     connect(ui->widgetColor, &QPushButton::clicked, this, &MainWindow::takeColor);
@@ -71,7 +71,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->editSalary, &QLineEdit::textEdited, [this](){
         fillTextBrowse();
     });
-    connect(ui->calendarWidget, &QCalendarWidget::clicked, this, &MainWindow::editCalendarWidget);
+    connect(ui->calendarWidget, &QCalendarWidget::clicked, this, &MainWindow::doActionToolbar);
 
     qDebug() << "Initialization of Toolbar...";
 
@@ -117,14 +117,17 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->toolButtonSave, &QAbstractButton::clicked, [this](){
 //        writeJson();
 
+        _query->exec("DELETE FROM days");
+
         QList<QDate> list = _editedDays.keys();
         for (auto iter : list)
         {
             QString date = iter.toString();
-            QString query = QString("INSERT INTO days (date, salary, employee) VALUES (\'%1\', %2, \'%3\')")
+            QString query = QString("INSERT INTO days (date, salary, employee, isPayed) VALUES (\'%1\', %2, \'%3\', \'%4\')")
                     .arg(date)
                     .arg(_editedDays[iter].salary)
-                    .arg(_editedDays[iter].name);
+                    .arg(_editedDays[iter].name)
+                    .arg(_editedDays[iter].isPayed);
 
             _query->exec(query);
         }
@@ -206,7 +209,7 @@ void MainWindow::changeSchedle()
     second.setForeground(Qt::black);
     second.setBackground(QColor(_employee2.colorHex));
     nobody.setForeground(Qt::black);
-    nobody.setBackground(QColor("#808080"));
+    nobody.setBackground(QColor(FINISHED_DAY_HEX));
 
     QStringList list = ui->comboBox->currentText().split("/");
 
@@ -228,9 +231,19 @@ void MainWindow::changeSchedle()
     {
         QTextCharFormat format;
         format.setForeground(Qt::black);
-        format.setBackground(QColor(_editedDays[iter].colorHex));
+
+        if (_editedDays[iter].isPayed)
+        {
+            format.setBackground(QColor(PAYED_DAY_HEX));
+        }
+        else
+        {
+            format.setBackground(QColor(_editedDays[iter].colorHex));
+        }
+
         ui->calendarWidget->setDateTextFormat(iter, format);
     }
+
     calculateWorks();
     fillTextBrowse();
 }
@@ -252,33 +265,33 @@ void MainWindow::setStatusBarMessage()
     switch(_toolBar.getTool())
     {
     case ToolBar::Arrow:
-        ui->statusBar->showMessage("Current tool is Selection");
+        ui->statusBar->showMessage("Выбран инструмент \"Выделить\"");
         break;
     case ToolBar::EmployeeTool:
-        ui->statusBar->showMessage("Current tool is Employee / " + _employee.name);
+        ui->statusBar->showMessage("Выбран инструмент \"Сотрудник\" / " + _employee.name);
         break;
     case ToolBar::SalaryTool:
-        ui->statusBar->showMessage("Current tool is Salary");
+        ui->statusBar->showMessage("Выбран инструмент \"Ставка\"");
         break;
     case ToolBar::PaymentTool:
-        ui->statusBar->showMessage("Current tool is Payment");
+        ui->statusBar->showMessage("Выбран инструмент \"Оплата\"");
         break;
     case ToolBar::ClearTool:
-        ui->statusBar->showMessage("Current tool is Clear");
+        ui->statusBar->showMessage("Выбран инструмент \"Очистка\"");
         break;
     default:
         ui->statusBar->showMessage("Selected unknown tool");
     }
 }
 
-void MainWindow::editCalendarWidget()
+void MainWindow::doActionToolbar()
 {
     QDate date = ui->calendarWidget->selectedDate();
 
     switch(_toolBar.getTool())
     {
     case ToolBar::Arrow:
-        AlertWidget::showAlert(_editedDays[date].name + "\n" + QVariant(_editedDays[date].salary).toString());
+        //AlertWidget::showAlert(_editedDays[date].name + "\n" + QVariant(_editedDays[date].salary).toString());
         return;
     case ToolBar::EmployeeTool:
         _editedDays[date].name      = _employee.name;
@@ -286,14 +299,14 @@ void MainWindow::editCalendarWidget()
         _editedDays[date].salary    = _employee.salary;
         break;
     case ToolBar::SalaryTool:
-        _editedDays[date].salary = ui->editSalary->text().toUInt();;
+        _editedDays[date].salary = ui->editSalary->text().toUInt();
         break;
     case ToolBar::PaymentTool:
+        _editedDays[date].isPayed = true;
         break;
     case ToolBar::ClearTool:
-        qDebug() << Qt::gray;
         _editedDays[date].name      = "";
-        _editedDays[date].colorHex  = QVariant(QColor("#808080")).toString();
+        _editedDays[date].colorHex  = QVariant(QColor(FINISHED_DAY_HEX)).toString();
         _editedDays[date].salary    = 0;
         break;
     default:
@@ -414,5 +427,34 @@ void MainWindow::loadCalendarStyle()
 
 void MainWindow::loadEditedDaysFromDB()
 {
+    qDebug() << "Loading data from database...";
 
+    _modelSchedle->select();
+    _modelEmployee->select();
+
+    int days        = _modelSchedle->rowCount();
+    int employees   = _modelSchedle->rowCount();
+
+    for (int i = 0; i < days; i++)
+    {
+        QDate date      = QDate::fromString(_modelSchedle->data(_modelSchedle->index(i, 0)).toString());
+        QString name    = _modelSchedle->data(_modelSchedle->index(i, 1)).toString();
+        quint32 salary  = _modelSchedle->data(_modelSchedle->index(i, 4)).toUInt();
+        bool isPayed    = _modelSchedle->data(_modelSchedle->index(i, 3)).toBool();
+
+        QString colorHex;
+
+        for (int j = 0; j < employees; j++)
+        {
+            if (_modelEmployee->data(_modelEmployee->index(j, 0)).toString() == name)
+            {
+                colorHex = _modelEmployee->data(_modelEmployee->index(j, 2)).toString();
+            }
+        }
+
+        _editedDays[date].name      = name;
+        _editedDays[date].salary    = salary;
+        _editedDays[date].colorHex  = colorHex;
+        _editedDays[date].isPayed   = isPayed;
+    }
 }
