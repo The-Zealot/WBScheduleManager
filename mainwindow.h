@@ -12,6 +12,7 @@
 #include <QSqlDatabase>
 #include <QSqlTableModel>
 #include <QSqlQuery>
+#include <QSqlError>
 #include <QSqlRecord>
 #include <QSqlField>
 
