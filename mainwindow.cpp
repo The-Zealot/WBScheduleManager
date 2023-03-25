@@ -9,7 +9,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     QLabel* betaLabel = new QLabel(this);
     betaLabel->setText("<h2 style=\"color:tomato;\">BETA TEST</h2>");
-    betaLabel->move(635, 350);
+    betaLabel->move(575, 350);
     betaLabel->show();
 
     this->setFixedSize(this->size());
@@ -153,6 +153,15 @@ MainWindow::MainWindow(QWidget *parent)
 
         AlertWidget::showAlert("Изменения сохранены");
     });
+    connect(ui->toolButtonLoad, &QAbstractButton::clicked, [this](){
+        loadEditedDaysFromDB();
+        updateCalendar();
+        ui->textBrowserShiftInfo->clear();
+        AlertWidget::showAlert("Данные загружены");
+    });
+    connect(ui->toolButtonInfo, &QAbstractButton::clicked, [this](){
+        QMessageBox::information(this, "Справка", "Справочная информация:");
+    });
 
     ui->toolButtonArrow->setIcon(QIcon(":/image/toolBar/arrow.png"));
     ui->toolButtonEmployees->setIcon(QIcon(":/image/toolBar/employee.png"));
@@ -162,6 +171,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->toolButtonClear->setIcon(QIcon(":/image/toolBar/clear.png"));
     ui->toolButtonCalculate->setIcon(QIcon(":/image/toolBar/calculator.png"));
     ui->toolButtonSave->setIcon(QIcon(":/image/toolBar/save.png"));
+    ui->toolButtonLoad->setIcon(QIcon(":/image/toolBar/load.png"));
+    ui->toolButtonInfo->setIcon(QIcon(":/image/toolBar/info.png"));
 
     ui->toolButtonArrow->setToolTip("Выделение");
     ui->toolButtonEmployees->setToolTip("Выбрать сотрудника");
@@ -171,6 +182,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->toolButtonClear->setToolTip("Сбросить день");
     ui->toolButtonCalculate->setToolTip("Перерасчет графика");
     ui->toolButtonSave->setToolTip("Сохранить");
+    ui->toolButtonLoad->setToolTip("Загрузить данные");
+    ui->toolButtonInfo->setToolTip("Справка");
 }
 
 MainWindow::~MainWindow()
@@ -191,20 +204,21 @@ void MainWindow::takeColor()                                                    
     if (obj->objectName() == "widgetColor")
     {
         color = QColorDialog::getColor(QColor(_employee1.colorHex), this, "Выбор цвета");
-        if (color.isValid())
+        if (!color.isValid())
             return;
         _employee1.colorHex = color.toString();
     }
     else
     {
         color = QColorDialog::getColor(QColor(_employee2.colorHex), this, "Выбор цвета");               // DRY
-        if (color.isValid())
+        if (!color.isValid())
             return;
         _employee2.colorHex = color.toString();
     }
     obj->setStyleSheet("border: 1px solid; background: " + color.toString());
 
-    changeSchedle();
+    //resetCalendar();
+    updateCalendar();
 }
 
 void MainWindow::changeSchedle()
@@ -370,12 +384,19 @@ void MainWindow::resetCalendar()
 
 void MainWindow::payAndClear()
 {
+    QDate date;
     int END_OF_DAY = 21;
     if (QTime::currentTime().hour() < END_OF_DAY)
-        _lastPayday = QDate::currentDate().addDays(-1);
+        date = QDate::currentDate().addDays(-1);
     else
-        _lastPayday = QDate::currentDate();
+        date = QDate::currentDate();
 
+    for (int i = 1; i <= _lastPayday.daysTo(date); i++)
+    {
+        _editedDays[_lastPayday.addDays(i)].isPayed = true;
+    }
+
+    updateCalendar();
     calculateWorks();
     fillTextBrowse();
 }
@@ -411,16 +432,7 @@ void MainWindow::doActionToolbar()
     switch(_toolBar.getTool())
     {
     case ToolBar::Arrow:
-        //AlertWidget::showAlert(_editedDays[date].name + "\n" + QVariant(_editedDays[date].salary).toString());
-        ui->textBrowser->setText(QString("Name: %1\nCost: %2\nShift is payed: %3")
-                                 .arg(_editedDays[date].name)
-                                 .arg(_editedDays[date].salary)
-                                 .arg(_editedDays[date].isPayed));
-        return;
-        if (_editedDays[date].name == "")
-        {
-
-        }
+        break;
     case ToolBar::EmployeeTool:
         _editedDays[date].name      = _employee.name;
         _editedDays[date].colorHex  = _employee.colorHex;
@@ -444,6 +456,12 @@ void MainWindow::doActionToolbar()
 
     updateCalendar();
 
+    ui->textBrowserShiftInfo->setText(QString("Сотрудник %2\nДата: %1\nСтавка: %3\nСтатус смены: %4")
+                                      .arg(date.toString("dd.MM.yy"))
+                                      .arg(_editedDays[date].name)
+                                      .arg(_editedDays[date].salary)
+                                      .arg(_editedDays[date].isPayed));
+
     qDebug() << "Selected date" << date.toString("dd.MM.yyyy") << "info:";
     qDebug() << "\tEmployee name is" << _editedDays[date].name;
     qDebug() << "\tEmployee color is" << _editedDays[date].colorHex;
@@ -457,35 +475,41 @@ void MainWindow::calculateWorks()
     int days                = _lastPayday.daysTo(QDate::currentDate());
     _daysOfFirstEmployee    = 0;
     _daysOfSecondEmployee   = 0;
+    _employees.clear();
 
     if (QTime::currentTime().hour() >= END_OF_DAY)
         days++;
 
     for (int i = 1; i < days; i++)
     {
-        if (ui->calendarWidget->dateTextFormat(_lastPayday.addDays(i)).background() == QColor(_employee1.colorHex))
+        QDate date = _lastPayday.addDays(i);
+        QString name = _editedDays[date].name;
+        if (!_editedDays[date].isPayed)
         {
-            _daysOfFirstEmployee++;
-        }
-        else
-        {
-            _daysOfSecondEmployee++;
+            _employees[name].salary += _editedDays[date].salary;
+            _employees[name].shifts++;
         }
     }
 }
 
 void MainWindow::fillTextBrowse()
 {
-    ui->textBrowser->setText(QString("Смен отработано:\nСотрудник %1: %2 (%3 руб.)\nСотрудник %4: %5 (%6 руб.)\n\n"
-                                    "Текущая дата: %7\nДата последней выплаты: %8")
-                          .arg(ui->editEmployee1->text())
-                          .arg(_daysOfFirstEmployee)
-                          .arg(_daysOfFirstEmployee * ui->editSalary->text().toInt())
-                          .arg(ui->editEmployee2->text())
-                          .arg(_daysOfSecondEmployee)
-                          .arg(_daysOfSecondEmployee * ui->editSalary->text().toInt())
-                          .arg(QDateTime::currentDateTime().toString("dd.MM.yyyy"))
-                          .arg(_lastPayday.toString("dd.MM.yyyy")));
+    ui->textBrowserLoggs->clear();
+
+    if (_employees.isEmpty())
+    {
+        ui->textBrowserLoggs->setText("Долгов по выплатам нет");
+        return;
+    }
+
+    for (auto iter : _employees.keys())
+    {
+        if (iter == "")
+            continue;
+        ui->textBrowserLoggs->append("Сотрудник <b>" + iter + "</b>");
+        ui->textBrowserLoggs->append("   Заработано: " + QVariant(_employees[iter].salary).toString() + " руб.");
+        ui->textBrowserLoggs->append("   Смен: " + QVariant(_employees[iter].shifts).toString());
+    }
 }
 
 void MainWindow::writeJson()
@@ -580,33 +604,9 @@ void MainWindow::loadEditedDaysFromDB()
                 _editedDays[date].colorHex = _modelEmployee->data(_modelEmployee->index(j, DB_TABLE_EMPLOYEE_COLOR)).toString();
             }
         }
-
         days++;
     }
 
     qDebug() << "Rows loaded from DAYS:" << days;
     qDebug() << "Rows loaded from EMPLOYEES:" << employees;
-
-//    for (int i = 0; i < days; i++)
-//    {
-//        QDate date      = QDate::fromString(_modelSchedle->data(_modelSchedle->index(i, DB_TABLE_DAYS_DATE)).toString());
-//        QString name    = _modelSchedle->data(_modelSchedle->index(i, DB_TABLE_DAYS_EMPLOYEE)).toString();
-//        quint32 salary  = _modelSchedle->data(_modelSchedle->index(i, DB_TABLE_DAYS_SALARY)).toUInt();
-//        bool isPayed    = _modelSchedle->data(_modelSchedle->index(i, DB_TABLE_DAYS_ISPAYED)).toBool();
-
-//        QString colorHex;
-
-//        for (int j = 0; j < employees; j++)
-//        {
-//            if (_modelEmployee->data(_modelEmployee->index(j, 0)).toString() == name)
-//            {
-//                colorHex = _modelEmployee->data(_modelEmployee->index(j, DB_TABLE_EMPLOYEE_COLOR)).toString();
-//            }
-//        }
-
-//        _editedDays[date].name      = name;
-//        _editedDays[date].salary    = salary;
-//        _editedDays[date].colorHex  = colorHex;
-//        _editedDays[date].isPayed   = isPayed;
-//    }
 }
