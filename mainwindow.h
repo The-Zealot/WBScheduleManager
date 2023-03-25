@@ -58,6 +58,7 @@ private:
     EmployeeShift _employee;
     ToolBar _toolBar;
     QMap<QDate, EmployeeShift> _editedDays;
+    QMap<QString, Employee> _employees;
 
     quint64 _salary;
     quint32 _daysOfFirstEmployee;
