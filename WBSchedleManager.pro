@@ -17,6 +17,7 @@ SOURCES += \
 
 HEADERS += \
     alertwidget.h \
+    defines.h \
     employee.h \
     employeedialog.h \
     mainwindow.h \
