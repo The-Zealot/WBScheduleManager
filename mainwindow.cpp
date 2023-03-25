@@ -7,6 +7,11 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    QLabel* betaLabel = new QLabel(this);
+    betaLabel->setText("<h2 style=\"color:tomato;\">BETA TEST</h2>");
+    betaLabel->move(635, 350);
+    betaLabel->show();
+
     this->setFixedSize(this->size());
 
     ui->buttonPay->setEnabled(false);                                                               // to remove button
@@ -16,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
     if (!_db.open())
     {
         qDebug() << "Cannot open database" << _db.databaseName();
-        QMessageBox::warning(this, "Внимание!", "Не удалось загрузить информацию о сотрудниках. Возможно, файл schedle.db был поврежден или перемещен.");
+        QMessageBox::warning(this, "Внимание!", "Не удалось загрузить информацию о сотрудниках. Возможно, файл schedle.db был поврежден или перемещен. \n");
     }
     else
     {
@@ -119,17 +124,32 @@ MainWindow::MainWindow(QWidget *parent)
 
         _query->exec("DELETE FROM days");
 
-        QList<QDate> list = _editedDays.keys();
-        for (auto iter : list)
-        {
-            QString date = iter.toString();
-            QString query = QString("INSERT INTO days (date, salary, employee, isPayed) VALUES (\'%1\', %2, \'%3\', \'%4\')")
-                    .arg(date)
-                    .arg(_editedDays[iter].salary)
-                    .arg(_editedDays[iter].name)
-                    .arg(_editedDays[iter].isPayed);
+        _query->prepare("INSERT INTO days (date, salary, employee, isPayed) VALUES (?, ?, ?, ?)");
 
-            _query->exec(query);
+        QList<QDate> list = _editedDays.keys();
+        int iterNumber = 0;
+
+        if (_db.transaction())
+        {
+            for (auto iter : list)
+            {
+                qDebug() << "Record number:" << ++iterNumber;
+
+                _query->addBindValue(iter.toString());
+                _query->addBindValue(_editedDays[iter].salary);
+                _query->addBindValue(_editedDays[iter].name);
+                _query->addBindValue(_editedDays[iter].isPayed);
+
+                if (!_query->exec())
+                {
+                    qDebug() << _query->lastError().text();
+                }
+            }
+
+            if (!_db.commit())
+            {
+                qDebug() << _db.lastError().text();
+            }
         }
 
         AlertWidget::showAlert("Изменения сохранены");
@@ -198,7 +218,9 @@ void MainWindow::changeSchedle()
         {
             for (int j = 0; j < employeeDayCount; j++)
             {
-                ui->calendarWidget->setDateTextFormat(startDate.addDays(i + j), format);
+                QDate selectedDate(startDate.addDays(i + j));
+                _editedDays[selectedDate].colorHex = QVariant(format.background().color()).toString();
+                ui->calendarWidget->setDateTextFormat(selectedDate, format);
             }
         }
     };
@@ -232,13 +254,17 @@ void MainWindow::changeSchedle()
         QTextCharFormat format;
         format.setForeground(Qt::black);
 
-        if (_editedDays[iter].isPayed)
+        if (_editedDays[iter].name == "")
         {
-            format.setBackground(QColor(PAYED_DAY_HEX));
+            format.setBackground(QColor(FINISHED_DAY_HEX));
         }
         else
         {
             format.setBackground(QColor(_editedDays[iter].colorHex));
+        }
+        if (_editedDays[iter].isPayed)
+        {
+            format.setBackground(QColor(PAYED_DAY_HEX));
         }
 
         ui->calendarWidget->setDateTextFormat(iter, format);
@@ -246,6 +272,8 @@ void MainWindow::changeSchedle()
 
     calculateWorks();
     fillTextBrowse();
+
+    qDebug() << "Map size:" << _editedDays.count();
 }
 
 void MainWindow::payAndClear()
@@ -293,6 +321,10 @@ void MainWindow::doActionToolbar()
     case ToolBar::Arrow:
         //AlertWidget::showAlert(_editedDays[date].name + "\n" + QVariant(_editedDays[date].salary).toString());
         return;
+        if (_editedDays[date].name == "")
+        {
+
+        }
     case ToolBar::EmployeeTool:
         _editedDays[date].name      = _employee.name;
         _editedDays[date].colorHex  = _employee.colorHex;
@@ -308,6 +340,7 @@ void MainWindow::doActionToolbar()
         _editedDays[date].name      = "";
         _editedDays[date].colorHex  = QVariant(QColor(FINISHED_DAY_HEX)).toString();
         _editedDays[date].salary    = 0;
+        _editedDays[date].isPayed   = false;
         break;
     default:
         QMessageBox::critical(this, "Error", "Unkwonw tool selected");
@@ -319,6 +352,7 @@ void MainWindow::doActionToolbar()
     qDebug() << "\tEmployee name is" << _editedDays[date].name;
     qDebug() << "\tEmployee color is" << _editedDays[date].colorHex;
     qDebug() << "\tEmployee salary is" << _editedDays[date].salary;
+    qDebug() << "\tThis shift is payed" << _editedDays[date].isPayed;
 }
 
 void MainWindow::calculateWorks()
