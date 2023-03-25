@@ -1,6 +1,9 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 
+#define FINISHED_DAY_HEX    "#808080"
+#define PAYED_DAY_HEX       "#00aa00"
+
 #define DB_TABLE_EMPLOYEE_NAME      0
 #define DB_TABLE_EMPLOYEE_SALARY    1
 #define DB_TABLE_EMPLOYEE_COLOR     2
