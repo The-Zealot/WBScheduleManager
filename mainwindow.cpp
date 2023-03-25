@@ -116,7 +116,7 @@ MainWindow::MainWindow(QWidget *parent)
     });
     connect(ui->toolButtonCalculate, &QAbstractButton::clicked, [this](){
         _editedDays.clear();
-        changeSchedle();
+        updateCalendar();
         AlertWidget::showAlert("График перерасчитан!");
     });
     connect(ui->toolButtonSave, &QAbstractButton::clicked, [this](){
@@ -184,8 +184,11 @@ void MainWindow::takeColor()                                                    
 {
     QWidget* obj = qobject_cast<QWidget*>(sender());
 
+    auto openColorDialog = [obj](EmployeeShift& e){
+
+    };
+
     QVariant color;
-    qDebug() << "Hex color:" << color.toString();
     if (obj->objectName() == "widgetColor")
     {
         color = QColorDialog::getColor(QColor(_employee1.colorHex), this, "Выбор цвета");
@@ -219,7 +222,18 @@ void MainWindow::changeSchedle()
             for (int j = 0; j < employeeDayCount; j++)
             {
                 QDate selectedDate(startDate.addDays(i + j));
-                _editedDays[selectedDate].colorHex = QVariant(format.background().color()).toString();
+                QString colorHex = QVariant(format.background().color()).toString();
+
+                qint32 employeeCount = _modelEmployee->rowCount();
+                for (int k = 0 ; k < employeeCount; k++)
+                {
+                    if (_modelEmployee->data(_modelEmployee->index(k, 2)).toString() == colorHex)
+                    {
+                        _editedDays[selectedDate].name = _modelEmployee->data(_modelEmployee->index(k, 0)).toString();
+                        _editedDays[selectedDate].salary = _modelEmployee->data(_modelEmployee->index(k, 1)).toUInt();
+                        _editedDays[selectedDate].colorHex = colorHex;
+                    }
+                }
                 ui->calendarWidget->setDateTextFormat(selectedDate, format);
             }
         }
@@ -276,6 +290,81 @@ void MainWindow::changeSchedle()
     qDebug() << "Map size:" << _editedDays.count();
 }
 
+void MainWindow::updateCalendar()
+{
+    if (ui->comboBox->currentText() == "")
+    {
+        qDebug() << "Can't parse comboBox->currentText()";
+        return;
+    }
+
+    auto reformatCalendar = [this](QDate startDate, int employeeDayCount, int allEmployeeDays, EmployeeShift &shift, int lengthReformat){
+        for (int i = 0; i < lengthReformat; i += allEmployeeDays)
+        {
+            for (int j = 0; j < employeeDayCount; j++)
+            {
+                QDate selectedDate(startDate.addDays(i + j));
+                QString name = shift.name;
+
+                qint32 employeeCount = _modelEmployee->rowCount();
+                for (int k = 0 ; k < employeeCount; k++)
+                {
+                    if (name == _modelEmployee->data(_modelEmployee->index(k, 0)).toString())
+                    {
+                        _editedDays[selectedDate].name = name;
+                        _editedDays[selectedDate].salary = _modelEmployee->data(_modelEmployee->index(k, 1)).toUInt();
+                        _editedDays[selectedDate].colorHex = _modelEmployee->data(_modelEmployee->index(k, 2)).toString();
+                    }
+                    else if (name == "")
+                    {
+                        EmployeeShift empty;
+                        _editedDays[selectedDate] = empty;
+                    }
+                }
+            }
+        }
+    };
+
+    QDate date = ui->dateEdit->date();
+    QStringList shiftList = ui->comboBox->currentText().split("/");
+
+    int DAYS_FIRST_EMPLOYEE     = shiftList.at(0).toInt();
+    int DAYS_SECOND_EMPLOYEE    = shiftList.at(1).toInt();
+    int DAYS_ALL_EMPLOYEE       = DAYS_FIRST_EMPLOYEE + DAYS_SECOND_EMPLOYEE;
+    int LENGTH_REFORMAT         = date.daysTo(QDate::currentDate().addYears(1));
+
+    EmployeeShift empty, first, second;
+
+    first   = _employee1;
+    second  = _employee2;
+
+    reformatCalendar(_openWBPoint, 1, 1, empty, _openWBPoint.daysTo(QDate::currentDate().addYears(1)));
+    reformatCalendar(date, DAYS_FIRST_EMPLOYEE, DAYS_ALL_EMPLOYEE, first, LENGTH_REFORMAT);
+    date = ui->dateEdit->date().addDays(DAYS_FIRST_EMPLOYEE);
+    reformatCalendar(date, DAYS_SECOND_EMPLOYEE, DAYS_ALL_EMPLOYEE, second, LENGTH_REFORMAT);
+
+    for (auto iter : _editedDays.keys())
+    {
+        QTextCharFormat format;
+        format.setForeground(Qt::black);
+        format.setBackground(QColor(_editedDays[iter].colorHex));
+
+        if (_editedDays[iter].isPayed)
+        {
+            format.setBackground(QColor(PAYED_DAY_HEX));
+        }
+        else
+        {
+            format.setBackground(QColor(_editedDays[iter].colorHex));
+        }
+
+        ui->calendarWidget->setDateTextFormat(iter, format);
+    }
+
+    calculateWorks();
+    fillTextBrowse();
+}
+
 void MainWindow::payAndClear()
 {
     int END_OF_DAY = 21;
@@ -320,6 +409,10 @@ void MainWindow::doActionToolbar()
     {
     case ToolBar::Arrow:
         //AlertWidget::showAlert(_editedDays[date].name + "\n" + QVariant(_editedDays[date].salary).toString());
+        ui->textBrowser->setText(QString("Name: %1\nSalary: %2\nShift is payed: %3")
+                                 .arg(_editedDays[date].name)
+                                 .arg(_editedDays[date].salary)
+                                 .arg(_editedDays[date].isPayed));
         return;
         if (_editedDays[date].name == "")
         {
