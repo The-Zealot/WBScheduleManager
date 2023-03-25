@@ -8,5 +8,7 @@
         <file alias="salary.png">toolBar/icons/salary.png</file>
         <file alias="calculator.png">toolBar/icons/calculate.png</file>
         <file alias="save.png">toolBar/icons/save.png</file>
+        <file alias="load.png">toolBar/icons/load.png</file>
+        <file alias="info.png">toolBar/icons/info.png</file>
     </qresource>
 </RCC>
