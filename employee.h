@@ -2,9 +2,7 @@
 #define EMPLOYEE_H
 
 #include <QString>
-
-#define FINISHED_DAY_HEX    "#808080"
-#define PAYED_DAY_HEX       "#00aa00"
+#include "defines.h"
 
 struct EmployeeShift
 {
@@ -14,6 +12,13 @@ struct EmployeeShift
 
     bool isFinished     = false;
     bool isPayed        = false;
+};
+
+struct Employee
+{
+    QString name = "";
+    quint32 salary = 0;
+    quint32 shifts = 0;
 };
 
 #endif // EMPLOYEE_H
