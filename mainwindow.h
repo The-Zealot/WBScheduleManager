@@ -20,6 +20,7 @@
 #include "employeedialog.h"
 #include "alertwidget.h"
 #include "toolbar.h"
+#include "defines.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -37,6 +38,7 @@ private slots:
     void takeColor();
     void changeSchedle();
     void updateCalendar();                      // changeSchedle v2.0
+    void resetCalendar();
     void payAndClear();
     void setStatusBarMessage();
     void doActionToolbar();
