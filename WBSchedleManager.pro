@@ -39,6 +39,8 @@ DISTFILES += \
     toolBar/icons/calculate.png \
     toolBar/icons/clear.png \
     toolBar/icons/employee.png \
+    toolBar/icons/info.png \
+    toolBar/icons/load.png \
     toolBar/icons/paymentGeneral.png \
     toolBar/icons/paymentTarget.png \
     toolBar/icons/salary.png \
