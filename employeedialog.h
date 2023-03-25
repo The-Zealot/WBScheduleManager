@@ -5,6 +5,7 @@
 #include <QSqlTableModel>
 
 #include "employee.h"
+#include "defines.h"
 
 namespace Ui {
 class EmployeeDialog;
