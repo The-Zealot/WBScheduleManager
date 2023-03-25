@@ -36,6 +36,7 @@ public:
 private slots:
     void takeColor();
     void changeSchedle();
+    void updateCalendar();                      // changeSchedle v2.0
     void payAndClear();
     void setStatusBarMessage();
     void doActionToolbar();
