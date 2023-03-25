@@ -9,7 +9,7 @@
 struct EmployeeShift
 {
     QString name        = "";
-    QString colorHex    = "#ffffff";
+    QString colorHex    = FINISHED_DAY_HEX;
     quint32 salary      = 0;
 
     bool isFinished     = false;
