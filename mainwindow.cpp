@@ -8,7 +8,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     QLabel* betaLabel = new QLabel(this);
-    betaLabel->setText("<h2 style=\"color:tomato;\">BETA TEST</h2>");
+    betaLabel->setText("<h3 style=\"color:tomato;\">build 230328</h3>");
     betaLabel->move(575, 350);
     betaLabel->show();
 
@@ -173,9 +173,7 @@ MainWindow::MainWindow(QWidget *parent)
         ui->textBrowserShiftInfo->clear();
         AlertWidget::showAlert("Данные загружены");
     });
-    connect(ui->toolButtonInfo, &QAbstractButton::clicked, [this](){
-        QMessageBox::information(this, "Справка", "Справочная информация:");
-    });
+    connect(ui->toolButtonInfo, &QAbstractButton::clicked, this, &MainWindow::openDocInfo);
 
     ui->toolButtonArrow->setIcon(QIcon(":/image/toolBar/arrow.png"));
     ui->toolButtonEmployees->setIcon(QIcon(":/image/toolBar/employee.png"));
@@ -354,8 +352,6 @@ void MainWindow::resetCalendar()
         return;
     }
 
-    calculateFinishedDays();
-
     auto reformatCalendar = [this](QDate startDate, int employeeDayCount, int allEmployeeDays, EmployeeShift &shift, int lengthReformat){
         for (int i = 0; i < lengthReformat; i += allEmployeeDays)
         {
@@ -401,6 +397,7 @@ void MainWindow::resetCalendar()
     date = _startDate.addDays(DAYS_FIRST_EMPLOYEE);
     reformatCalendar(date, DAYS_SECOND_EMPLOYEE, DAYS_ALL_EMPLOYEE, second, LENGTH_REFORMAT);
 
+    calculateFinishedDays();
     updateCalendar();
 }
 
@@ -562,6 +559,15 @@ void MainWindow::saveSettings()
     QMessageBox::information(this, "Успешный успех", "Настройки были успешно сохранены. Перезапустите программу, чтобы изменения вступили в силу.");
 }
 
+void MainWindow::openDocInfo()
+{
+    if (!QDesktopServices::openUrl(QUrl("schedle.doc")))
+    {
+        qDebug() << "File not open";
+        QMessageBox::critical(this, "Error", "Failed to open file. Make sure it exists.");
+    }
+}
+
 void MainWindow::calculateWorks()
 {
     int days                = _lastPayday.daysTo(QDate::currentDate());
@@ -702,7 +708,7 @@ void MainWindow::loadEditedDaysFromDB()
         _editedDays[date].name          = _query->value(DB_TABLE_DAYS_EMPLOYEE).toString();
         _editedDays[date].salary        = _query->value(DB_TABLE_DAYS_SALARY).toUInt();
         _editedDays[date].isPayed       = _query->value(DB_TABLE_DAYS_ISPAYED).toBool();
-        _editedDays[date].isFinished    = _query->value(DB_TABLE_DAYS_ISPAYED).toBool();
+        _editedDays[date].isFinished    = _query->value(DB_TABLE_DAYS_ISFINISHED).toBool();
 
         for (int j = 0; j < employees; j++)
         {

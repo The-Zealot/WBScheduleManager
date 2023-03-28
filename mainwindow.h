@@ -15,6 +15,7 @@
 #include <QSqlError>
 #include <QSqlRecord>
 #include <QSqlField>
+#include <QDesktopServices>
 
 #include "employee.h"
 #include "employeedialog.h"
@@ -50,6 +51,7 @@ private slots:
     void tableItemSelect(const QModelIndex &index);
 
     void saveSettings();
+    void openDocInfo();
 
 private:
     void calculateWorks();
