@@ -89,6 +89,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->checkBoxShifts, &QCheckBox::clicked, this, &MainWindow::updateCalendar);
     connect(ui->checkBoxPayedDays, &QCheckBox::clicked, this, &MainWindow::updateCalendar);
     connect(ui->checkBoxFinishedDays, &QCheckBox::clicked, this, &MainWindow::updateCalendar);
+    connect(ui->buttonSaveSettings, &QPushButton::clicked, this, &MainWindow::saveSettings);
 
     qDebug() << "Initialization of Toolbar...";
 
@@ -119,7 +120,7 @@ MainWindow::MainWindow(QWidget *parent)
         setStatusBarMessage();
     });
     connect(ui->toolButtonPaymentGeneral, &QAbstractButton::clicked, [this](){
-        payAndClear();
+        payEverything();
         AlertWidget::showAlert("Все смены успешно оплачены!");
     });
     connect(ui->toolButtonClear, &QAbstractButton::clicked, [this](){
@@ -403,7 +404,7 @@ void MainWindow::resetCalendar()
     updateCalendar();
 }
 
-void MainWindow::payAndClear()
+void MainWindow::payEverything()
 {
     QDate date;
     if (QTime::currentTime().hour() < END_OF_SHIFT)
@@ -557,6 +558,8 @@ void MainWindow::tableItemSelect(const QModelIndex &index)
 void MainWindow::saveSettings()
 {
     writeJson();
+
+    QMessageBox::information(this, "Успешный успех", "Настройки были успешно сохранены. Перезапустите программу, чтобы изменения вступили в силу.");
 }
 
 void MainWindow::calculateWorks()
@@ -629,8 +632,8 @@ void MainWindow::writeJson()
     jObject["SecondEmployee"]   = ui->editEmployee2->text();
     jObject["PayedDayColor"]    = _employee1.colorHex;
     jObject["FinishedDayColor"] = _employee2.colorHex;
-    jObject["StartDate"]        = ui->dateEditStartpoint->date().toString();
-    jObject["OpenDate"]         = ui->dateEditStartpoint->date().toString();
+    jObject["StartDate"]        = _startDate.toString();
+    jObject["OpenDate"]         = _openWBPoint.toString();
     jObject["lastPayday"]       = _lastPayday.toString();
 
     QJsonDocument jDoc(jObject);
@@ -649,10 +652,10 @@ void MainWindow::readJson()
     QJsonObject jObject = QJsonDocument::fromJson(json.readAll()).object();
     json.close();
 
-    _employee1.name     = jObject["Employee_1"].toString();
-    _employee2.name     = jObject["Employee_2"].toString();
-    _employee1.colorHex = jObject["color_1"].toString();
-    _employee2.colorHex = jObject["color_2"].toString();
+    _employee1.name     = jObject["FirstEmployee"].toString();
+    _employee2.name     = jObject["SecondEmployee"].toString();
+    _employee1.colorHex = jObject["PayedDayColor"].toString();
+    _employee2.colorHex = jObject["FinishedDayColor"].toString();
     _lastPayday         = QDate::fromString(jObject["lastPayday"].toString());
     _startDate          = QDate::fromString(jObject["StartDate"].toString());
     _openWBPoint        = QDate::fromString(jObject["OpenDate"].toString());
