@@ -60,7 +60,6 @@ public:
     QTextBrowser *textBrowserLoggs;
     QWidget *tab_2;
     QTableView *tableView;
-    QLabel *label_2;
     QWidget *widget;
     QGridLayout *gridLayout;
     QLineEdit *editHex;
@@ -81,10 +80,10 @@ public:
     QLineEdit *editEmployee2;
     QHBoxLayout *horizontalLayout_2;
     QLineEdit *editColorPayedDay;
-    QPushButton *widgetColor;
+    ColorWidget *colorWidgetPayedDay;
     QHBoxLayout *horizontalLayout_7;
     QLineEdit *editColorFinishedDay;
-    QPushButton *widgetColor2;
+    ColorWidget *colorWidgetFinishedDay;
     QHBoxLayout *horizontalLayout_8;
     QLabel *label;
     QDateEdit *dateEditOpen;
@@ -256,13 +255,10 @@ public:
         tab_2->setObjectName(QString::fromUtf8("tab_2"));
         tableView = new QTableView(tab_2);
         tableView->setObjectName(QString::fromUtf8("tableView"));
-        tableView->setGeometry(QRect(11, 11, 311, 401));
-        label_2 = new QLabel(tab_2);
-        label_2->setObjectName(QString::fromUtf8("label_2"));
-        label_2->setGeometry(QRect(460, 290, 16, 16));
+        tableView->setGeometry(QRect(11, 11, 321, 401));
         widget = new QWidget(tab_2);
         widget->setObjectName(QString::fromUtf8("widget"));
-        widget->setGeometry(QRect(331, 11, 159, 185));
+        widget->setGeometry(QRect(339, 11, 151, 185));
         gridLayout = new QGridLayout(widget);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         gridLayout->setContentsMargins(0, 0, 0, 0);
@@ -361,13 +357,13 @@ public:
 
         horizontalLayout_2->addWidget(editColorPayedDay);
 
-        widgetColor = new QPushButton(layoutWidget1);
-        widgetColor->setObjectName(QString::fromUtf8("widgetColor"));
-        sizePolicy2.setHeightForWidth(widgetColor->sizePolicy().hasHeightForWidth());
-        widgetColor->setSizePolicy(sizePolicy2);
-        widgetColor->setMinimumSize(QSize(42, 0));
+        colorWidgetPayedDay = new ColorWidget(layoutWidget1);
+        colorWidgetPayedDay->setObjectName(QString::fromUtf8("colorWidgetPayedDay"));
+        sizePolicy2.setHeightForWidth(colorWidgetPayedDay->sizePolicy().hasHeightForWidth());
+        colorWidgetPayedDay->setSizePolicy(sizePolicy2);
+        colorWidgetPayedDay->setMinimumSize(QSize(42, 0));
 
-        horizontalLayout_2->addWidget(widgetColor);
+        horizontalLayout_2->addWidget(colorWidgetPayedDay);
 
 
         verticalLayout_5->addLayout(horizontalLayout_2);
@@ -379,13 +375,13 @@ public:
 
         horizontalLayout_7->addWidget(editColorFinishedDay);
 
-        widgetColor2 = new QPushButton(layoutWidget1);
-        widgetColor2->setObjectName(QString::fromUtf8("widgetColor2"));
-        sizePolicy2.setHeightForWidth(widgetColor2->sizePolicy().hasHeightForWidth());
-        widgetColor2->setSizePolicy(sizePolicy2);
-        widgetColor2->setMinimumSize(QSize(42, 0));
+        colorWidgetFinishedDay = new ColorWidget(layoutWidget1);
+        colorWidgetFinishedDay->setObjectName(QString::fromUtf8("colorWidgetFinishedDay"));
+        sizePolicy2.setHeightForWidth(colorWidgetFinishedDay->sizePolicy().hasHeightForWidth());
+        colorWidgetFinishedDay->setSizePolicy(sizePolicy2);
+        colorWidgetFinishedDay->setMinimumSize(QSize(42, 0));
 
-        horizontalLayout_7->addWidget(widgetColor2);
+        horizontalLayout_7->addWidget(colorWidgetFinishedDay);
 
 
         verticalLayout_5->addLayout(horizontalLayout_7);
@@ -489,10 +485,10 @@ public:
         QWidget::setTabOrder(checkBoxShifts, editEmployee1);
         QWidget::setTabOrder(editEmployee1, editEmployee2);
         QWidget::setTabOrder(editEmployee2, editColorPayedDay);
-        QWidget::setTabOrder(editColorPayedDay, widgetColor);
-        QWidget::setTabOrder(widgetColor, editColorFinishedDay);
-        QWidget::setTabOrder(editColorFinishedDay, widgetColor2);
-        QWidget::setTabOrder(widgetColor2, dateEditOpen);
+        QWidget::setTabOrder(editColorPayedDay, colorWidgetPayedDay);
+        QWidget::setTabOrder(colorWidgetPayedDay, editColorFinishedDay);
+        QWidget::setTabOrder(editColorFinishedDay, colorWidgetFinishedDay);
+        QWidget::setTabOrder(colorWidgetFinishedDay, dateEditOpen);
         QWidget::setTabOrder(dateEditOpen, dateEditStartpoint);
         QWidget::setTabOrder(dateEditStartpoint, comboBoxSchedle);
         QWidget::setTabOrder(comboBoxSchedle, buttonSaveSettings);
@@ -507,7 +503,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(1);
+        tabWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -536,7 +532,6 @@ public:
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">\320\241\320\276\321\202\321\200\321\203\320\264\320\275\320\270\320\272 %4: "
                         "%5 (%6 \321\200\321\203\320\261.)</p></body></html>", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tab), QCoreApplication::translate("MainWindow", "\320\223\321\200\320\260\321\204\320\270\320\272", nullptr));
-        label_2->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:600;\">\342\202\275</span></p></body></html>", nullptr));
         editHex->setPlaceholderText(QCoreApplication::translate("MainWindow", "\320\246\320\262\320\265\321\202", nullptr));
         colorWidget->setText(QString());
         editEmployeeName->setPlaceholderText(QCoreApplication::translate("MainWindow", "\320\230\320\274\321\217 \321\201\320\276\321\202\321\200\321\203\320\264\320\275\320\270\320\272\320\260", nullptr));
@@ -551,9 +546,9 @@ public:
         editEmployee1->setPlaceholderText(QCoreApplication::translate("MainWindow", "\320\230\320\274\321\217 \321\201\320\276\321\202\321\200\321\203\320\264\320\275\320\270\320\272\320\260 \342\204\2261", nullptr));
         editEmployee2->setPlaceholderText(QCoreApplication::translate("MainWindow", "\320\230\320\274\321\217 \321\201\320\276\321\202\321\200\321\203\320\264\320\275\320\270\320\272\320\260 \342\204\2262", nullptr));
         editColorPayedDay->setPlaceholderText(QCoreApplication::translate("MainWindow", "\320\246\320\262\320\265\321\202 \320\276\320\277\320\273\320\260\321\207\320\265\320\275\320\275\320\276\320\263\320\276 \320\264\320\275\321\217", nullptr));
-        widgetColor->setText(QString());
+        colorWidgetPayedDay->setText(QString());
         editColorFinishedDay->setPlaceholderText(QCoreApplication::translate("MainWindow", "\320\246\320\262\320\265\321\202 \320\276\321\202\321\200\320\260\320\261\320\276\321\202\320\260\320\275\320\275\320\276\320\263\320\276 \320\264\320\275\321\217", nullptr));
-        widgetColor2->setText(QString());
+        colorWidgetFinishedDay->setText(QString());
         label->setText(QCoreApplication::translate("MainWindow", "\320\224\320\260\321\202\320\260 \320\276\321\202\320\272\321\200\321\213\321\202\320\270\321\217:", nullptr));
         label_4->setText(QCoreApplication::translate("MainWindow", "\320\235\320\260\321\207\320\260\320\273\321\214\320\275\320\260\321\217 \320\264\320\260\321\202\320\260:", nullptr));
         label_3->setText(QCoreApplication::translate("MainWindow", "\320\223\321\200\320\260\321\204\320\270\320\272:", nullptr));
