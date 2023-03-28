@@ -42,37 +42,41 @@ MainWindow::MainWindow(QWidget *parent)
     readJson();
     readSchedleList();
 
-    _daysOfFirstEmployee = 0;
-    _daysOfSecondEmployee = 0;
-    _openWBPoint.setDate(2021, 12, 1);
+    _daysOfFirstEmployee            = 0;
+    _daysOfSecondEmployee           = 0;
+    ui->dateEditOpen->setDate(_openWBPoint);
+    ui->dateEditStartpoint->setDate(_startDate);
     _toolBar.setTool(ToolBar::Arrow);
     setStatusBarMessage();
 
     qDebug() << "Initialization class members...";
 
-    ui->widgetColor->setFocusPolicy(Qt::NoFocus);
-    ui->widgetColor2->setFocusPolicy(Qt::NoFocus);
-    ui->widgetColor->setStyleSheet("border: 1px solid; background: " + _employee1.colorHex);
-    ui->widgetColor2->setStyleSheet("border: 1px solid; background: " + _employee2.colorHex);
+    ui->colorWidgetPayedDay->setColor(PAYED_DAY_HEX);
+    ui->colorWidgetFinishedDay->setColor(FINISHED_DAY_HEX);
     ui->editEmployee1->setText(_employee1.name);
     ui->editEmployee2->setText(_employee2.name);
 
-    ui->editSalary->setText(QVariant(_salary).toString());
+//    ui->editSalary->setText(QVariant(_salary).toString());
 
     ui->calendarWidget->setDateRange(_openWBPoint, QDate::currentDate().addYears(1));
 
     ui->editSalary->setValidator(new QRegularExpressionValidator(QRegularExpression("[1-9][0-9]{0,3}")));
     ui->editHex->setValidator(new QRegularExpressionValidator(QRegularExpression("#[a-f0-9]{6}")));
+    ui->editColorPayedDay->setValidator(new QRegularExpressionValidator(QRegularExpression("#[a-f0-9]{6}")));
+    ui->editColorFinishedDay->setValidator(new QRegularExpressionValidator(QRegularExpression("#[a-f0-9]{6}")));
 
     loadEditedDaysFromDB();
+    calculateFinishedDays();
     updateCalendar();
 
-    connect(ui->widgetColor, &QPushButton::clicked, this, &MainWindow::takeColor);
-    connect(ui->widgetColor2, &QPushButton::clicked, this, &MainWindow::takeColor);
-//    connect(ui->comboBox, &QComboBox::currentIndexChanged, this, &MainWindow::changeShedle);              // to remove
-//    connect(ui->dateEdit, &QDateEdit::dateChanged, [this](){ changeShedle(); });                          // to remove
-    connect(ui->editSalary, &QLineEdit::textEdited, [this](){
-        fillTextBrowse();
+//    connect(ui->colorWidgetPayedDay, &QPushButton::clicked, this, &MainWindow::takeColor);
+//    connect(ui->colorWidgetFinishedDay, &QPushButton::clicked, this, &MainWindow::takeColor);
+//    connect(ui->editSalary, &QLineEdit::textEdited, [this](){ fillTextBrowse(); });
+    connect(ui->dateEditOpen, &QDateEdit::dateChanged, [this](){
+        _openWBPoint = ui->dateEditOpen->date();
+    });
+    connect(ui->dateEditStartpoint, &QDateEdit::dateChanged, [this](){
+        _startDate = ui->dateEditStartpoint->date();
     });
     connect(ui->calendarWidget, &QCalendarWidget::clicked, this, &MainWindow::doActionToolbar);
     connect(ui->buttonAdd, &QPushButton::clicked, this, &MainWindow::addEmployee);
@@ -82,6 +86,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->colorWidget, &QPushButton::clicked, [this](){
         ui->editHex->setText(QVariant(ui->colorWidget->getColor()).toString());
     });
+    connect(ui->checkBoxShifts, &QCheckBox::clicked, this, &MainWindow::updateCalendar);
+    connect(ui->checkBoxPayedDays, &QCheckBox::clicked, this, &MainWindow::updateCalendar);
+    connect(ui->checkBoxFinishedDays, &QCheckBox::clicked, this, &MainWindow::updateCalendar);
 
     qDebug() << "Initialization of Toolbar...";
 
@@ -129,7 +136,7 @@ MainWindow::MainWindow(QWidget *parent)
 
         _query->exec("DELETE FROM days");
 
-        _query->prepare("INSERT INTO days (date, salary, employee, isPayed) VALUES (?, ?, ?, ?)");
+        _query->prepare("INSERT INTO days (date, salary, employee, isPayed, isFinished) VALUES (?, ?, ?, ?, ?)");
 
         QList<QDate> list = _editedDays.keys();
 
@@ -141,6 +148,7 @@ MainWindow::MainWindow(QWidget *parent)
                 _query->addBindValue(_editedDays[iter].salary);
                 _query->addBindValue(_editedDays[iter].name);
                 _query->addBindValue(_editedDays[iter].isPayed);
+                _query->addBindValue(_editedDays[iter].isFinished);
 
                 if (!_query->exec())
                 {
@@ -195,12 +203,14 @@ MainWindow::~MainWindow()
 {
     delete ui->editSalary->validator();
     delete ui->editHex->validator();
+    delete ui->editColorPayedDay->validator();
+    delete ui->editColorFinishedDay->validator();
     delete ui;
 }
 
 void MainWindow::takeColor()                                                            // to rework
 {
-    QWidget* obj = qobject_cast<QWidget*>(sender());
+    /*QWidget* obj = qobject_cast<QWidget*>(sender());
 
     auto openColorDialog = [obj](EmployeeShift& e){
 
@@ -224,7 +234,7 @@ void MainWindow::takeColor()                                                    
     obj->setStyleSheet("border: 1px solid; background: " + color.toString());
 
     //resetCalendar();
-    updateCalendar();
+    updateCalendar();*/
 }
 
 void MainWindow::changeSchedle()
@@ -310,18 +320,21 @@ void MainWindow::changeSchedle()
 }
 
 void MainWindow::updateCalendar()
-{
+{    
     for (auto iter : _editedDays.keys())
     {
         QTextCharFormat format;
         format.setForeground(Qt::black);
-        format.setBackground(QColor(_editedDays[iter].colorHex));
+        format.setBackground(QColor(INCOMPLETE_DAY_HEX));
 
-        if (_editedDays[iter].isPayed)
+        if (_editedDays[iter].isFinished and ui->checkBoxFinishedDays->isChecked())
+            format.setBackground(QColor(FINISHED_DAY_HEX));
+
+        if (_editedDays[iter].isPayed and ui->checkBoxPayedDays->isChecked())
         {
             format.setBackground(QColor(PAYED_DAY_HEX));
         }
-        else
+        else if (ui->checkBoxShifts->isChecked())
         {
             format.setBackground(QColor(_editedDays[iter].colorHex));
         }
@@ -339,6 +352,8 @@ void MainWindow::resetCalendar()
         qDebug() << "Can't parse comboBox->currentText()";
         return;
     }
+
+    calculateFinishedDays();
 
     auto reformatCalendar = [this](QDate startDate, int employeeDayCount, int allEmployeeDays, EmployeeShift &shift, int lengthReformat){
         for (int i = 0; i < lengthReformat; i += allEmployeeDays)
@@ -367,7 +382,7 @@ void MainWindow::resetCalendar()
         }
     };
 
-    QDate date = ui->dateEditStartpoint->date();
+    QDate date = _startDate;
     QStringList shiftList = ui->comboBoxSchedle->currentText().split("/");
 
     int DAYS_FIRST_EMPLOYEE     = shiftList.at(0).toInt();
@@ -382,7 +397,7 @@ void MainWindow::resetCalendar()
 
     reformatCalendar(_openWBPoint, 1, 1, empty, _openWBPoint.daysTo(QDate::currentDate().addYears(1)));
     reformatCalendar(date, DAYS_FIRST_EMPLOYEE, DAYS_ALL_EMPLOYEE, first, LENGTH_REFORMAT);
-    date = ui->dateEditStartpoint->date().addDays(DAYS_FIRST_EMPLOYEE);
+    date = _startDate.addDays(DAYS_FIRST_EMPLOYEE);
     reformatCalendar(date, DAYS_SECOND_EMPLOYEE, DAYS_ALL_EMPLOYEE, second, LENGTH_REFORMAT);
 
     updateCalendar();
@@ -391,8 +406,7 @@ void MainWindow::resetCalendar()
 void MainWindow::payAndClear()
 {
     QDate date;
-    int END_OF_DAY = 21;
-    if (QTime::currentTime().hour() < END_OF_DAY)
+    if (QTime::currentTime().hour() < END_OF_SHIFT)
         date = QDate::currentDate().addDays(-1);
     else
         date = QDate::currentDate();
@@ -462,17 +476,19 @@ void MainWindow::doActionToolbar()
 
     updateCalendar();
 
-    ui->textBrowserShiftInfo->setText(QString("Сотрудник %2\nДата: %1\nСтавка: %3\nСтатус смены: %4")
+    ui->textBrowserShiftInfo->setText(QString("Сотрудник %2\nДата: %1\nСтавка: %3\nСтатус смены: %4\nДень: %5")
                                       .arg(date.toString("dd.MM.yy"))
                                       .arg(_editedDays[date].name)
                                       .arg(_editedDays[date].salary)
-                                      .arg(_editedDays[date].isPayed));
+                                      .arg(_editedDays[date].isPayed)
+                                      .arg(_editedDays[date].isFinished));
 
     qDebug() << "Selected date" << date.toString("dd.MM.yyyy") << "info:";
     qDebug() << "\tEmployee name is" << _editedDays[date].name;
     qDebug() << "\tEmployee color is" << _editedDays[date].colorHex;
     qDebug() << "\tEmployee salary is" << _editedDays[date].salary;
     qDebug() << "\tThis shift is payed" << _editedDays[date].isPayed;
+    qDebug() << "\tThis shift is finished" << _editedDays[date].isFinished;
 }
 
 void MainWindow::addEmployee()
@@ -522,6 +538,8 @@ void MainWindow::updateEmployee()
 
     qDebug() << "Query:" << query;
 
+    updateCalendar();
+
     _modelEmployee->select();
 }
 
@@ -536,15 +554,17 @@ void MainWindow::tableItemSelect(const QModelIndex &index)
     ui->colorWidget->setColor(colorHex);
 }
 
+void MainWindow::saveSettings()
+{
+    writeJson();
+}
+
 void MainWindow::calculateWorks()
 {
-    int END_OF_DAY          = 21;
     int days                = _lastPayday.daysTo(QDate::currentDate());
-    _daysOfFirstEmployee    = 0;
-    _daysOfSecondEmployee   = 0;
     _employees.clear();
 
-    if (QTime::currentTime().hour() >= END_OF_DAY)
+    if (QTime::currentTime().hour() >= END_OF_SHIFT)
         days++;
 
     for (int i = 1; i < days; i++)
@@ -556,6 +576,22 @@ void MainWindow::calculateWorks()
             _employees[name].salary += _editedDays[date].salary;
             _employees[name].shifts++;
         }
+    }
+}
+
+void MainWindow::calculateFinishedDays()
+{
+    qDebug() << "Calculating days...";
+
+    int days        = _openWBPoint.daysTo(QDate::currentDate());
+
+    if (QTime::currentTime().hour() >= END_OF_SHIFT)
+        days++;
+
+    for (int i = 0; i < days; i++)
+    {
+        QDate date = _openWBPoint.addDays(i);
+        _editedDays[date].isFinished = true;
     }
 }
 
@@ -589,13 +625,13 @@ void MainWindow::writeJson()
     }
     QJsonObject jObject;
 
-    jObject["Employee_1"]   = ui->editEmployee1->text();
-    jObject["Employee_2"]   = ui->editEmployee2->text();
-    jObject["color_1"]      = _employee1.colorHex;
-    jObject["color_2"]      = _employee2.colorHex;
-    jObject["startDate"]    = ui->dateEditStartpoint->date().toString();
-    jObject["salary"]       = ui->editSalary->text().toInt();
-    jObject["lastPayday"]   = _lastPayday.toString();
+    jObject["FirstEmployee"]    = ui->editEmployee1->text();
+    jObject["SecondEmployee"]   = ui->editEmployee2->text();
+    jObject["PayedDayColor"]    = _employee1.colorHex;
+    jObject["FinishedDayColor"] = _employee2.colorHex;
+    jObject["StartDate"]        = ui->dateEditStartpoint->date().toString();
+    jObject["OpenDate"]         = ui->dateEditStartpoint->date().toString();
+    jObject["lastPayday"]       = _lastPayday.toString();
 
     QJsonDocument jDoc(jObject);
     json.write(jDoc.toJson());
@@ -617,9 +653,9 @@ void MainWindow::readJson()
     _employee2.name     = jObject["Employee_2"].toString();
     _employee1.colorHex = jObject["color_1"].toString();
     _employee2.colorHex = jObject["color_2"].toString();
-    _salary             = jObject["salary"].toInt();
     _lastPayday         = QDate::fromString(jObject["lastPayday"].toString());
-    ui->dateEditStartpoint->setDate(QDate::fromString(jObject["startDate"].toString()));
+    _startDate          = QDate::fromString(jObject["StartDate"].toString());
+    _openWBPoint        = QDate::fromString(jObject["OpenDate"].toString());
 }
 
 void MainWindow::readSchedleList()
@@ -660,9 +696,10 @@ void MainWindow::loadEditedDaysFromDB()
     {
         QDate date = QDate::fromString(_query->value(DB_TABLE_DAYS_DATE).toString());
 
-        _editedDays[date].name      = _query->value(DB_TABLE_DAYS_EMPLOYEE).toString();
-        _editedDays[date].salary    = _query->value(DB_TABLE_DAYS_SALARY).toUInt();
-        _editedDays[date].isPayed   = _query->value(DB_TABLE_DAYS_ISPAYED).toBool();
+        _editedDays[date].name          = _query->value(DB_TABLE_DAYS_EMPLOYEE).toString();
+        _editedDays[date].salary        = _query->value(DB_TABLE_DAYS_SALARY).toUInt();
+        _editedDays[date].isPayed       = _query->value(DB_TABLE_DAYS_ISPAYED).toBool();
+        _editedDays[date].isFinished    = _query->value(DB_TABLE_DAYS_ISPAYED).toBool();
 
         for (int j = 0; j < employees; j++)
         {
