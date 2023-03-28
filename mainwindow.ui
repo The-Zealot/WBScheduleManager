@@ -381,7 +381,7 @@ p, li { white-space: pre-wrap; }
        <item row="4" column="0" colspan="2">
         <widget class="QPushButton" name="buttonRemove">
          <property name="text">
-          <string>Убавить</string>
+          <string>Удалить</string>
          </property>
         </widget>
        </item>
