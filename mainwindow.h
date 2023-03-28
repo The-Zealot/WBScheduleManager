@@ -43,6 +43,11 @@ private slots:
     void setStatusBarMessage();
     void doActionToolbar();
 
+    void addEmployee();
+    void removeEmployee();
+    void updateEmployee();
+    void tableItemSelect(QModelIndex &index);
+
 private:
     void calculateWorks();
     void fillTextBrowse();

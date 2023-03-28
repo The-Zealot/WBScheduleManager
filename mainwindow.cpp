@@ -14,8 +14,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     this->setFixedSize(this->size());
 
-    ui->buttonPay->setEnabled(false);                                                               // to remove button
-
     _db = QSqlDatabase::addDatabase("QSQLITE");
     _db.setDatabaseName("./schedle.db");
     if (!_db.open())
@@ -72,11 +70,14 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->widgetColor2, &QPushButton::clicked, this, &MainWindow::takeColor);
 //    connect(ui->comboBox, &QComboBox::currentIndexChanged, this, &MainWindow::changeShedle);              // to remove
 //    connect(ui->dateEdit, &QDateEdit::dateChanged, [this](){ changeShedle(); });                          // to remove
-    connect(ui->buttonPay, &QPushButton::clicked, this, &MainWindow::payAndClear);
     connect(ui->editSalary, &QLineEdit::textEdited, [this](){
         fillTextBrowse();
     });
     connect(ui->calendarWidget, &QCalendarWidget::clicked, this, &MainWindow::doActionToolbar);
+    connect(ui->buttonAdd, &QPushButton::clicked, this, &MainWindow::addEmployee);
+    connect(ui->buttonRemove, &QPushButton::clicked, this, &MainWindow::removeEmployee);
+    connect(ui->buttonEdit, &QPushButton::clicked, this, &MainWindow::updateEmployee);
+//    connect(ui->tableView, &QTableView::clicked, this, &MainWindow::tableItemSelect);
 
     qDebug() << "Initialization of Toolbar...";
 
@@ -223,7 +224,7 @@ void MainWindow::takeColor()                                                    
 
 void MainWindow::changeSchedle()
 {
-    if (ui->comboBox->currentText() == "")
+    if (ui->comboBoxSchedle->currentText() == "")
     {
         qDebug() << "Can't parse comboBox->currentText()";
         return;
@@ -260,7 +261,7 @@ void MainWindow::changeSchedle()
     nobody.setForeground(Qt::black);
     nobody.setBackground(QColor(FINISHED_DAY_HEX));
 
-    QStringList list = ui->comboBox->currentText().split("/");
+    QStringList list = ui->comboBoxSchedle->currentText().split("/");
 
     int DAYS_FIRST_EMPLOYEE     = list.at(0).toInt();
     int DAYS_SECOND_EMPLOYEE    = list.at(1).toInt();
@@ -269,11 +270,11 @@ void MainWindow::changeSchedle()
 
     reformatCalendar(_openWBPoint, 1, 1, nobody, _openWBPoint.daysTo(QDate::currentDate().addYears(1)));
 
-    QDate date = ui->dateEdit->date();
+    QDate date = ui->dateEditStartpoint->date();
     int yearAhead = date.daysTo(QDate::currentDate().addYears(1));
 
     reformatCalendar(date, DAYS_FIRST_EMPLOYEE, DAYS_ALL_EMPLOYEE, first, yearAhead);
-    date = ui->dateEdit->date().addDays(DAYS_FIRST_EMPLOYEE);
+    date = ui->dateEditStartpoint->date().addDays(DAYS_FIRST_EMPLOYEE);
     reformatCalendar(date, DAYS_SECOND_EMPLOYEE, DAYS_ALL_EMPLOYEE, second, yearAhead);
 
     for (auto iter : _editedDays.keys())
@@ -328,7 +329,7 @@ void MainWindow::updateCalendar()
 
 void MainWindow::resetCalendar()
 {
-    if (ui->comboBox->currentText() == "")
+    if (ui->comboBoxSchedle->currentText() == "")
     {
         qDebug() << "Can't parse comboBox->currentText()";
         return;
@@ -361,8 +362,8 @@ void MainWindow::resetCalendar()
         }
     };
 
-    QDate date = ui->dateEdit->date();
-    QStringList shiftList = ui->comboBox->currentText().split("/");
+    QDate date = ui->dateEditStartpoint->date();
+    QStringList shiftList = ui->comboBoxSchedle->currentText().split("/");
 
     int DAYS_FIRST_EMPLOYEE     = shiftList.at(0).toInt();
     int DAYS_SECOND_EMPLOYEE    = shiftList.at(1).toInt();
@@ -376,7 +377,7 @@ void MainWindow::resetCalendar()
 
     reformatCalendar(_openWBPoint, 1, 1, empty, _openWBPoint.daysTo(QDate::currentDate().addYears(1)));
     reformatCalendar(date, DAYS_FIRST_EMPLOYEE, DAYS_ALL_EMPLOYEE, first, LENGTH_REFORMAT);
-    date = ui->dateEdit->date().addDays(DAYS_FIRST_EMPLOYEE);
+    date = ui->dateEditStartpoint->date().addDays(DAYS_FIRST_EMPLOYEE);
     reformatCalendar(date, DAYS_SECOND_EMPLOYEE, DAYS_ALL_EMPLOYEE, second, LENGTH_REFORMAT);
 
     updateCalendar();
@@ -469,6 +470,49 @@ void MainWindow::doActionToolbar()
     qDebug() << "\tThis shift is payed" << _editedDays[date].isPayed;
 }
 
+void MainWindow::addEmployee()
+{
+    QString query = QString("INSERT INTO Employees VALUES (\'%1\', %2, \'%3\');")
+            .arg(ui->editEmployeeName->text())
+            .arg(ui->editSalary->text().toUInt())
+            .arg(ui->editHex->text());
+    _query->exec(query);
+
+    qDebug() << "Query:" << query;
+
+    _modelEmployee->select();
+}
+
+void MainWindow::removeEmployee()
+{
+    QString query = QString("DELETE FROM Employees WHERE name = \'%1\';")
+            .arg(ui->editEmployeeName->text());
+    _query->exec(query);
+
+    qDebug() << "Query:" << query;
+
+    _modelEmployee->select();
+}
+
+void MainWindow::updateEmployee()
+{
+    QString query = QString("UPDATE Employees SET salary = %1, color = \'%2\' WHERE name = \'%3\';")
+            .arg(ui->editSalary->text().toUInt())
+            .arg(ui->editHex->text())
+            .arg(ui->editEmployeeName->text());
+    _query->exec(query);
+
+    qDebug() << "Query:" << query;
+
+    _modelEmployee->select();
+}
+
+void MainWindow::tableItemSelect(QModelIndex &index)
+{
+    qDebug() << index.column();
+
+}
+
 void MainWindow::calculateWorks()
 {
     int END_OF_DAY          = 21;
@@ -526,7 +570,7 @@ void MainWindow::writeJson()
     jObject["Employee_2"]   = ui->editEmployee2->text();
     jObject["color_1"]      = _employee1.colorHex;
     jObject["color_2"]      = _employee2.colorHex;
-    jObject["startDate"]    = ui->dateEdit->date().toString();
+    jObject["startDate"]    = ui->dateEditStartpoint->date().toString();
     jObject["salary"]       = ui->editSalary->text().toInt();
     jObject["lastPayday"]   = _lastPayday.toString();
 
@@ -552,7 +596,7 @@ void MainWindow::readJson()
     _employee2.colorHex = jObject["color_2"].toString();
     _salary             = jObject["salary"].toInt();
     _lastPayday         = QDate::fromString(jObject["lastPayday"].toString());
-    ui->dateEdit->setDate(QDate::fromString(jObject["startDate"].toString()));
+    ui->dateEditStartpoint->setDate(QDate::fromString(jObject["startDate"].toString()));
 }
 
 void MainWindow::readSchedleList()
@@ -563,7 +607,7 @@ void MainWindow::readSchedleList()
         qDebug() << "File " + file.fileName() + " not found";
         return;
     }
-    ui->comboBox->addItems(QString(file.readAll()).split("\n"));
+    ui->comboBoxSchedle->addItems(QString(file.readAll()).split("\n"));
     file.close();
 }
 
