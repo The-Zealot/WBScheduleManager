@@ -5,6 +5,7 @@ ColorWidget::ColorWidget(QWidget *parent) : QPushButton(parent)
     connect(this, &QPushButton::clicked, this, &ColorWidget::openColorDialog);
 
     this->setAutoFillBackground(true);
+    this->setFocusPolicy(Qt::NoFocus);
 }
 
 QColor ColorWidget::getColor()
