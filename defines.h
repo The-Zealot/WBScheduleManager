@@ -1,6 +1,9 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 
+#define END_OF_SHIFT                21
+
+#define INCOMPLETE_DAY_HEX  "#b5b5b5"
 #define FINISHED_DAY_HEX    "#808080"
 #define PAYED_DAY_HEX       "#00aa00"
 
