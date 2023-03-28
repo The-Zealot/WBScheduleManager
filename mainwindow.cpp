@@ -62,6 +62,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->calendarWidget->setDateRange(_openWBPoint, QDate::currentDate().addYears(1));
 
     ui->editSalary->setValidator(new QRegularExpressionValidator(QRegularExpression("[1-9][0-9]{0,3}")));
+    ui->editHex->setValidator(new QRegularExpressionValidator(QRegularExpression("#[a-f0-9]{6}")));
 
     loadEditedDaysFromDB();
     updateCalendar();
@@ -193,6 +194,7 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui->editSalary->validator();
+    delete ui->editHex->validator();
     delete ui;
 }
 
