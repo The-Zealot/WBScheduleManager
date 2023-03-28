@@ -49,8 +49,11 @@ private slots:
     void updateEmployee();
     void tableItemSelect(const QModelIndex &index);
 
+    void saveSettings();
+
 private:
     void calculateWorks();
+    void calculateFinishedDays();
     void fillTextBrowse();
     void writeJson();
     void readJson();
@@ -71,6 +74,7 @@ private:
     quint32 _daysOfSecondEmployee;
 
     QDate _lastPayday;
+    QDate _startDate;
     QDate _openWBPoint;
 
     QSqlDatabase _db;
