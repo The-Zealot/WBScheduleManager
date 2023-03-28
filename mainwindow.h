@@ -20,6 +20,7 @@
 #include "employeedialog.h"
 #include "alertwidget.h"
 #include "toolbar.h"
+#include "colorwidget.h"
 #include "defines.h"
 
 QT_BEGIN_NAMESPACE
@@ -46,7 +47,7 @@ private slots:
     void addEmployee();
     void removeEmployee();
     void updateEmployee();
-    void tableItemSelect(QModelIndex &index);
+    void tableItemSelect(const QModelIndex &index);
 
 private:
     void calculateWorks();

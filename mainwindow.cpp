@@ -77,7 +77,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->buttonAdd, &QPushButton::clicked, this, &MainWindow::addEmployee);
     connect(ui->buttonRemove, &QPushButton::clicked, this, &MainWindow::removeEmployee);
     connect(ui->buttonEdit, &QPushButton::clicked, this, &MainWindow::updateEmployee);
-//    connect(ui->tableView, &QTableView::clicked, this, &MainWindow::tableItemSelect);
+    connect(ui->tableView, &QTableView::clicked, this, &MainWindow::tableItemSelect);
+    connect(ui->colorWidget, &QPushButton::clicked, [this](){
+        ui->editHex->setText(QVariant(ui->colorWidget->getColor()).toString());
+    });
 
     qDebug() << "Initialization of Toolbar...";
 
@@ -472,13 +475,21 @@ void MainWindow::doActionToolbar()
 
 void MainWindow::addEmployee()
 {
-    QString query = QString("INSERT INTO Employees VALUES (\'%1\', %2, \'%3\');")
-            .arg(ui->editEmployeeName->text())
-            .arg(ui->editSalary->text().toUInt())
-            .arg(ui->editHex->text());
-    _query->exec(query);
+    if (_db.transaction())
+    {
+        QString query = QString("INSERT INTO Employees VALUES (\'%1\', %2, \'%3\');")
+                .arg(ui->editEmployeeName->text())
+                .arg(ui->editSalary->text().toUInt())
+                .arg(ui->editHex->text());
+        _query->exec(query);
 
-    qDebug() << "Query:" << query;
+        qDebug() << "Query:" << query;
+
+        if (!_db.commit())
+        {
+            qDebug() << "Failed while insert record";
+        }
+    }
 
     _modelEmployee->select();
 }
@@ -490,6 +501,11 @@ void MainWindow::removeEmployee()
     _query->exec(query);
 
     qDebug() << "Query:" << query;
+
+    ui->editEmployeeName->clear();
+    ui->editHex->clear();
+    ui->editSalary->clear();
+    ui->colorWidget->clear();
 
     _modelEmployee->select();
 }
@@ -507,10 +523,15 @@ void MainWindow::updateEmployee()
     _modelEmployee->select();
 }
 
-void MainWindow::tableItemSelect(QModelIndex &index)
+void MainWindow::tableItemSelect(const QModelIndex &index)
 {
-    qDebug() << index.column();
+    int id = index.row();
+    QString colorHex = _modelEmployee->data(_modelEmployee->index(id, DB_TABLE_EMPLOYEE_COLOR)).toString();
 
+    ui->editEmployeeName->setText(_modelEmployee->data(_modelEmployee->index(id, DB_TABLE_EMPLOYEE_NAME)).toString());
+    ui->editSalary->setText(_modelEmployee->data(_modelEmployee->index(id, DB_TABLE_EMPLOYEE_SALARY)).toString());
+    ui->editHex->setText(colorHex);
+    ui->colorWidget->setColor(colorHex);
 }
 
 void MainWindow::calculateWorks()
