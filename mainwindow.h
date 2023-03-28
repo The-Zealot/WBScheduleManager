@@ -40,7 +40,7 @@ private slots:
     void changeSchedle();
     void updateCalendar();                      // changeSchedle v2.0
     void resetCalendar();
-    void payAndClear();
+    void payEverything();
     void setStatusBarMessage();
     void doActionToolbar();
 
