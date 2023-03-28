@@ -15,6 +15,7 @@
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QDateEdit>
+#include <QtWidgets/QGridLayout>
 #include <QtWidgets/QGroupBox>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
@@ -30,6 +31,7 @@
 #include <QtWidgets/QToolButton>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
+#include "colorwidget.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -58,22 +60,17 @@ public:
     QTextBrowser *textBrowserLoggs;
     QWidget *tab_2;
     QTableView *tableView;
-    QWidget *layoutWidget1;
-    QVBoxLayout *verticalLayout_4;
-    QVBoxLayout *verticalLayout_2;
-    QLineEdit *editEmployeeName;
-    QHBoxLayout *horizontalLayout;
-    QLineEdit *editHex;
-    QPushButton *widgetColor_2;
-    QHBoxLayout *horizontalLayout_3;
-    QLineEdit *editSalary;
     QLabel *label_2;
-    QVBoxLayout *verticalLayout;
+    QWidget *widget;
+    QGridLayout *gridLayout;
+    QLineEdit *editHex;
+    ColorWidget *colorWidget;
+    QLineEdit *editEmployeeName;
+    QLineEdit *editSalary;
     QPushButton *buttonAdd;
     QPushButton *buttonRemove;
     QPushButton *buttonEdit;
-    QWidget *tab_3;
-    QWidget *layoutWidget2;
+    QWidget *layoutWidget1;
     QVBoxLayout *verticalLayout_7;
     QVBoxLayout *verticalLayout_3;
     QCheckBox *checkBoxFinishedDays;
@@ -259,104 +256,84 @@ public:
         tab_2->setObjectName(QString::fromUtf8("tab_2"));
         tableView = new QTableView(tab_2);
         tableView->setObjectName(QString::fromUtf8("tableView"));
-        tableView->setGeometry(QRect(10, 10, 321, 381));
-        layoutWidget1 = new QWidget(tab_2);
-        layoutWidget1->setObjectName(QString::fromUtf8("layoutWidget1"));
-        layoutWidget1->setGeometry(QRect(340, 10, 151, 193));
-        verticalLayout_4 = new QVBoxLayout(layoutWidget1);
-        verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
-        verticalLayout_4->setContentsMargins(0, 0, 0, 0);
-        verticalLayout_2 = new QVBoxLayout();
-        verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
-        editEmployeeName = new QLineEdit(layoutWidget1);
-        editEmployeeName->setObjectName(QString::fromUtf8("editEmployeeName"));
-
-        verticalLayout_2->addWidget(editEmployeeName);
-
-        horizontalLayout = new QHBoxLayout();
-        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
-        editHex = new QLineEdit(layoutWidget1);
+        tableView->setGeometry(QRect(11, 11, 311, 401));
+        label_2 = new QLabel(tab_2);
+        label_2->setObjectName(QString::fromUtf8("label_2"));
+        label_2->setGeometry(QRect(460, 290, 16, 16));
+        widget = new QWidget(tab_2);
+        widget->setObjectName(QString::fromUtf8("widget"));
+        widget->setGeometry(QRect(331, 11, 159, 185));
+        gridLayout = new QGridLayout(widget);
+        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        gridLayout->setContentsMargins(0, 0, 0, 0);
+        editHex = new QLineEdit(widget);
         editHex->setObjectName(QString::fromUtf8("editHex"));
 
-        horizontalLayout->addWidget(editHex);
+        gridLayout->addWidget(editHex, 1, 0, 1, 1);
 
-        widgetColor_2 = new QPushButton(layoutWidget1);
-        widgetColor_2->setObjectName(QString::fromUtf8("widgetColor_2"));
+        colorWidget = new ColorWidget(widget);
+        colorWidget->setObjectName(QString::fromUtf8("colorWidget"));
         QSizePolicy sizePolicy2(QSizePolicy::Preferred, QSizePolicy::Fixed);
         sizePolicy2.setHorizontalStretch(0);
         sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(widgetColor_2->sizePolicy().hasHeightForWidth());
-        widgetColor_2->setSizePolicy(sizePolicy2);
-        widgetColor_2->setMinimumSize(QSize(42, 0));
+        sizePolicy2.setHeightForWidth(colorWidget->sizePolicy().hasHeightForWidth());
+        colorWidget->setSizePolicy(sizePolicy2);
+        colorWidget->setMinimumSize(QSize(42, 0));
 
-        horizontalLayout->addWidget(widgetColor_2);
+        gridLayout->addWidget(colorWidget, 1, 1, 1, 1);
 
+        editEmployeeName = new QLineEdit(widget);
+        editEmployeeName->setObjectName(QString::fromUtf8("editEmployeeName"));
 
-        verticalLayout_2->addLayout(horizontalLayout);
+        gridLayout->addWidget(editEmployeeName, 0, 0, 1, 2);
 
-        horizontalLayout_3 = new QHBoxLayout();
-        horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
-        editSalary = new QLineEdit(layoutWidget1);
+        editSalary = new QLineEdit(widget);
         editSalary->setObjectName(QString::fromUtf8("editSalary"));
+        QSizePolicy sizePolicy3(QSizePolicy::Expanding, QSizePolicy::Fixed);
+        sizePolicy3.setHorizontalStretch(0);
+        sizePolicy3.setVerticalStretch(0);
+        sizePolicy3.setHeightForWidth(editSalary->sizePolicy().hasHeightForWidth());
+        editSalary->setSizePolicy(sizePolicy3);
 
-        horizontalLayout_3->addWidget(editSalary);
+        gridLayout->addWidget(editSalary, 2, 0, 1, 2);
 
-        label_2 = new QLabel(layoutWidget1);
-        label_2->setObjectName(QString::fromUtf8("label_2"));
-
-        horizontalLayout_3->addWidget(label_2);
-
-
-        verticalLayout_2->addLayout(horizontalLayout_3);
-
-
-        verticalLayout_4->addLayout(verticalLayout_2);
-
-        verticalLayout = new QVBoxLayout();
-        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
-        buttonAdd = new QPushButton(layoutWidget1);
+        buttonAdd = new QPushButton(widget);
         buttonAdd->setObjectName(QString::fromUtf8("buttonAdd"));
 
-        verticalLayout->addWidget(buttonAdd);
+        gridLayout->addWidget(buttonAdd, 3, 0, 1, 2);
 
-        buttonRemove = new QPushButton(layoutWidget1);
+        buttonRemove = new QPushButton(widget);
         buttonRemove->setObjectName(QString::fromUtf8("buttonRemove"));
 
-        verticalLayout->addWidget(buttonRemove);
+        gridLayout->addWidget(buttonRemove, 4, 0, 1, 2);
 
-        buttonEdit = new QPushButton(layoutWidget1);
+        buttonEdit = new QPushButton(widget);
         buttonEdit->setObjectName(QString::fromUtf8("buttonEdit"));
 
-        verticalLayout->addWidget(buttonEdit);
-
-
-        verticalLayout_4->addLayout(verticalLayout);
+        gridLayout->addWidget(buttonEdit, 5, 0, 1, 2);
 
         tabWidget->addTab(tab_2, QString());
-        tab_3 = new QWidget();
-        tab_3->setObjectName(QString::fromUtf8("tab_3"));
-        tabWidget->addTab(tab_3, QString());
-        layoutWidget2 = new QWidget(centralwidget);
-        layoutWidget2->setObjectName(QString::fromUtf8("layoutWidget2"));
-        layoutWidget2->setGeometry(QRect(520, 40, 209, 421));
-        verticalLayout_7 = new QVBoxLayout(layoutWidget2);
+        layoutWidget1 = new QWidget(centralwidget);
+        layoutWidget1->setObjectName(QString::fromUtf8("layoutWidget1"));
+        layoutWidget1->setGeometry(QRect(520, 40, 209, 421));
+        verticalLayout_7 = new QVBoxLayout(layoutWidget1);
         verticalLayout_7->setObjectName(QString::fromUtf8("verticalLayout_7"));
         verticalLayout_7->setContentsMargins(0, 0, 0, 0);
         verticalLayout_3 = new QVBoxLayout();
         verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
-        checkBoxFinishedDays = new QCheckBox(layoutWidget2);
+        checkBoxFinishedDays = new QCheckBox(layoutWidget1);
         checkBoxFinishedDays->setObjectName(QString::fromUtf8("checkBoxFinishedDays"));
         checkBoxFinishedDays->setChecked(true);
 
         verticalLayout_3->addWidget(checkBoxFinishedDays);
 
-        checkBoxPayedDays = new QCheckBox(layoutWidget2);
+        checkBoxPayedDays = new QCheckBox(layoutWidget1);
         checkBoxPayedDays->setObjectName(QString::fromUtf8("checkBoxPayedDays"));
         checkBoxPayedDays->setChecked(true);
 
         verticalLayout_3->addWidget(checkBoxPayedDays);
 
-        checkBoxShifts = new QCheckBox(layoutWidget2);
+        checkBoxShifts = new QCheckBox(layoutWidget1);
         checkBoxShifts->setObjectName(QString::fromUtf8("checkBoxShifts"));
         checkBoxShifts->setChecked(true);
 
@@ -367,24 +344,24 @@ public:
 
         verticalLayout_5 = new QVBoxLayout();
         verticalLayout_5->setObjectName(QString::fromUtf8("verticalLayout_5"));
-        editEmployee1 = new QLineEdit(layoutWidget2);
+        editEmployee1 = new QLineEdit(layoutWidget1);
         editEmployee1->setObjectName(QString::fromUtf8("editEmployee1"));
 
         verticalLayout_5->addWidget(editEmployee1);
 
-        editEmployee2 = new QLineEdit(layoutWidget2);
+        editEmployee2 = new QLineEdit(layoutWidget1);
         editEmployee2->setObjectName(QString::fromUtf8("editEmployee2"));
 
         verticalLayout_5->addWidget(editEmployee2);
 
         horizontalLayout_2 = new QHBoxLayout();
         horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
-        editColorPayedDay = new QLineEdit(layoutWidget2);
+        editColorPayedDay = new QLineEdit(layoutWidget1);
         editColorPayedDay->setObjectName(QString::fromUtf8("editColorPayedDay"));
 
         horizontalLayout_2->addWidget(editColorPayedDay);
 
-        widgetColor = new QPushButton(layoutWidget2);
+        widgetColor = new QPushButton(layoutWidget1);
         widgetColor->setObjectName(QString::fromUtf8("widgetColor"));
         sizePolicy2.setHeightForWidth(widgetColor->sizePolicy().hasHeightForWidth());
         widgetColor->setSizePolicy(sizePolicy2);
@@ -397,12 +374,12 @@ public:
 
         horizontalLayout_7 = new QHBoxLayout();
         horizontalLayout_7->setObjectName(QString::fromUtf8("horizontalLayout_7"));
-        editColorFinishedDay = new QLineEdit(layoutWidget2);
+        editColorFinishedDay = new QLineEdit(layoutWidget1);
         editColorFinishedDay->setObjectName(QString::fromUtf8("editColorFinishedDay"));
 
         horizontalLayout_7->addWidget(editColorFinishedDay);
 
-        widgetColor2 = new QPushButton(layoutWidget2);
+        widgetColor2 = new QPushButton(layoutWidget1);
         widgetColor2->setObjectName(QString::fromUtf8("widgetColor2"));
         sizePolicy2.setHeightForWidth(widgetColor2->sizePolicy().hasHeightForWidth());
         widgetColor2->setSizePolicy(sizePolicy2);
@@ -415,12 +392,12 @@ public:
 
         horizontalLayout_8 = new QHBoxLayout();
         horizontalLayout_8->setObjectName(QString::fromUtf8("horizontalLayout_8"));
-        label = new QLabel(layoutWidget2);
+        label = new QLabel(layoutWidget1);
         label->setObjectName(QString::fromUtf8("label"));
 
         horizontalLayout_8->addWidget(label);
 
-        dateEditOpen = new QDateEdit(layoutWidget2);
+        dateEditOpen = new QDateEdit(layoutWidget1);
         dateEditOpen->setObjectName(QString::fromUtf8("dateEditOpen"));
 
         horizontalLayout_8->addWidget(dateEditOpen);
@@ -430,12 +407,12 @@ public:
 
         horizontalLayout_6 = new QHBoxLayout();
         horizontalLayout_6->setObjectName(QString::fromUtf8("horizontalLayout_6"));
-        label_4 = new QLabel(layoutWidget2);
+        label_4 = new QLabel(layoutWidget1);
         label_4->setObjectName(QString::fromUtf8("label_4"));
 
         horizontalLayout_6->addWidget(label_4);
 
-        dateEditStartpoint = new QDateEdit(layoutWidget2);
+        dateEditStartpoint = new QDateEdit(layoutWidget1);
         dateEditStartpoint->setObjectName(QString::fromUtf8("dateEditStartpoint"));
         dateEditStartpoint->setDateTime(QDateTime(QDate(2023, 2, 20), QTime(0, 0, 0)));
 
@@ -446,18 +423,18 @@ public:
 
         horizontalLayout_4 = new QHBoxLayout();
         horizontalLayout_4->setObjectName(QString::fromUtf8("horizontalLayout_4"));
-        label_3 = new QLabel(layoutWidget2);
+        label_3 = new QLabel(layoutWidget1);
         label_3->setObjectName(QString::fromUtf8("label_3"));
 
         horizontalLayout_4->addWidget(label_3);
 
-        comboBoxSchedle = new QComboBox(layoutWidget2);
+        comboBoxSchedle = new QComboBox(layoutWidget1);
         comboBoxSchedle->setObjectName(QString::fromUtf8("comboBoxSchedle"));
-        QSizePolicy sizePolicy3(QSizePolicy::Minimum, QSizePolicy::Fixed);
-        sizePolicy3.setHorizontalStretch(0);
-        sizePolicy3.setVerticalStretch(0);
-        sizePolicy3.setHeightForWidth(comboBoxSchedle->sizePolicy().hasHeightForWidth());
-        comboBoxSchedle->setSizePolicy(sizePolicy3);
+        QSizePolicy sizePolicy4(QSizePolicy::Minimum, QSizePolicy::Fixed);
+        sizePolicy4.setHorizontalStretch(0);
+        sizePolicy4.setVerticalStretch(0);
+        sizePolicy4.setHeightForWidth(comboBoxSchedle->sizePolicy().hasHeightForWidth());
+        comboBoxSchedle->setSizePolicy(sizePolicy4);
 
         horizontalLayout_4->addWidget(comboBoxSchedle);
 
@@ -470,7 +447,7 @@ public:
 
         horizontalLayout_5->addItem(horizontalSpacer);
 
-        buttonSaveSettings = new QPushButton(layoutWidget2);
+        buttonSaveSettings = new QPushButton(layoutWidget1);
         buttonSaveSettings->setObjectName(QString::fromUtf8("buttonSaveSettings"));
 
         horizontalLayout_5->addWidget(buttonSaveSettings);
@@ -522,8 +499,8 @@ public:
         QWidget::setTabOrder(buttonSaveSettings, tableView);
         QWidget::setTabOrder(tableView, editEmployeeName);
         QWidget::setTabOrder(editEmployeeName, editHex);
-        QWidget::setTabOrder(editHex, widgetColor_2);
-        QWidget::setTabOrder(widgetColor_2, editSalary);
+        QWidget::setTabOrder(editHex, colorWidget);
+        QWidget::setTabOrder(colorWidget, editSalary);
         QWidget::setTabOrder(editSalary, buttonAdd);
         QWidget::setTabOrder(buttonAdd, buttonRemove);
         QWidget::setTabOrder(buttonRemove, buttonEdit);
@@ -559,16 +536,15 @@ public:
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">\320\241\320\276\321\202\321\200\321\203\320\264\320\275\320\270\320\272 %4: "
                         "%5 (%6 \321\200\321\203\320\261.)</p></body></html>", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tab), QCoreApplication::translate("MainWindow", "\320\223\321\200\320\260\321\204\320\270\320\272", nullptr));
-        editEmployeeName->setPlaceholderText(QCoreApplication::translate("MainWindow", "\320\230\320\274\321\217 \321\201\320\276\321\202\321\200\321\203\320\264\320\275\320\270\320\272\320\260", nullptr));
-        editHex->setPlaceholderText(QCoreApplication::translate("MainWindow", "\320\246\320\262\320\265\321\202", nullptr));
-        widgetColor_2->setText(QString());
-        editSalary->setPlaceholderText(QCoreApplication::translate("MainWindow", "\320\241\321\202\320\260\320\262\320\272\320\260", nullptr));
         label_2->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:600;\">\342\202\275</span></p></body></html>", nullptr));
+        editHex->setPlaceholderText(QCoreApplication::translate("MainWindow", "\320\246\320\262\320\265\321\202", nullptr));
+        colorWidget->setText(QString());
+        editEmployeeName->setPlaceholderText(QCoreApplication::translate("MainWindow", "\320\230\320\274\321\217 \321\201\320\276\321\202\321\200\321\203\320\264\320\275\320\270\320\272\320\260", nullptr));
+        editSalary->setPlaceholderText(QCoreApplication::translate("MainWindow", "\320\241\321\202\320\260\320\262\320\272\320\260", nullptr));
         buttonAdd->setText(QCoreApplication::translate("MainWindow", "\320\224\320\276\320\261\320\260\320\262\320\270\321\202\321\214", nullptr));
         buttonRemove->setText(QCoreApplication::translate("MainWindow", "\320\243\320\261\320\260\320\262\320\270\321\202\321\214", nullptr));
         buttonEdit->setText(QCoreApplication::translate("MainWindow", "\320\230\320\267\320\274\320\265\320\275\320\270\321\202\321\214", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QCoreApplication::translate("MainWindow", "\320\241\320\276\321\202\321\200\321\203\320\264\320\275\320\270\320\272\320\270", nullptr));
-        tabWidget->setTabText(tabWidget->indexOf(tab_3), QCoreApplication::translate("MainWindow", "\320\235\320\260\321\201\321\202\321\200\320\276\320\271\320\272\320\270", nullptr));
         checkBoxFinishedDays->setText(QCoreApplication::translate("MainWindow", "\320\236\321\202\321\200\320\260\320\261\320\276\321\202\320\260\320\275\320\275\321\213\320\265 \320\264\320\275\320\270", nullptr));
         checkBoxPayedDays->setText(QCoreApplication::translate("MainWindow", "\320\236\320\277\320\273\320\260\321\207\320\265\320\275\320\275\321\213\320\265 \320\264\320\275\320\270", nullptr));
         checkBoxShifts->setText(QCoreApplication::translate("MainWindow", "\320\241\320\274\320\265\320\275\321\213", nullptr));
