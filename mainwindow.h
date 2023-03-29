@@ -19,6 +19,7 @@
 
 #include "employee.h"
 #include "employeedialog.h"
+#include "salarydialog.h"
 #include "alertwidget.h"
 #include "toolbar.h"
 #include "colorwidget.h"
@@ -71,7 +72,7 @@ private:
     QMap<QDate, EmployeeShift> _editedDays;
     QMap<QString, Employee> _employees;
 
-    quint64 _salary;
+    quint32 _salary;
     quint32 _daysOfFirstEmployee;
     quint32 _daysOfSecondEmployee;
 

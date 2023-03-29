@@ -42,8 +42,10 @@ MainWindow::MainWindow(QWidget *parent)
     readJson();
     readSchedleList();
 
-    _daysOfFirstEmployee            = 0;
-    _daysOfSecondEmployee           = 0;
+    _salary                 = 1300;
+    _daysOfFirstEmployee    = 0;
+    _daysOfSecondEmployee   = 0;
+
     ui->dateEditOpen->setDate(_openWBPoint);
     ui->dateEditStartpoint->setDate(_startDate);
     _toolBar.setTool(ToolBar::Arrow);
@@ -112,8 +114,16 @@ MainWindow::MainWindow(QWidget *parent)
         }
     });
     connect(ui->toolButtonSalary, &QAbstractButton::clicked, [this](){
+        SalaryDialog dialog(this, &_salary);
+        if (dialog.exec() == SalaryDialog::Accepted)
+        {
         _toolBar.setTool(ToolBar::SalaryTool);
         setStatusBarMessage();
+        }
+        else
+        {
+            qDebug() << "Failed";
+        }
     });
     connect(ui->toolButtonPaymentTarget, &QAbstractButton::clicked, [this](){
         _toolBar.setTool(ToolBar::PaymentTool);
@@ -430,7 +440,7 @@ void MainWindow::setStatusBarMessage()
         ui->statusBar->showMessage("Выбран инструмент \"Сотрудник\" / " + _employee.name);
         break;
     case ToolBar::SalaryTool:
-        ui->statusBar->showMessage("Выбран инструмент \"Ставка\"");
+        ui->statusBar->showMessage("Выбран инструмент \"Ставка\" / " + QVariant(_salary).toString() + " руб.");
         break;
     case ToolBar::PaymentTool:
         ui->statusBar->showMessage("Выбран инструмент \"Оплата\"");
@@ -457,7 +467,7 @@ void MainWindow::doActionToolbar()
         _editedDays[date].salary    = _employee.salary;
         break;
     case ToolBar::SalaryTool:
-        _editedDays[date].salary = ui->editSalary->text().toUInt();
+        _editedDays[date].salary = _salary;
         break;
     case ToolBar::PaymentTool:
         _editedDays[date].isPayed = true;
@@ -543,8 +553,8 @@ void MainWindow::updateEmployee()
 
 void MainWindow::tableItemSelect(const QModelIndex &index)
 {
-    int id = index.row();
-    QString colorHex = _modelEmployee->data(_modelEmployee->index(id, DB_TABLE_EMPLOYEE_COLOR)).toString();
+    int id              = index.row();
+    QString colorHex    = _modelEmployee->data(_modelEmployee->index(id, DB_TABLE_EMPLOYEE_COLOR)).toString();
 
     ui->editEmployeeName->setText(_modelEmployee->data(_modelEmployee->index(id, DB_TABLE_EMPLOYEE_NAME)).toString());
     ui->editSalary->setText(_modelEmployee->data(_modelEmployee->index(id, DB_TABLE_EMPLOYEE_SALARY)).toString());
@@ -722,4 +732,6 @@ void MainWindow::loadEditedDaysFromDB()
 
     qDebug() << "Rows loaded from DAYS:" << days;
     qDebug() << "Rows loaded from EMPLOYEES:" << employees;
+
+    calculateFinishedDays();
 }
