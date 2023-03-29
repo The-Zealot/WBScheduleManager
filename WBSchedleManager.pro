@@ -2,6 +2,12 @@ QT       += core gui sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+VERSION = 2.1.1.230329
+QMAKE_TARGET_COMPANY = The_Zealot
+QMAKE_TARGET_PRODUCT = WBSchedleManager
+QMAKE_TARGET_DESCRIPTION = Managment the shifts of all employees involved in the WBPoint
+QMAKE_TARGET_COPYRIGHT = Yaroslav Solovev
+
 CONFIG += c++11
 
 # You can make your code fail to compile if it uses deprecated APIs.
@@ -10,22 +16,27 @@ CONFIG += c++11
 
 SOURCES += \
     alertwidget.cpp \
+    colorwidget.cpp \
     employeedialog.cpp \
     main.cpp \
     mainwindow.cpp \
+    salarydialog.cpp \
     toolbar.cpp
 
 HEADERS += \
     alertwidget.h \
+    colorwidget.h \
     defines.h \
     employee.h \
     employeedialog.h \
     mainwindow.h \
+    salarydialog.h \
     toolbar.h
 
 FORMS += \
     employeedialog.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    salarydialog.ui
 
 RC_ICONS = app.ico
 
