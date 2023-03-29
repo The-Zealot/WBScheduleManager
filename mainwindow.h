@@ -16,6 +16,7 @@
 #include <QSqlRecord>
 #include <QSqlField>
 #include <QDesktopServices>
+#include <QLineEdit>
 
 #include "employee.h"
 #include "employeedialog.h"
@@ -24,6 +25,9 @@
 #include "toolbar.h"
 #include "colorwidget.h"
 #include "defines.h"
+
+#undef FINISHED_DAY_HEX
+#undef PAYED_DAY_HEX
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -38,7 +42,7 @@ public:
     ~MainWindow();
     
 private slots:
-    void takeColor();
+    void takeColor(QLineEdit* edit);
     void changeSchedle();
     void updateCalendar();                      // changeSchedle v2.0
     void resetCalendar();
@@ -63,6 +67,9 @@ private:
     void readSchedleList();
     void loadCalendarStyle();
     void loadEditedDaysFromDB();
+
+    QString FINISHED_DAY_HEX;
+    QString PAYED_DAY_HEX;
 
     Ui::MainWindow *ui;
     EmployeeShift _employee1;

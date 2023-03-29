@@ -8,7 +8,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     QLabel* betaLabel = new QLabel(this);
-    betaLabel->setText("<h3 style=\"color:tomato;\">build 230328</h3>");
+    betaLabel->setText("<h3 style=\"color:tomato;\">build 230329</h3>");
     betaLabel->move(575, 350);
     betaLabel->show();
 
@@ -55,10 +55,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->colorWidgetPayedDay->setColor(PAYED_DAY_HEX);
     ui->colorWidgetFinishedDay->setColor(FINISHED_DAY_HEX);
+    ui->editColorFinishedDay->setText(FINISHED_DAY_HEX);
+    ui->editColorPayedDay->setText(PAYED_DAY_HEX);
     ui->editEmployee1->setText(_employee1.name);
     ui->editEmployee2->setText(_employee2.name);
-
-//    ui->editSalary->setText(QVariant(_salary).toString());
 
     ui->calendarWidget->setDateRange(_openWBPoint, QDate::currentDate().addYears(1));
 
@@ -68,12 +68,16 @@ MainWindow::MainWindow(QWidget *parent)
     ui->editColorFinishedDay->setValidator(new QRegularExpressionValidator(QRegularExpression("#[a-f0-9]{6}")));
 
     loadEditedDaysFromDB();
-    calculateFinishedDays();
     updateCalendar();
 
-//    connect(ui->colorWidgetPayedDay, &QPushButton::clicked, this, &MainWindow::takeColor);
-//    connect(ui->colorWidgetFinishedDay, &QPushButton::clicked, this, &MainWindow::takeColor);
-//    connect(ui->editSalary, &QLineEdit::textEdited, [this](){ fillTextBrowse(); });
+    connect(ui->colorWidgetPayedDay, &QPushButton::clicked, [this](){
+        PAYED_DAY_HEX = QVariant(ui->colorWidgetPayedDay->getColor()).toString();
+        ui->editColorPayedDay->setText(PAYED_DAY_HEX);                                                          // DRY
+    });
+    connect(ui->colorWidgetFinishedDay, &QPushButton::clicked, [this](){
+        FINISHED_DAY_HEX = QVariant(ui->colorWidgetFinishedDay->getColor()).toString();
+        ui->editColorFinishedDay->setText(FINISHED_DAY_HEX);                                                    // DRY
+    });
     connect(ui->dateEditOpen, &QDateEdit::dateChanged, [this](){
         _openWBPoint = ui->dateEditOpen->date();
     });
@@ -86,7 +90,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->buttonEdit, &QPushButton::clicked, this, &MainWindow::updateEmployee);
     connect(ui->tableView, &QTableView::clicked, this, &MainWindow::tableItemSelect);
     connect(ui->colorWidget, &QPushButton::clicked, [this](){
-        ui->editHex->setText(QVariant(ui->colorWidget->getColor()).toString());
+        ui->editHex->setText(QVariant(ui->colorWidget->getColor()).toString());                                 // DRY
     });
     connect(ui->checkBoxShifts, &QCheckBox::clicked, this, &MainWindow::updateCalendar);
     connect(ui->checkBoxPayedDays, &QCheckBox::clicked, this, &MainWindow::updateCalendar);
@@ -143,8 +147,6 @@ MainWindow::MainWindow(QWidget *parent)
         AlertWidget::showAlert("График перерасчитан!");
     });
     connect(ui->toolButtonSave, &QAbstractButton::clicked, [this](){
-//        writeJson();
-
         _query->exec("DELETE FROM days");
 
         _query->prepare("INSERT INTO days (date, salary, employee, isPayed, isFinished) VALUES (?, ?, ?, ?, ?)");
@@ -217,33 +219,15 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::takeColor()                                                            // to rework
+void MainWindow::takeColor(QLineEdit* edit)                                                            // to rework ???
 {
-    /*QWidget* obj = qobject_cast<QWidget*>(sender());
+    ColorWidget* obj = qobject_cast<ColorWidget*>(sender());
 
-    auto openColorDialog = [obj](EmployeeShift& e){
+    qDebug() << edit->objectName();
 
-    };
+    edit->setText(QVariant(obj->getColor()).toString());
 
-    QVariant color;
-    if (obj->objectName() == "widgetColor")
-    {
-        color = QColorDialog::getColor(QColor(_employee1.colorHex), this, "Выбор цвета");
-        if (!color.isValid())
-            return;
-        _employee1.colorHex = color.toString();
-    }
-    else
-    {
-        color = QColorDialog::getColor(QColor(_employee2.colorHex), this, "Выбор цвета");               // DRY
-        if (!color.isValid())
-            return;
-        _employee2.colorHex = color.toString();
-    }
-    obj->setStyleSheet("border: 1px solid; background: " + color.toString());
-
-    //resetCalendar();
-    updateCalendar();*/
+    updateCalendar();
 }
 
 void MainWindow::changeSchedle()
@@ -646,8 +630,8 @@ void MainWindow::writeJson()
 
     jObject["FirstEmployee"]    = ui->editEmployee1->text();
     jObject["SecondEmployee"]   = ui->editEmployee2->text();
-    jObject["PayedDayColor"]    = _employee1.colorHex;
-    jObject["FinishedDayColor"] = _employee2.colorHex;
+    jObject["PayedDayColor"]    = PAYED_DAY_HEX;
+    jObject["FinishedDayColor"] = FINISHED_DAY_HEX;
     jObject["StartDate"]        = _startDate.toString();
     jObject["OpenDate"]         = _openWBPoint.toString();
     jObject["lastPayday"]       = _lastPayday.toString();
@@ -670,8 +654,8 @@ void MainWindow::readJson()
 
     _employee1.name     = jObject["FirstEmployee"].toString();
     _employee2.name     = jObject["SecondEmployee"].toString();
-    _employee1.colorHex = jObject["PayedDayColor"].toString();
-    _employee2.colorHex = jObject["FinishedDayColor"].toString();
+    PAYED_DAY_HEX       = jObject["PayedDayColor"].toString();
+    FINISHED_DAY_HEX    = jObject["FinishedDayColor"].toString();
     _lastPayday         = QDate::fromString(jObject["lastPayday"].toString());
     _startDate          = QDate::fromString(jObject["StartDate"].toString());
     _openWBPoint        = QDate::fromString(jObject["OpenDate"].toString());
