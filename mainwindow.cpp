@@ -46,6 +46,7 @@ MainWindow::MainWindow(QWidget *parent)
     _daysOfFirstEmployee    = 0;
     _daysOfSecondEmployee   = 0;
 
+    ui->comboBoxSchedle->setCurrentText(_comboboxText);
     ui->dateEditOpen->setDate(_openWBPoint);
     ui->dateEditStartpoint->setDate(_startDate);
     _toolBar.setTool(ToolBar::Arrow);
@@ -83,6 +84,9 @@ MainWindow::MainWindow(QWidget *parent)
     });
     connect(ui->dateEditStartpoint, &QDateEdit::dateChanged, [this](){
         _startDate = ui->dateEditStartpoint->date();
+    });
+    connect(ui->comboBoxSchedle, &QComboBox::currentTextChanged, [this](){
+        _comboboxText = ui->comboBoxSchedle->currentText();
     });
     connect(ui->calendarWidget, &QCalendarWidget::clicked, this, &MainWindow::doActionToolbar);
     connect(ui->buttonAdd, &QPushButton::clicked, this, &MainWindow::addEmployee);
@@ -635,6 +639,7 @@ void MainWindow::writeJson()
     jObject["StartDate"]        = _startDate.toString();
     jObject["OpenDate"]         = _openWBPoint.toString();
     jObject["lastPayday"]       = _lastPayday.toString();
+    jObject["currentSchedle"]   = _comboboxText;
 
     QJsonDocument jDoc(jObject);
     json.write(jDoc.toJson());
@@ -659,6 +664,7 @@ void MainWindow::readJson()
     _lastPayday         = QDate::fromString(jObject["lastPayday"].toString());
     _startDate          = QDate::fromString(jObject["StartDate"].toString());
     _openWBPoint        = QDate::fromString(jObject["OpenDate"].toString());
+    _comboboxText       = jObject["currentSchedle"].toString();
 }
 
 void MainWindow::readSchedleList()

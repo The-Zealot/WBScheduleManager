@@ -78,6 +78,7 @@ private:
     ToolBar _toolBar;
     QMap<QDate, EmployeeShift> _editedDays;
     QMap<QString, Employee> _employees;
+    QString _comboboxText;
 
     quint32 _salary;
     quint32 _daysOfFirstEmployee;
