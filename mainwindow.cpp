@@ -564,7 +564,7 @@ void MainWindow::openDocInfo()
 
 void MainWindow::calculateWorks()
 {
-    int days                = _lastPayday.daysTo(QDate::currentDate());
+    int days = _lastPayday.daysTo(QDate::currentDate());
     _employees.clear();
 
     if (QTime::currentTime().hour() >= END_OF_SHIFT)
@@ -586,7 +586,7 @@ void MainWindow::calculateFinishedDays()
 {
     qDebug() << "Calculating days...";
 
-    int days        = _openWBPoint.daysTo(QDate::currentDate());
+    int days = _openWBPoint.daysTo(QDate::currentDate());
 
     if (QTime::currentTime().hour() >= END_OF_SHIFT)
         days++;
@@ -687,6 +687,8 @@ void MainWindow::loadCalendarStyle()
 
 void MainWindow::loadEditedDaysFromDB()
 {
+    resetCalendar();
+
     qDebug() << "Loading data from database...";
 
     _modelEmployee->select();
