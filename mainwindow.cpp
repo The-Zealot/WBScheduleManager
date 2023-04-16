@@ -7,11 +7,6 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    QLabel* betaLabel = new QLabel(this);
-    betaLabel->setText("<h3 style=\"color:tomato;\">build 230403</h3>");
-    betaLabel->move(575, 350);
-    betaLabel->show();
-
     this->setFixedSize(this->size());
 
     _db = QSqlDatabase::addDatabase("QSQLITE");
