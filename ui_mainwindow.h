@@ -22,7 +22,6 @@
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
-#include <QtWidgets/QListView>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpacerItem>
@@ -105,10 +104,10 @@ public:
     QFrame *line;
     QWidget *widget;
     QGridLayout *gridLayout_2;
-    QListView *listViewPoints;
     QLineEdit *editPointName;
     QPushButton *buttonAddPoint;
     QPushButton *buttonDeletePoint;
+    QTableView *tableViewPoints;
     QWidget *widget1;
     QGridLayout *gridLayout_3;
     QLineEdit *lineEdit_2;
@@ -487,7 +486,7 @@ public:
         tab_3->setObjectName(QString::fromUtf8("tab_3"));
         line = new QFrame(tab_3);
         line->setObjectName(QString::fromUtf8("line"));
-        line->setGeometry(QRect(350, -20, 21, 461));
+        line->setGeometry(QRect(340, -20, 31, 461));
         line->setFrameShadow(QFrame::Sunken);
         line->setLineWidth(1);
         line->setMidLineWidth(0);
@@ -498,11 +497,6 @@ public:
         gridLayout_2 = new QGridLayout(widget);
         gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
         gridLayout_2->setContentsMargins(0, 0, 0, 0);
-        listViewPoints = new QListView(widget);
-        listViewPoints->setObjectName(QString::fromUtf8("listViewPoints"));
-
-        gridLayout_2->addWidget(listViewPoints, 0, 0, 1, 2);
-
         editPointName = new QLineEdit(widget);
         editPointName->setObjectName(QString::fromUtf8("editPointName"));
         editPointName->setReadOnly(true);
@@ -520,9 +514,14 @@ public:
 
         gridLayout_2->addWidget(buttonDeletePoint, 2, 1, 1, 1);
 
+        tableViewPoints = new QTableView(widget);
+        tableViewPoints->setObjectName(QString::fromUtf8("tableViewPoints"));
+
+        gridLayout_2->addWidget(tableViewPoints, 0, 0, 1, 2);
+
         widget1 = new QWidget(tab_3);
         widget1->setObjectName(QString::fromUtf8("widget1"));
-        widget1->setGeometry(QRect(380, 10, 331, 401));
+        widget1->setGeometry(QRect(370, 10, 331, 401));
         gridLayout_3 = new QGridLayout(widget1);
         gridLayout_3->setObjectName(QString::fromUtf8("gridLayout_3"));
         gridLayout_3->setContentsMargins(0, 0, 0, 0);
@@ -594,8 +593,8 @@ public:
         QWidget::setTabOrder(editSalary, buttonAdd);
         QWidget::setTabOrder(buttonAdd, buttonRemove);
         QWidget::setTabOrder(buttonRemove, buttonEdit);
-        QWidget::setTabOrder(buttonEdit, listViewPoints);
-        QWidget::setTabOrder(listViewPoints, editPointName);
+        QWidget::setTabOrder(buttonEdit, tableViewPoints);
+        QWidget::setTabOrder(tableViewPoints, editPointName);
         QWidget::setTabOrder(editPointName, buttonAddPoint);
         QWidget::setTabOrder(buttonAddPoint, buttonDeletePoint);
         QWidget::setTabOrder(buttonDeletePoint, textBrowserStats);

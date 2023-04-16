@@ -642,9 +642,9 @@ p, li { white-space: pre-wrap; }
      <widget class="Line" name="line">
       <property name="geometry">
        <rect>
-        <x>350</x>
+        <x>340</x>
         <y>-20</y>
-        <width>21</width>
+        <width>31</width>
         <height>461</height>
        </rect>
       </property>
@@ -671,9 +671,6 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout_2">
-       <item row="0" column="0" colspan="2">
-        <widget class="QListView" name="listViewPoints"/>
-       </item>
        <item row="1" column="0" colspan="2">
         <widget class="QLineEdit" name="editPointName">
          <property name="readOnly">
@@ -701,12 +698,15 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
+       <item row="0" column="0" colspan="2">
+        <widget class="QTableView" name="tableViewPoints"/>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="">
       <property name="geometry">
        <rect>
-        <x>380</x>
+        <x>370</x>
         <y>10</y>
         <width>331</width>
         <height>401</height>
@@ -812,7 +812,7 @@ p, li { white-space: pre-wrap; }
   <tabstop>buttonAdd</tabstop>
   <tabstop>buttonRemove</tabstop>
   <tabstop>buttonEdit</tabstop>
-  <tabstop>listViewPoints</tabstop>
+  <tabstop>tableViewPoints</tabstop>
   <tabstop>editPointName</tabstop>
   <tabstop>buttonAddPoint</tabstop>
   <tabstop>buttonDeletePoint</tabstop>
