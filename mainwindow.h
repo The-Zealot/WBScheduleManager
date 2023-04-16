@@ -91,6 +91,7 @@ private:
     QSqlDatabase _db;
     QSqlTableModel* _modelEmployee;
     QSqlTableModel* _modelSchedle;
+    QSqlTableModel* _modelPoint;
     QSqlQuery* _query;
 };
 #endif // MAINWINDOW_H

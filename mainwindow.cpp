@@ -27,10 +27,23 @@ MainWindow::MainWindow(QWidget *parent)
     _modelSchedle = new QSqlTableModel(this, _db);
     _modelSchedle->setTable("days");
     _modelSchedle->select();
+    _modelPoint = new QSqlTableModel(this, _db);
+    _modelPoint->setTable("points");
+    _modelPoint->select();
     _query = new QSqlQuery(_db);
 
     ui->tableView->setModel(_modelEmployee);
+    ui->tableView->hideColumn(DB_TABLE_EMPLOYEE_ID);
+    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->tableViewPoints->setModel(_modelPoint);
+    ui->tableViewPoints->hideColumn(DB_TABLE_POINTS_ID);
+    ui->tableViewPoints->hideColumn(DB_TABLE_POINTS_TABLE);
+    ui->tableViewPoints->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+    int pointCount = _modelPoint->rowCount();
+    for (int i = 0; i < pointCount; i++)
+        ui->comboBoxPoint->addItem(_modelPoint->data(_modelPoint->index(i, DB_TABLE_POINTS_NAME)).toString());
 
     qDebug() << "Reading file data...";
 
