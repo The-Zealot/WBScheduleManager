@@ -2,6 +2,11 @@ QT       += core gui sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+MAJOR = 2;
+MINOR = 1;
+RELEASE = 3;
+BUILD = 230403;
+
 VERSION = 2.1.3.230403
 QMAKE_TARGET_COMPANY = The_Zealot
 QMAKE_TARGET_PRODUCT = WBSchedleManager
