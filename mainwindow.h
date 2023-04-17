@@ -56,6 +56,9 @@ private slots:
     void updateEmployee();
     void tableItemSelect(const QModelIndex &index);
 
+    void addPoint();
+    void removePoint();
+
     void saveSettings();
     void openDocInfo();
 
@@ -81,6 +84,7 @@ private:
     QMap<QString, Employee> _employees;
     QString _comboboxText;
 
+    quint32 _pointID;
     quint32 _employeeID;
     quint32 _salary;
     quint32 _daysOfFirstEmployee;

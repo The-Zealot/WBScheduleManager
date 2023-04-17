@@ -108,28 +108,18 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->checkBoxPayedDays, &QCheckBox::clicked, this, &MainWindow::updateCalendar);
     connect(ui->checkBoxFinishedDays, &QCheckBox::clicked, this, &MainWindow::updateCalendar);
     connect(ui->buttonSaveSettings, &QPushButton::clicked, this, &MainWindow::saveSettings);
-    connect(ui->tableViewPoints, &QTableView::doubleClicked, [this](){
-
-    });
-    connect(ui->buttonDeletePoint, &QPushButton::clicked, [this](){
-        DeleteDialog dialog(this);
-
+    connect(ui->tableViewPoints, &QTableView::clicked, [this](){
         int row = ui->tableViewPoints->currentIndex().row();
         QString pointName = _modelPoint->data(_modelPoint->index(row, DB_TABLE_POINTS_NAME)).toString();
+        _pointID = _modelPoint->data(_modelPoint->index(row, DB_TABLE_POINTS_ID)).toUInt();
 
-        dialog.setText("Внимание! Вы собираетесь удалить элемент из списка пунктов выдачи. Данное действие необратимо.\n"
-                        "Вы действительно хотите продолжить?");
-        dialog.setConfirmedString(pointName);
-        if (dialog.getConfirmedString().isEmpty())
-        {
-            qDebug() << "Item has not been selected";
-            return;
-        }
-        if (dialog.exec() == DeleteDialog::Accepted)
-        {
-            qDebug() << pointName << "was delete";
-        }
+        ui->editPointName->setText(pointName);
     });
+    connect(ui->tableViewPoints, &QTableView::doubleClicked, [this](){
+        qDebug() << "Selected ID:" << _pointID;
+    });
+//    connect(ui->buttonDeletePoint, &QPushButton::clicked, this, &MainWindow::removePoint);
+//    connect(ui->buttonAddPoint, &QPushButton::clicked, this, &MainWindow::addPoint);
 
     qDebug() << "Initialization of Toolbar...";
 
@@ -586,6 +576,82 @@ void MainWindow::tableItemSelect(const QModelIndex &index)
     ui->editSalary->setText(_modelEmployee->data(_modelEmployee->index(id, DB_TABLE_EMPLOYEE_SALARY)).toString());
     ui->editHex->setText(colorHex);
     ui->colorWidget->setColor(colorHex);
+}
+
+void MainWindow::addPoint()
+{
+    QString query = QString("INSERT INTO points (name) VALUES (\'%1\');")
+            .arg(ui->editPointName->text());
+
+    qDebug() << "Insert record into points...";
+    if (!_query->exec(query))
+    {
+        qDebug() << "Failed.";
+        return;
+    }
+
+    _modelPoint->select();
+
+    int pointCount  = _modelPoint->rowCount();
+    int lastPointID = _modelPoint->data(_modelPoint->index(pointCount - 1, DB_TABLE_POINTS_ID)).toInt();
+    QString newTableName = "point" + QVariant(lastPointID).toString();
+
+    query = QString("UPDATE points SET point_table_name = \'%1\' WHERE id = %2;")
+            .arg(newTableName)
+            .arg(lastPointID);
+    qDebug() << "Set point_table_name in last record..." << _query->exec(query);
+
+    query = QString("CREATE TABLE %1 (date TEXT NOT NULL UNIQUE, employee TEXT, isFinished BOOL, isPayed BOOL, salary INTEGER NOT NULL);")
+            .arg(newTableName);
+    qDebug() << "Tabel creating..." << _query->exec(query);
+
+    _modelPoint->select();
+}
+
+void MainWindow::removePoint()
+{
+    DeleteDialog dialog(this);
+
+    int row             = ui->tableViewPoints->currentIndex().row();
+    QString pointName   = _modelPoint->data(_modelPoint->index(row, DB_TABLE_POINTS_NAME)).toString();
+    QString tableName   = _modelPoint->data(_modelPoint->index(row, DB_TABLE_POINTS_TABLE)).toString();
+
+    dialog.setText("Внимание! Вы собираетесь удалить элемент из списка пунктов выдачи. Данное действие необратимо.\n"
+                    "Вы действительно хотите продолжить?");
+    dialog.setConfirmedString(pointName);
+    if (dialog.getConfirmedString().isEmpty())
+    {
+        qDebug() << "Item has not been selected";
+        return;
+    }
+    if (dialog.exec() == DeleteDialog::Accepted)
+    {
+        QString query;
+        query = QString("DELETE FROM points WHERE id = \'%1\';")
+                .arg(_pointID);
+        if (_query->exec(query))
+        {
+            qDebug() << pointName << "has been deleted";
+        }
+
+        query = QString("SELECT drop_table(%1)")
+                .arg(tableName);
+        _query->prepare("PRAGMA foreign_keys = 0;");
+        _query->prepare(query);
+        _query->prepare("PRAGMA foreign_keys = 1;");
+        if (_query->exec())
+        {
+            qDebug() << "Table" << tableName << "has beed dropped";
+            qDebug() << _db.tables();
+        }
+        else
+        {
+            qDebug() << tableName << _query->lastError();
+        }
+
+        ui->editPointName->clear();
+        _modelPoint->select();
+    }
 }
 
 void MainWindow::saveSettings()
