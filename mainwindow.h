@@ -71,6 +71,7 @@ private:
     void readSchedleList();
     void loadCalendarStyle();
     void loadEditedDaysFromDB();
+    void loadPointData(int pointID);
 
     QString FINISHED_DAY_HEX;
     QString PAYED_DAY_HEX;
@@ -82,9 +83,10 @@ private:
     ToolBar _toolBar;
     QMap<QDate, EmployeeShift> _editedDays;
     QMap<QString, Employee> _employees;
-    QString _comboboxText;
+    QString _scheduleText;
 
     quint32 _pointID;
+    quint32 _editedPointID;
     quint32 _employeeID;
     quint32 _salary;
     quint32 _daysOfFirstEmployee;
