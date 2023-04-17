@@ -22,6 +22,7 @@ CONFIG += c++11
 SOURCES += \
     alertwidget.cpp \
     colorwidget.cpp \
+    deletedialog.cpp \
     employeedialog.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -32,6 +33,7 @@ HEADERS += \
     alertwidget.h \
     colorwidget.h \
     defines.h \
+    deletedialog.h \
     employee.h \
     employeedialog.h \
     mainwindow.h \
@@ -39,6 +41,7 @@ HEADERS += \
     toolbar.h
 
 FORMS += \
+    deletedialog.ui \
     employeedialog.ui \
     mainwindow.ui \
     salarydialog.ui

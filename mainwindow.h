@@ -25,6 +25,7 @@
 #include "toolbar.h"
 #include "colorwidget.h"
 #include "defines.h"
+#include "deletedialog.h"
 
 #undef FINISHED_DAY_HEX
 #undef PAYED_DAY_HEX

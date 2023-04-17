@@ -108,6 +108,28 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->checkBoxPayedDays, &QCheckBox::clicked, this, &MainWindow::updateCalendar);
     connect(ui->checkBoxFinishedDays, &QCheckBox::clicked, this, &MainWindow::updateCalendar);
     connect(ui->buttonSaveSettings, &QPushButton::clicked, this, &MainWindow::saveSettings);
+    connect(ui->tableViewPoints, &QTableView::clicked, [this](const QModelIndex &index){
+        ui->editPointName->setText("");
+    });
+    connect(ui->buttonDeletePoint, &QPushButton::clicked, [this](){
+        DeleteDialog dialog(this);
+
+        int row = ui->tableViewPoints->currentIndex().row();
+        QString pointName = _modelPoint->data(_modelPoint->index(row, DB_TABLE_POINTS_NAME)).toString();
+
+        dialog.setText("Внимание! Вы собираетесь удалить элемент из списка пунктов выдачи. Данное действие необратимо.\n"
+                        "Вы действительно хотите продолжить?");
+        dialog.setConfirmedString(pointName);
+        if (dialog.getConfirmedString().isEmpty())
+        {
+            qDebug() << "Item has not been selected";
+            return;
+        }
+        if (dialog.exec() == DeleteDialog::Accepted)
+        {
+            qDebug() << pointName << "was delete";
+        }
+    });
 
     qDebug() << "Initialization of Toolbar...";
 
@@ -371,9 +393,9 @@ void MainWindow::resetCalendar()
                 {
                     if (name == _modelEmployee->data(_modelEmployee->index(k, DB_TABLE_EMPLOYEE_NAME)).toString())
                     {
-                        _editedDays[selectedDate].name = name;
-                        _editedDays[selectedDate].salary = _modelEmployee->data(_modelEmployee->index(k, DB_TABLE_EMPLOYEE_SALARY)).toUInt();
-                        _editedDays[selectedDate].colorHex = _modelEmployee->data(_modelEmployee->index(k, DB_TABLE_EMPLOYEE_COLOR)).toString();
+                        _editedDays[selectedDate].name      = name;
+                        _editedDays[selectedDate].salary    = _modelEmployee->data(_modelEmployee->index(k, DB_TABLE_EMPLOYEE_SALARY)).toUInt();
+                        _editedDays[selectedDate].colorHex  = _modelEmployee->data(_modelEmployee->index(k, DB_TABLE_EMPLOYEE_COLOR)).toString();
                     }
                     else if (name == "")
                     {
@@ -463,10 +485,10 @@ void MainWindow::doActionToolbar()
         _editedDays[date].salary    = _employee.salary;
         break;
     case ToolBar::SalaryTool:
-        _editedDays[date].salary = _salary;
+        _editedDays[date].salary    = _salary;
         break;
     case ToolBar::PaymentTool:
-        _editedDays[date].isPayed = true;
+        _editedDays[date].isPayed   = true;
         break;
     case ToolBar::ClearTool:
         _editedDays[date].name      = "";
