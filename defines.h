@@ -21,6 +21,8 @@
 #define DB_TABLE_POINTS_ID          0
 #define DB_TABLE_POINTS_NAME        1
 #define DB_TABLE_POINTS_MARKET      2
-#define DB_TABLE_POINTS_TABLE       3
+#define DB_TABLE_POINT_EMPLOYEE1    3
+#define DB_TABLE_POINT_EMPLOYEE2    4
+#define DB_TABLE_POINTS_TABLE       5
 
 #endif // DEFINES_H
