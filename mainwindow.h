@@ -81,6 +81,7 @@ private:
     QMap<QString, Employee> _employees;
     QString _comboboxText;
 
+    quint32 _employeeID;
     quint32 _salary;
     quint32 _daysOfFirstEmployee;
     quint32 _daysOfSecondEmployee;

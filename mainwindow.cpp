@@ -14,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
     if (!_db.open())
     {
         qDebug() << "Cannot open database" << _db.databaseName();
-        QMessageBox::warning(this, "Внимание!", "Не удалось загрузить информацию о сотрудниках. Возможно, файл schedle.db был поврежден или перемещен. \n");
+        QMessageBox::warning(this, "Внимание!", "Не удалось загрузить информацию о сотрудниках.\n");
     }
     else
     {
@@ -108,8 +108,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->checkBoxPayedDays, &QCheckBox::clicked, this, &MainWindow::updateCalendar);
     connect(ui->checkBoxFinishedDays, &QCheckBox::clicked, this, &MainWindow::updateCalendar);
     connect(ui->buttonSaveSettings, &QPushButton::clicked, this, &MainWindow::saveSettings);
-    connect(ui->tableViewPoints, &QTableView::clicked, [this](const QModelIndex &index){
-        ui->editPointName->setText("");
+    connect(ui->tableViewPoints, &QTableView::doubleClicked, [this](){
+
     });
     connect(ui->buttonDeletePoint, &QPushButton::clicked, [this](){
         DeleteDialog dialog(this);
@@ -521,7 +521,7 @@ void MainWindow::addEmployee()
 {
     if (_db.transaction())
     {
-        QString query = QString("INSERT INTO Employees VALUES (\'%1\', %2, \'%3\');")
+        QString query = QString("INSERT INTO Employees (name, salary, color) VALUES (\'%1\', %2, \'%3\');")
                 .arg(ui->editEmployeeName->text())
                 .arg(ui->editSalary->text().toUInt())
                 .arg(ui->editHex->text());
@@ -540,8 +540,8 @@ void MainWindow::addEmployee()
 
 void MainWindow::removeEmployee()
 {
-    QString query = QString("DELETE FROM Employees WHERE name = \'%1\';")
-            .arg(ui->editEmployeeName->text());
+    QString query = QString("DELETE FROM Employees WHERE id = \'%1\';")
+            .arg(_employeeID);
     _query->exec(query);
 
     qDebug() << "Query:" << query;
@@ -556,10 +556,17 @@ void MainWindow::removeEmployee()
 
 void MainWindow::updateEmployee()
 {
-    QString query = QString("UPDATE Employees SET salary = %1, color = \'%2\' WHERE name = \'%3\';")
-            .arg(ui->editSalary->text().toUInt())
+    if (ui->editEmployeeName->text().isEmpty())
+    {
+        qDebug() << "No selected employee";
+        return;
+    }
+
+    QString query = QString("UPDATE Employees SET salary = %1, color = \'%2\', name = \'%3\' WHERE id = %4;")
+            .arg(ui->editSalary->text())
             .arg(ui->editHex->text())
-            .arg(ui->editEmployeeName->text());
+            .arg(ui->editEmployeeName->text())
+            .arg(_employeeID);
     _query->exec(query);
 
     qDebug() << "Query:" << query;
@@ -573,6 +580,7 @@ void MainWindow::tableItemSelect(const QModelIndex &index)
 {
     int id              = index.row();
     QString colorHex    = _modelEmployee->data(_modelEmployee->index(id, DB_TABLE_EMPLOYEE_COLOR)).toString();
+    _employeeID         = _modelEmployee->data(_modelEmployee->index(id, DB_TABLE_EMPLOYEE_ID)).toUInt();
 
     ui->editEmployeeName->setText(_modelEmployee->data(_modelEmployee->index(id, DB_TABLE_EMPLOYEE_NAME)).toString());
     ui->editSalary->setText(_modelEmployee->data(_modelEmployee->index(id, DB_TABLE_EMPLOYEE_SALARY)).toString());
