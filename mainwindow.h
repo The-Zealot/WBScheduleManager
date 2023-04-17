@@ -25,6 +25,7 @@
 #include "toolbar.h"
 #include "colorwidget.h"
 #include "defines.h"
+#include "deletedialog.h"
 
 #undef FINISHED_DAY_HEX
 #undef PAYED_DAY_HEX
@@ -80,6 +81,7 @@ private:
     QMap<QString, Employee> _employees;
     QString _comboboxText;
 
+    quint32 _employeeID;
     quint32 _salary;
     quint32 _daysOfFirstEmployee;
     quint32 _daysOfSecondEmployee;
@@ -91,6 +93,7 @@ private:
     QSqlDatabase _db;
     QSqlTableModel* _modelEmployee;
     QSqlTableModel* _modelSchedle;
+    QSqlTableModel* _modelPoint;
     QSqlQuery* _query;
 };
 #endif // MAINWINDOW_H

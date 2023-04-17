@@ -2,7 +2,12 @@ QT       += core gui sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-VERSION = 2.1.3.230403
+MAJOR   = 2;
+MINOR   = 1;
+RELEASE = 3;
+BUILD   = 230417;
+
+VERSION = 2.1.3.230417
 QMAKE_TARGET_COMPANY = The_Zealot
 QMAKE_TARGET_PRODUCT = WBSchedleManager
 QMAKE_TARGET_DESCRIPTION = Managment the shifts of all employees involved in the WBPoint
@@ -17,6 +22,7 @@ CONFIG += c++11
 SOURCES += \
     alertwidget.cpp \
     colorwidget.cpp \
+    deletedialog.cpp \
     employeedialog.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -27,6 +33,7 @@ HEADERS += \
     alertwidget.h \
     colorwidget.h \
     defines.h \
+    deletedialog.h \
     employee.h \
     employeedialog.h \
     mainwindow.h \
@@ -34,6 +41,7 @@ HEADERS += \
     toolbar.h
 
 FORMS += \
+    deletedialog.ui \
     employeedialog.ui \
     mainwindow.ui \
     salarydialog.ui

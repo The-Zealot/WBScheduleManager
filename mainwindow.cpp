@@ -7,11 +7,6 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    QLabel* betaLabel = new QLabel(this);
-    betaLabel->setText("<h3 style=\"color:tomato;\">build 230403</h3>");
-    betaLabel->move(575, 350);
-    betaLabel->show();
-
     this->setFixedSize(this->size());
 
     _db = QSqlDatabase::addDatabase("QSQLITE");
@@ -19,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
     if (!_db.open())
     {
         qDebug() << "Cannot open database" << _db.databaseName();
-        QMessageBox::warning(this, "Внимание!", "Не удалось загрузить информацию о сотрудниках. Возможно, файл schedle.db был поврежден или перемещен. \n");
+        QMessageBox::warning(this, "Внимание!", "Не удалось загрузить информацию о сотрудниках.\n");
     }
     else
     {
@@ -32,10 +27,23 @@ MainWindow::MainWindow(QWidget *parent)
     _modelSchedle = new QSqlTableModel(this, _db);
     _modelSchedle->setTable("days");
     _modelSchedle->select();
+    _modelPoint = new QSqlTableModel(this, _db);
+    _modelPoint->setTable("points");
+    _modelPoint->select();
     _query = new QSqlQuery(_db);
 
     ui->tableView->setModel(_modelEmployee);
+    ui->tableView->hideColumn(DB_TABLE_EMPLOYEE_ID);
+    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->tableViewPoints->setModel(_modelPoint);
+    ui->tableViewPoints->hideColumn(DB_TABLE_POINTS_ID);
+    ui->tableViewPoints->hideColumn(DB_TABLE_POINTS_TABLE);
+    ui->tableViewPoints->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+    int pointCount = _modelPoint->rowCount();
+    for (int i = 0; i < pointCount; i++)
+        ui->comboBoxPoint->addItem(_modelPoint->data(_modelPoint->index(i, DB_TABLE_POINTS_NAME)).toString());
 
     qDebug() << "Reading file data...";
 
@@ -100,6 +108,28 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->checkBoxPayedDays, &QCheckBox::clicked, this, &MainWindow::updateCalendar);
     connect(ui->checkBoxFinishedDays, &QCheckBox::clicked, this, &MainWindow::updateCalendar);
     connect(ui->buttonSaveSettings, &QPushButton::clicked, this, &MainWindow::saveSettings);
+    connect(ui->tableViewPoints, &QTableView::doubleClicked, [this](){
+
+    });
+    connect(ui->buttonDeletePoint, &QPushButton::clicked, [this](){
+        DeleteDialog dialog(this);
+
+        int row = ui->tableViewPoints->currentIndex().row();
+        QString pointName = _modelPoint->data(_modelPoint->index(row, DB_TABLE_POINTS_NAME)).toString();
+
+        dialog.setText("Внимание! Вы собираетесь удалить элемент из списка пунктов выдачи. Данное действие необратимо.\n"
+                        "Вы действительно хотите продолжить?");
+        dialog.setConfirmedString(pointName);
+        if (dialog.getConfirmedString().isEmpty())
+        {
+            qDebug() << "Item has not been selected";
+            return;
+        }
+        if (dialog.exec() == DeleteDialog::Accepted)
+        {
+            qDebug() << pointName << "was delete";
+        }
+    });
 
     qDebug() << "Initialization of Toolbar...";
 
@@ -363,9 +393,9 @@ void MainWindow::resetCalendar()
                 {
                     if (name == _modelEmployee->data(_modelEmployee->index(k, DB_TABLE_EMPLOYEE_NAME)).toString())
                     {
-                        _editedDays[selectedDate].name = name;
-                        _editedDays[selectedDate].salary = _modelEmployee->data(_modelEmployee->index(k, DB_TABLE_EMPLOYEE_SALARY)).toUInt();
-                        _editedDays[selectedDate].colorHex = _modelEmployee->data(_modelEmployee->index(k, DB_TABLE_EMPLOYEE_COLOR)).toString();
+                        _editedDays[selectedDate].name      = name;
+                        _editedDays[selectedDate].salary    = _modelEmployee->data(_modelEmployee->index(k, DB_TABLE_EMPLOYEE_SALARY)).toUInt();
+                        _editedDays[selectedDate].colorHex  = _modelEmployee->data(_modelEmployee->index(k, DB_TABLE_EMPLOYEE_COLOR)).toString();
                     }
                     else if (name == "")
                     {
@@ -455,10 +485,10 @@ void MainWindow::doActionToolbar()
         _editedDays[date].salary    = _employee.salary;
         break;
     case ToolBar::SalaryTool:
-        _editedDays[date].salary = _salary;
+        _editedDays[date].salary    = _salary;
         break;
     case ToolBar::PaymentTool:
-        _editedDays[date].isPayed = true;
+        _editedDays[date].isPayed   = true;
         break;
     case ToolBar::ClearTool:
         _editedDays[date].name      = "";
@@ -491,7 +521,7 @@ void MainWindow::addEmployee()
 {
     if (_db.transaction())
     {
-        QString query = QString("INSERT INTO Employees VALUES (\'%1\', %2, \'%3\');")
+        QString query = QString("INSERT INTO Employees (name, salary, color) VALUES (\'%1\', %2, \'%3\');")
                 .arg(ui->editEmployeeName->text())
                 .arg(ui->editSalary->text().toUInt())
                 .arg(ui->editHex->text());
@@ -510,8 +540,8 @@ void MainWindow::addEmployee()
 
 void MainWindow::removeEmployee()
 {
-    QString query = QString("DELETE FROM Employees WHERE name = \'%1\';")
-            .arg(ui->editEmployeeName->text());
+    QString query = QString("DELETE FROM Employees WHERE id = \'%1\';")
+            .arg(_employeeID);
     _query->exec(query);
 
     qDebug() << "Query:" << query;
@@ -526,10 +556,17 @@ void MainWindow::removeEmployee()
 
 void MainWindow::updateEmployee()
 {
-    QString query = QString("UPDATE Employees SET salary = %1, color = \'%2\' WHERE name = \'%3\';")
-            .arg(ui->editSalary->text().toUInt())
+    if (ui->editEmployeeName->text().isEmpty())
+    {
+        qDebug() << "No selected employee";
+        return;
+    }
+
+    QString query = QString("UPDATE Employees SET salary = %1, color = \'%2\', name = \'%3\' WHERE id = %4;")
+            .arg(ui->editSalary->text())
             .arg(ui->editHex->text())
-            .arg(ui->editEmployeeName->text());
+            .arg(ui->editEmployeeName->text())
+            .arg(_employeeID);
     _query->exec(query);
 
     qDebug() << "Query:" << query;
@@ -543,6 +580,7 @@ void MainWindow::tableItemSelect(const QModelIndex &index)
 {
     int id              = index.row();
     QString colorHex    = _modelEmployee->data(_modelEmployee->index(id, DB_TABLE_EMPLOYEE_COLOR)).toString();
+    _employeeID         = _modelEmployee->data(_modelEmployee->index(id, DB_TABLE_EMPLOYEE_ID)).toUInt();
 
     ui->editEmployeeName->setText(_modelEmployee->data(_modelEmployee->index(id, DB_TABLE_EMPLOYEE_NAME)).toString());
     ui->editSalary->setText(_modelEmployee->data(_modelEmployee->index(id, DB_TABLE_EMPLOYEE_SALARY)).toString());
