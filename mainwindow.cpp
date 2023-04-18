@@ -173,24 +173,26 @@ MainWindow::MainWindow(QWidget *parent)
         AlertWidget::showAlert("График перерасчитан!");
     });
     connect(ui->toolButtonSave, &QAbstractButton::clicked, [this](){
-//        _query->exec("DELETE FROM days");
-
-//        _query->prepare("INSERT INTO days (date, salary, employee, isPayed, isFinished) VALUES (?, ?, ?, ?, ?)");
-        _query->prepare("UPDATE days SET salary = ?, employee = ?, isPayed = ?, isFinished = ? WHERE data = ?");
-
         QList<QDate> list = _editedDays.keys();
 
         if (_db.transaction())
         {
             for (auto iter : list)
             {
-                _query->addBindValue(_editedDays[iter].salary);
-                _query->addBindValue(_editedDays[iter].name);
-                _query->addBindValue(_editedDays[iter].isPayed);
-                _query->addBindValue(_editedDays[iter].isFinished);
-                _query->addBindValue(iter.toString());
+                QString query = "INSERT INTO days (date, salary, employee, isPayed, isFinished, point_id)"
+                                "VALUES (\'%1\', %2, \'%3\', %4, %5, %6)"
+                                "ON CONFLICT (date, point_id)"
+                                "DO UPDATE SET date = \'%1\', salary = %2, employee = \'%3\', isPayed = %4, isFinished = %5, point_id = %6;";
 
-                if (!_query->exec())
+                query = query
+                        .arg(iter.toString())
+                        .arg(_editedDays[iter].salary)
+                        .arg(_editedDays[iter].name)
+                        .arg(_editedDays[iter].isPayed)
+                        .arg(_editedDays[iter].isFinished)
+                        .arg(_pointID);
+
+                if (!_query->exec(query))
                 {
                     qDebug() << _query->lastError().text();
                 }
@@ -200,11 +202,13 @@ MainWindow::MainWindow(QWidget *parent)
             {
                 qDebug() << _db.lastError().text();
             }
+            else
+            {
+                 AlertWidget::showAlert("Изменения сохранены");
+            }
         }
 
-        qDebug() << "Records saved:" << list.size();
-
-        AlertWidget::showAlert("Изменения сохранены");
+        qDebug() << "Records processed:" << list.size();
     });
     connect(ui->toolButtonLoad, &QAbstractButton::clicked, [this](){
         loadEditedDaysFromDB();
