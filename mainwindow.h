@@ -50,6 +50,7 @@ private slots:
     void payEverything();
     void setStatusBarMessage();
     void doActionToolbar();
+    void updatePointList();
 
     void addEmployee();
     void removeEmployee();
@@ -58,6 +59,7 @@ private slots:
 
     void addPoint();
     void removePoint();
+    void changePoint();
 
     void saveSettings();
     void openDocInfo();
@@ -70,7 +72,7 @@ private:
     void readJson();
     void readSchedleList();
     void loadCalendarStyle();
-    void loadEditedDaysFromDB();
+    void loadEditedDaysFromDB(int pointID);
     void loadPointData(int pointID);
     void editPointData(int pointID);
 
