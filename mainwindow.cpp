@@ -40,21 +40,19 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tableViewPoints->hideColumn(DB_TABLE_POINTS_ID);
     ui->tableViewPoints->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    int pointCount = _modelPoint->rowCount();
-    for (int i = 0; i < pointCount; i++)
-        ui->comboBoxPoint->addItem(_modelPoint->data(_modelPoint->index(i, DB_TABLE_POINTS_NAME)).toString());
+    updatePointList();
 
     qDebug() << "Reading file data...";
 
     readJson();                                                                         // rework
     readSchedleList();
 
-    _pointID                = 1;
+    _pointID                = 0;
     _salary                 = 1300;
     _daysOfFirstEmployee    = 0;
     _daysOfSecondEmployee   = 0;
 
-    loadPointData(_pointID - 1);
+    loadPointData(_pointID);
 
     ui->comboBoxSchedle->setCurrentText(_scheduleText);
     ui->dateEditOpen->setDate(_openWBPoint);
@@ -79,7 +77,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->editColorFinishedDay->setValidator(new QRegularExpressionValidator(QRegularExpression("#[a-f0-9]{6}")));
     ui->editPointName->setValidator(new QRegularExpressionValidator(QRegularExpression("\\S[0-9a-zA-zА-яа-я ]{255}")));
 
-    loadEditedDaysFromDB();
+    loadEditedDaysFromDB(_pointID);
     updateCalendar();
 
     connect(ui->colorWidgetPayedDay, &QPushButton::clicked, [this](){
@@ -122,9 +120,11 @@ MainWindow::MainWindow(QWidget *parent)
         int pointID = _modelPoint->data(_modelPoint->index(row, DB_TABLE_POINTS_ID)).toUInt();
 
         qDebug() << "Selected ID:" << pointID;
+        editPointData(pointID);
     });
     connect(ui->buttonDeletePoint, &QPushButton::clicked, this, &MainWindow::removePoint);
     connect(ui->buttonAddPoint, &QPushButton::clicked, this, &MainWindow::addPoint);
+    connect(ui->comboBoxPoint, &QComboBox::currentIndexChanged, this, &MainWindow::changePoint);
 
     qDebug() << "Initialization of Toolbar...";
 
@@ -171,7 +171,6 @@ MainWindow::MainWindow(QWidget *parent)
         setStatusBarMessage();
     });
     connect(ui->toolButtonCalculate, &QAbstractButton::clicked, [this](){
-        _editedDays.clear();
         resetCalendar();
         AlertWidget::showAlert("График перерасчитан!");
     });
@@ -214,7 +213,7 @@ MainWindow::MainWindow(QWidget *parent)
         qDebug() << "Records processed:" << list.size();
     });
     connect(ui->toolButtonLoad, &QAbstractButton::clicked, [this](){
-        loadEditedDaysFromDB();
+        loadEditedDaysFromDB(_pointID);
         updateCalendar();
         ui->textBrowserShiftInfo->clear();
         AlertWidget::showAlert("Данные загружены");
@@ -375,7 +374,7 @@ void MainWindow::updateCalendar()
 
 void MainWindow::resetCalendar()
 {
-    if (ui->comboBoxSchedle->currentText() == "")
+    if (_scheduleText == "")
     {
         qDebug() << "Can't parse comboBox->currentText()";
         return;
@@ -408,6 +407,7 @@ void MainWindow::resetCalendar()
         }
     };
 
+    _editedDays.clear();
     QDate date = _startDate;
     QStringList shiftList = _scheduleText.split("/");
 
@@ -421,10 +421,16 @@ void MainWindow::resetCalendar()
     first   = _employee1;
     second  = _employee2;
 
+    qDebug() << "Start reforamting...";
+
+    ui->calendarWidget->setDateRange(_openWBPoint, QDate::currentDate().addYears(1));
+
     reformatCalendar(_openWBPoint, 1, 1, empty, _openWBPoint.daysTo(QDate::currentDate().addYears(1)));
     reformatCalendar(date, DAYS_FIRST_EMPLOYEE, DAYS_ALL_EMPLOYEE, first, LENGTH_REFORMAT);
     date = _startDate.addDays(DAYS_FIRST_EMPLOYEE);
     reformatCalendar(date, DAYS_SECOND_EMPLOYEE, DAYS_ALL_EMPLOYEE, second, LENGTH_REFORMAT);
+
+    qDebug() << "Calculating finished days...";
 
     calculateFinishedDays();
     updateCalendar();
@@ -518,6 +524,14 @@ void MainWindow::doActionToolbar()
     qDebug() << "\tThis shift is finished" << _editedDays[date].isFinished;
 }
 
+void MainWindow::updatePointList()
+{
+    ui->comboBoxPoint->clear();
+    int pointCount = _modelPoint->rowCount();
+    for (int i = 0; i < pointCount; i++)
+        ui->comboBoxPoint->addItem(_modelPoint->data(_modelPoint->index(i, DB_TABLE_POINTS_NAME)).toString());
+}
+
 void MainWindow::addEmployee()
 {
     if (_db.transaction())
@@ -597,11 +611,12 @@ void MainWindow::addPoint()
         return;
     }
 
-    QString query   = "INSERT INTO points (name, open_date, start_date) VALUES (\'%1\', \'%2\', \'%3\');";
-    QString name    = ui->editPointName->text();
-    QString today   = QDate::currentDate().toString();
+    QString query       = "INSERT INTO points (name, open_date, start_date, last_payday) VALUES (\'%1\', \'%2\', \'%3\', \'%4\');";
+    QString name        = ui->editPointName->text();
+    QString today       = QDate::currentDate().toString();
+    QString yesterday   = QDate::currentDate().addDays(-1).toString();
 
-    query = query.arg(name).arg(today).arg(today);
+    query = query.arg(name).arg(today).arg(today).arg(yesterday);
 
     qDebug() << "Insert record into points...";
     if (!_query->exec(query))
@@ -613,6 +628,8 @@ void MainWindow::addPoint()
 
     ui->editPointName->clear();
     _modelPoint->select();
+
+    updatePointList();
 }
 
 void MainWindow::removePoint()
@@ -640,9 +657,33 @@ void MainWindow::removePoint()
             qDebug() << pointName << "has been deleted";
         }
 
+        query = "DELETE FROM days WHERE point_id = %1";
+        if (_query->exec(query.arg(pointID)))
+        {
+            qDebug() << "Table days fixed";
+        }
+
         ui->editPointName->clear();
         _modelPoint->select();
     }
+
+    updatePointList();
+}
+
+void MainWindow::changePoint()
+{
+    int pointID = ui->comboBoxPoint->currentIndex();
+
+    loadPointData(pointID);
+    ui->editEmployee1->setText(_employee1.name);
+    ui->editEmployee2->setText(_employee2.name);
+    qDebug() << "Set current point id = " << pointID;
+
+    qDebug() << "Loading data...";
+    loadEditedDaysFromDB(_pointID);
+
+    qDebug() << "Updating calendar...";
+    updateCalendar();
 }
 
 void MainWindow::saveSettings()
@@ -786,16 +827,17 @@ void MainWindow::loadCalendarStyle()
     file.close();
 }
 
-void MainWindow::loadEditedDaysFromDB()
+void MainWindow::loadEditedDaysFromDB(int pointID)
 {
     resetCalendar();
 
     qDebug() << "Loading data from database...";
+    qDebug() << "Current point id:" << pointID;
 
     QString query("SELECT * FROM days WHERE point_id = %1");
 
     _modelEmployee->select();
-    _query->exec(query.arg(_pointID));
+    _query->exec(query.arg(pointID));
 
     int days        = 0;
     int employees   = _modelEmployee->rowCount();
@@ -827,6 +869,7 @@ void MainWindow::loadEditedDaysFromDB()
 
 void MainWindow::loadPointData(int pointID)
 {
+    _pointID        = _modelPoint->data((_modelPoint->index(pointID, DB_TABLE_POINTS_ID))).toUInt();
     _employee1.name = _modelPoint->data(_modelPoint->index(pointID, DB_TABLE_POINT_EMPLOYEE1)).toString();
     _employee2.name = _modelPoint->data(_modelPoint->index(pointID, DB_TABLE_POINT_EMPLOYEE2)).toString();
 
@@ -835,6 +878,15 @@ void MainWindow::loadPointData(int pointID)
     _openWBPoint    = QDate::fromString(_modelPoint->data(_modelPoint->index(pointID, DB_TABLE_POINT_OPEN_DATE)).toString());
     _startDate      = QDate::fromString(_modelPoint->data(_modelPoint->index(pointID, DB_TABLE_POINT_START_DATE)).toString());
     _lastPayday     = QDate::fromString(_modelPoint->data(_modelPoint->index(pointID, DB_TABLE_POINT_LAST_PAYDAY)).toString());
+
+    qDebug() << "Loaded:";
+    qDebug() << "  Poind id:       " << _pointID;
+    qDebug() << "  First  employee:" << _employee1.name;
+    qDebug() << "  Second employee:" << _employee2.name;
+    qDebug() << "  Schedule:       " << _scheduleText;
+    qDebug() << "  Open  date:     " << _openWBPoint.toString();
+    qDebug() << "  Start date:     " << _startDate.toString();
+    qDebug() << "  Last  payday:   " << _lastPayday.toString();
 }
 
 void MainWindow::editPointData(int pointID)
