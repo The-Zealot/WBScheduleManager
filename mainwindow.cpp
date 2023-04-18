@@ -77,6 +77,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->editHex->setValidator(new QRegularExpressionValidator(QRegularExpression("#[a-f0-9]{6}")));
     ui->editColorPayedDay->setValidator(new QRegularExpressionValidator(QRegularExpression("#[a-f0-9]{6}")));
     ui->editColorFinishedDay->setValidator(new QRegularExpressionValidator(QRegularExpression("#[a-f0-9]{6}")));
+    ui->editPointName->setValidator(new QRegularExpressionValidator(QRegularExpression("\\S[0-9a-zA-zА-яа-я ]{255}")));
 
     loadEditedDaysFromDB();
     updateCalendar();
@@ -113,15 +114,17 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->tableViewPoints, &QTableView::clicked, [this](){
         int row = ui->tableViewPoints->currentIndex().row();
         QString pointName = _modelPoint->data(_modelPoint->index(row, DB_TABLE_POINTS_NAME)).toString();
-        _editedPointID = _modelPoint->data(_modelPoint->index(row, DB_TABLE_POINTS_ID)).toUInt();
 
         ui->editPointName->setText(pointName);
     });
     connect(ui->tableViewPoints, &QTableView::doubleClicked, [this](){
-        qDebug() << "Selected ID:" << _editedPointID;
+        int row = ui->tableViewPoints->currentIndex().row();
+        int pointID = _modelPoint->data(_modelPoint->index(row, DB_TABLE_POINTS_ID)).toUInt();
+
+        qDebug() << "Selected ID:" << pointID;
     });
-//    connect(ui->buttonDeletePoint, &QPushButton::clicked, this, &MainWindow::removePoint);
-//    connect(ui->buttonAddPoint, &QPushButton::clicked, this, &MainWindow::addPoint);
+    connect(ui->buttonDeletePoint, &QPushButton::clicked, this, &MainWindow::removePoint);
+    connect(ui->buttonAddPoint, &QPushButton::clicked, this, &MainWindow::addPoint);
 
     qDebug() << "Initialization of Toolbar...";
 
@@ -247,6 +250,7 @@ MainWindow::~MainWindow()
     delete ui->editHex->validator();
     delete ui->editColorPayedDay->validator();
     delete ui->editColorFinishedDay->validator();
+    delete ui->editPointName->validator();
     delete ui;
 }
 
@@ -587,31 +591,27 @@ void MainWindow::tableItemSelect(const QModelIndex &index)
 
 void MainWindow::addPoint()
 {
-    QString query = QString("INSERT INTO points (name) VALUES (\'%1\');")
-            .arg(ui->editPointName->text());
+    if (ui->editPointName->text().isEmpty())
+    {
+        qDebug() << "Invalid name";
+        return;
+    }
+
+    QString query   = "INSERT INTO points (name, open_date, start_date) VALUES (\'%1\', \'%2\', \'%3\');";
+    QString name    = ui->editPointName->text();
+    QString today   = QDate::currentDate().toString();
+
+    query = query.arg(name).arg(today).arg(today);
 
     qDebug() << "Insert record into points...";
     if (!_query->exec(query))
     {
         qDebug() << "Failed.";
+        QMessageBox::warning(this, "Внимание", "Упс! Что-то пошло не так.");
         return;
     }
 
-    _modelPoint->select();
-
-    int pointCount  = _modelPoint->rowCount();
-    int lastPointID = _modelPoint->data(_modelPoint->index(pointCount - 1, DB_TABLE_POINTS_ID)).toInt();
-    QString newTableName = "point" + QVariant(lastPointID).toString();
-
-    query = QString("UPDATE points SET point_table_name = \'%1\' WHERE id = %2;")
-            .arg(newTableName)
-            .arg(lastPointID);
-    qDebug() << "Set point_table_name in last record..." << _query->exec(query);
-
-    query = QString("CREATE TABLE %1 (date TEXT NOT NULL UNIQUE, employee TEXT, isFinished BOOL, isPayed BOOL, salary INTEGER NOT NULL);")
-            .arg(newTableName);
-    qDebug() << "Tabel creating..." << _query->exec(query);
-
+    ui->editPointName->clear();
     _modelPoint->select();
 }
 
@@ -621,8 +621,7 @@ void MainWindow::removePoint()
 
     int row             = ui->tableViewPoints->currentIndex().row();
     QString pointName   = _modelPoint->data(_modelPoint->index(row, DB_TABLE_POINTS_NAME)).toString();
-//    QString tableName   = _modelPoint->data(_modelPoint->index(row, DB_TABLE_POINTS_TABLE)).toString();
-    QString tableName = "";
+    int pointID         = _modelPoint->data(_modelPoint->index(row, DB_TABLE_POINTS_ID)).toInt();
 
     dialog.setText("Внимание! Вы собираетесь удалить элемент из списка пунктов выдачи. Данное действие необратимо.\n"
                     "Вы действительно хотите продолжить?");
@@ -634,27 +633,11 @@ void MainWindow::removePoint()
     }
     if (dialog.exec() == DeleteDialog::Accepted)
     {
-        QString query;
-        query = QString("DELETE FROM points WHERE id = \'%1\';")
-                .arg(_pointID);
-        if (_query->exec(query))
+        QString query = "DELETE FROM points WHERE id = \'%1\';";
+
+        if (_query->exec(query.arg(pointID)))
         {
             qDebug() << pointName << "has been deleted";
-        }
-
-        query = QString("SELECT drop_table(%1)")
-                .arg(tableName);
-        _query->prepare("PRAGMA foreign_keys = 0;");
-        _query->prepare(query);
-        _query->prepare("PRAGMA foreign_keys = 1;");
-        if (_query->exec())
-        {
-            qDebug() << "Table" << tableName << "has beed dropped";
-            qDebug() << _db.tables();
-        }
-        else
-        {
-            qDebug() << tableName << _query->lastError();
         }
 
         ui->editPointName->clear();
@@ -852,4 +835,9 @@ void MainWindow::loadPointData(int pointID)
     _openWBPoint    = QDate::fromString(_modelPoint->data(_modelPoint->index(pointID, DB_TABLE_POINT_OPEN_DATE)).toString());
     _startDate      = QDate::fromString(_modelPoint->data(_modelPoint->index(pointID, DB_TABLE_POINT_START_DATE)).toString());
     _lastPayday     = QDate::fromString(_modelPoint->data(_modelPoint->index(pointID, DB_TABLE_POINT_LAST_PAYDAY)).toString());
+}
+
+void MainWindow::editPointData(int pointID)
+{
+
 }
