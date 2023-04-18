@@ -72,6 +72,7 @@ private:
     void loadCalendarStyle();
     void loadEditedDaysFromDB();
     void loadPointData(int pointID);
+    void editPointData(int pointID);
 
     QString FINISHED_DAY_HEX;
     QString PAYED_DAY_HEX;
@@ -86,7 +87,6 @@ private:
     QString _scheduleText;
 
     quint32 _pointID;
-    quint32 _editedPointID;
     quint32 _employeeID;
     quint32 _salary;
     quint32 _daysOfFirstEmployee;
