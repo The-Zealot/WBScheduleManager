@@ -3,11 +3,11 @@ QT       += core gui sql
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 MAJOR   = 2;
-MINOR   = 1;
+MINOR   = 2;
 RELEASE = 3;
-BUILD   = 230417;
+BUILD   = 230418;
 
-VERSION = 2.1.3.230417
+VERSION = 2.2.3.230418
 QMAKE_TARGET_COMPANY = The_Zealot
 QMAKE_TARGET_PRODUCT = WBSchedleManager
 QMAKE_TARGET_DESCRIPTION = Managment the shifts of all employees involved in the WBPoint
