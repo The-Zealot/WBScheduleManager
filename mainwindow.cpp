@@ -672,12 +672,21 @@ void MainWindow::removePoint()
 
 void MainWindow::changePoint()
 {
-    int pointID = ui->comboBoxPoint->currentIndex();
+    int selectedPoint = ui->comboBoxPoint->currentIndex();
 
-    loadPointData(pointID);
+    loadPointData(selectedPoint);
+
+    //////////////////// separate ////////////////////
+
     ui->editEmployee1->setText(_employee1.name);
     ui->editEmployee2->setText(_employee2.name);
-    qDebug() << "Set current point id = " << pointID;
+    ui->dateEditOpen->setDate(_openWBPoint);
+    ui->dateEditStartpoint->setDate(_startDate);
+    ui->comboBoxSchedle->setCurrentText(_scheduleText);
+
+    //////////////////////////////////////////////////
+
+    qDebug() << "Set current point id = " << selectedPoint;
 
     qDebug() << "Loading data...";
     loadEditedDaysFromDB(_pointID);
@@ -867,17 +876,17 @@ void MainWindow::loadEditedDaysFromDB(int pointID)
     calculateFinishedDays();
 }
 
-void MainWindow::loadPointData(int pointID)
+void MainWindow::loadPointData(int selectedPoint)
 {
-    _pointID        = _modelPoint->data((_modelPoint->index(pointID, DB_TABLE_POINTS_ID))).toUInt();
-    _employee1.name = _modelPoint->data(_modelPoint->index(pointID, DB_TABLE_POINT_EMPLOYEE1)).toString();
-    _employee2.name = _modelPoint->data(_modelPoint->index(pointID, DB_TABLE_POINT_EMPLOYEE2)).toString();
+    _pointID        = _modelPoint->data((_modelPoint->index(selectedPoint, DB_TABLE_POINTS_ID))).toUInt();
+    _employee1.name = _modelPoint->data(_modelPoint->index(selectedPoint, DB_TABLE_POINT_EMPLOYEE1)).toString();
+    _employee2.name = _modelPoint->data(_modelPoint->index(selectedPoint, DB_TABLE_POINT_EMPLOYEE2)).toString();
 
-    _scheduleText   = _modelPoint->data(_modelPoint->index(pointID, DB_TABLE_POINT_SCHEDULE)).toString();
+    _scheduleText   = _modelPoint->data(_modelPoint->index(selectedPoint, DB_TABLE_POINT_SCHEDULE)).toString();
 
-    _openWBPoint    = QDate::fromString(_modelPoint->data(_modelPoint->index(pointID, DB_TABLE_POINT_OPEN_DATE)).toString());
-    _startDate      = QDate::fromString(_modelPoint->data(_modelPoint->index(pointID, DB_TABLE_POINT_START_DATE)).toString());
-    _lastPayday     = QDate::fromString(_modelPoint->data(_modelPoint->index(pointID, DB_TABLE_POINT_LAST_PAYDAY)).toString());
+    _openWBPoint    = QDate::fromString(_modelPoint->data(_modelPoint->index(selectedPoint, DB_TABLE_POINT_OPEN_DATE)).toString());
+    _startDate      = QDate::fromString(_modelPoint->data(_modelPoint->index(selectedPoint, DB_TABLE_POINT_START_DATE)).toString());
+    _lastPayday     = QDate::fromString(_modelPoint->data(_modelPoint->index(selectedPoint, DB_TABLE_POINT_LAST_PAYDAY)).toString());
 
     qDebug() << "Loaded:";
     qDebug() << "  Poind id:       " << _pointID;

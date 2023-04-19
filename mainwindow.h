@@ -73,7 +73,7 @@ private:
     void readSchedleList();
     void loadCalendarStyle();
     void loadEditedDaysFromDB(int pointID);
-    void loadPointData(int pointID);
+    void loadPointData(int selectedPoint);
     void editPointData(int pointID);
 
     QString FINISHED_DAY_HEX;
