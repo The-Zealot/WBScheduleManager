@@ -23,6 +23,7 @@ SOURCES += \
     alertwidget.cpp \
     colorwidget.cpp \
     deletedialog.cpp \
+    editpointdialog.cpp \
     employeedialog.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -34,6 +35,7 @@ HEADERS += \
     colorwidget.h \
     defines.h \
     deletedialog.h \
+    editpointdialog.h \
     employee.h \
     employeedialog.h \
     mainwindow.h \
@@ -42,6 +44,7 @@ HEADERS += \
 
 FORMS += \
     deletedialog.ui \
+    editpointdialog.ui \
     employeedialog.ui \
     mainwindow.ui \
     salarydialog.ui
