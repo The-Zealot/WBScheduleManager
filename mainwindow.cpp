@@ -509,12 +509,16 @@ void MainWindow::doActionToolbar()
 
     updateCalendar();
 
+    QString isPayed, isFinished;
+    _editedDays[date].isPayed ? isPayed = "Оплачена" : isPayed = "Не оплачена";
+    _editedDays[date].isFinished ? isFinished = "Окончен" : isFinished = "Не окончен";
+
     ui->textBrowserShiftInfo->setText(QString("Сотрудник %2\nДата: %1\nСтавка: %3\nСтатус смены: %4\nДень: %5")
                                       .arg(date.toString("dd.MM.yy"))
                                       .arg(_editedDays[date].name)
                                       .arg(_editedDays[date].salary)
-                                      .arg(_editedDays[date].isPayed)
-                                      .arg(_editedDays[date].isFinished));
+                                      .arg(isPayed)
+                                      .arg(isFinished));
 
     qDebug() << "Selected date" << date.toString("dd.MM.yyyy") << "info:";
     qDebug() << "\tEmployee name is" << _editedDays[date].name;
