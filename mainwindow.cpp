@@ -440,9 +440,9 @@ void MainWindow::payEverything()
     else
         date = QDate::currentDate();
 
-    for (int i = 1; i <= _lastPayday.daysTo(date); i++)
+    for (int i = 1; i <= _startDate.daysTo(date); i++)
     {
-        _editedDays[_lastPayday.addDays(i)].isPayed = true;
+        _editedDays[_startDate.addDays(i)].isPayed = true;
     }
 
     updateCalendar();
@@ -713,7 +713,7 @@ void MainWindow::openDocInfo()
 
 void MainWindow::calculateWorks()
 {
-    int days = _lastPayday.daysTo(QDate::currentDate());
+    int days = _startDate.daysTo(QDate::currentDate());
     _employees.clear();
 
     if (QTime::currentTime().hour() >= END_OF_SHIFT)
@@ -721,7 +721,7 @@ void MainWindow::calculateWorks()
 
     for (int i = 1; i < days; i++)
     {
-        QDate date = _lastPayday.addDays(i);
+        QDate date = _startDate.addDays(i);
         QString name = _editedDays[date].name;
         if (!_editedDays[date].isPayed)
         {
@@ -783,7 +783,6 @@ void MainWindow::writeJson()
     jObject["FinishedDayColor"] = FINISHED_DAY_HEX;
     jObject["StartDate"]        = _startDate.toString();
     jObject["OpenDate"]         = _openWBPoint.toString();
-    jObject["lastPayday"]       = _lastPayday.toString();
     jObject["currentSchedle"]   = _scheduleText;
 
     QJsonDocument jDoc(jObject);
@@ -806,7 +805,6 @@ void MainWindow::readJson()
     _employee2.name     = jObject["SecondEmployee"].toString();
     PAYED_DAY_HEX       = jObject["PayedDayColor"].toString();
     FINISHED_DAY_HEX    = jObject["FinishedDayColor"].toString();
-    _lastPayday         = QDate::fromString(jObject["lastPayday"].toString());
     _startDate          = QDate::fromString(jObject["StartDate"].toString());
     _openWBPoint        = QDate::fromString(jObject["OpenDate"].toString());
     _scheduleText       = jObject["currentSchedle"].toString();
@@ -886,7 +884,6 @@ void MainWindow::loadPointData(int selectedPoint)
 
     _openWBPoint    = QDate::fromString(_modelPoint->data(_modelPoint->index(selectedPoint, DB_TABLE_POINTS_OPEN_DATE)).toString());
     _startDate      = QDate::fromString(_modelPoint->data(_modelPoint->index(selectedPoint, DB_TABLE_POINTS_START_DATE)).toString());
-    _lastPayday     = QDate::fromString(_modelPoint->data(_modelPoint->index(selectedPoint, DB_TABLE_POINTS_LAST_PAYDAY)).toString());
 
     qDebug() << "Loaded:";
     qDebug() << "  Poind id:       " << _pointID;
@@ -895,7 +892,6 @@ void MainWindow::loadPointData(int selectedPoint)
     qDebug() << "  Schedule:       " << _scheduleText;
     qDebug() << "  Open  date:     " << _openWBPoint.toString();
     qDebug() << "  Start date:     " << _startDate.toString();
-    qDebug() << "  Last  payday:   " << _lastPayday.toString();
 }
 
 void MainWindow::editPointData(const QModelIndex &index)

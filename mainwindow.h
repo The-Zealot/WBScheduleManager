@@ -95,7 +95,6 @@ private:
     quint32 _daysOfFirstEmployee;
     quint32 _daysOfSecondEmployee;
 
-    QDate _lastPayday;
     QDate _startDate;
     QDate _openWBPoint;
 
