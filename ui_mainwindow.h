@@ -102,17 +102,19 @@ public:
     QPushButton *buttonEdit;
     QWidget *tab_3;
     QFrame *line;
-    QWidget *widget;
+    QWidget *layoutWidget2;
     QGridLayout *gridLayout_2;
     QLineEdit *editPointName;
     QPushButton *buttonAddPoint;
     QPushButton *buttonDeletePoint;
     QTableView *tableViewPoints;
-    QWidget *widget1;
+    QWidget *layoutWidget3;
     QGridLayout *gridLayout_3;
+    QTextBrowser *textBrowserStats;
     QLineEdit *lineEdit_2;
     QToolButton *toolButtonSelectDir;
-    QTextBrowser *textBrowserStats;
+    QHBoxLayout *horizontalLayout;
+    QPushButton *buttonStatistics;
     QPushButton *buttonReport;
     QStatusBar *statusBar;
 
@@ -491,59 +493,67 @@ public:
         line->setLineWidth(1);
         line->setMidLineWidth(0);
         line->setFrameShape(QFrame::VLine);
-        widget = new QWidget(tab_3);
-        widget->setObjectName(QString::fromUtf8("widget"));
-        widget->setGeometry(QRect(10, 10, 331, 401));
-        gridLayout_2 = new QGridLayout(widget);
+        layoutWidget2 = new QWidget(tab_3);
+        layoutWidget2->setObjectName(QString::fromUtf8("layoutWidget2"));
+        layoutWidget2->setGeometry(QRect(10, 10, 331, 401));
+        gridLayout_2 = new QGridLayout(layoutWidget2);
         gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
         gridLayout_2->setContentsMargins(0, 0, 0, 0);
-        editPointName = new QLineEdit(widget);
+        editPointName = new QLineEdit(layoutWidget2);
         editPointName->setObjectName(QString::fromUtf8("editPointName"));
-        editPointName->setReadOnly(true);
+        editPointName->setReadOnly(false);
         editPointName->setClearButtonEnabled(true);
 
         gridLayout_2->addWidget(editPointName, 1, 0, 1, 2);
 
-        buttonAddPoint = new QPushButton(widget);
+        buttonAddPoint = new QPushButton(layoutWidget2);
         buttonAddPoint->setObjectName(QString::fromUtf8("buttonAddPoint"));
 
         gridLayout_2->addWidget(buttonAddPoint, 2, 0, 1, 1);
 
-        buttonDeletePoint = new QPushButton(widget);
+        buttonDeletePoint = new QPushButton(layoutWidget2);
         buttonDeletePoint->setObjectName(QString::fromUtf8("buttonDeletePoint"));
 
         gridLayout_2->addWidget(buttonDeletePoint, 2, 1, 1, 1);
 
-        tableViewPoints = new QTableView(widget);
+        tableViewPoints = new QTableView(layoutWidget2);
         tableViewPoints->setObjectName(QString::fromUtf8("tableViewPoints"));
 
         gridLayout_2->addWidget(tableViewPoints, 0, 0, 1, 2);
 
-        widget1 = new QWidget(tab_3);
-        widget1->setObjectName(QString::fromUtf8("widget1"));
-        widget1->setGeometry(QRect(370, 10, 331, 401));
-        gridLayout_3 = new QGridLayout(widget1);
+        layoutWidget3 = new QWidget(tab_3);
+        layoutWidget3->setObjectName(QString::fromUtf8("layoutWidget3"));
+        layoutWidget3->setGeometry(QRect(370, 10, 331, 401));
+        gridLayout_3 = new QGridLayout(layoutWidget3);
         gridLayout_3->setObjectName(QString::fromUtf8("gridLayout_3"));
         gridLayout_3->setContentsMargins(0, 0, 0, 0);
-        lineEdit_2 = new QLineEdit(widget1);
+        textBrowserStats = new QTextBrowser(layoutWidget3);
+        textBrowserStats->setObjectName(QString::fromUtf8("textBrowserStats"));
+
+        gridLayout_3->addWidget(textBrowserStats, 0, 0, 1, 2);
+
+        lineEdit_2 = new QLineEdit(layoutWidget3);
         lineEdit_2->setObjectName(QString::fromUtf8("lineEdit_2"));
         lineEdit_2->setEnabled(true);
         lineEdit_2->setReadOnly(true);
 
         gridLayout_3->addWidget(lineEdit_2, 1, 0, 1, 1);
 
-        toolButtonSelectDir = new QToolButton(widget1);
+        toolButtonSelectDir = new QToolButton(layoutWidget3);
         toolButtonSelectDir->setObjectName(QString::fromUtf8("toolButtonSelectDir"));
         toolButtonSelectDir->setEnabled(false);
 
         gridLayout_3->addWidget(toolButtonSelectDir, 1, 1, 1, 1);
 
-        textBrowserStats = new QTextBrowser(widget1);
-        textBrowserStats->setObjectName(QString::fromUtf8("textBrowserStats"));
+        horizontalLayout = new QHBoxLayout();
+        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
+        buttonStatistics = new QPushButton(layoutWidget3);
+        buttonStatistics->setObjectName(QString::fromUtf8("buttonStatistics"));
+        buttonStatistics->setEnabled(false);
 
-        gridLayout_3->addWidget(textBrowserStats, 0, 0, 1, 2);
+        horizontalLayout->addWidget(buttonStatistics);
 
-        buttonReport = new QPushButton(widget1);
+        buttonReport = new QPushButton(layoutWidget3);
         buttonReport->setObjectName(QString::fromUtf8("buttonReport"));
         buttonReport->setEnabled(false);
         buttonReport->setCheckable(false);
@@ -551,7 +561,10 @@ public:
         buttonReport->setAutoDefault(false);
         buttonReport->setFlat(false);
 
-        gridLayout_3->addWidget(buttonReport, 2, 0, 1, 2);
+        horizontalLayout->addWidget(buttonReport);
+
+
+        gridLayout_3->addLayout(horizontalLayout, 2, 0, 1, 2);
 
         tabWidget->addTab(tab_3, QString());
         MainWindow->setCentralWidget(centralwidget);
@@ -600,7 +613,6 @@ public:
         QWidget::setTabOrder(buttonDeletePoint, textBrowserStats);
         QWidget::setTabOrder(textBrowserStats, lineEdit_2);
         QWidget::setTabOrder(lineEdit_2, toolButtonSelectDir);
-        QWidget::setTabOrder(toolButtonSelectDir, buttonReport);
 
         retranslateUi(MainWindow);
 
@@ -659,7 +671,30 @@ public:
         editPointName->setPlaceholderText(QCoreApplication::translate("MainWindow", "\320\235\320\260\320\267\320\262\320\260\320\275\320\270\320\265 \320\277\321\203\320\275\320\272\321\202\320\260", nullptr));
         buttonAddPoint->setText(QCoreApplication::translate("MainWindow", "\320\224\320\276\320\261\320\260\320\262\320\270\321\202\321\214", nullptr));
         buttonDeletePoint->setText(QCoreApplication::translate("MainWindow", "\320\243\320\264\320\260\320\273\320\270\321\202\321\214", nullptr));
+        textBrowserStats->setHtml(QCoreApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:7.8pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt; font-style:italic;\">point_name</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">   \320\237\321\200\320\276\321\210\320\273\320\276 \320\264\320\275\320\265\320\271 \321\201 \320\274\320\276\320\274\320\265\320\275\321\202\320\260 \320\276\321\202\320\272\321\200\321\213\321\202\320\270\321\217: 	0</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-inde"
+                        "nt:0; text-indent:0px;\"><span style=\" font-size:8pt;\">   \320\232\320\276\320\273\320\270\321\207\320\265\321\201\321\202\320\262\320\276 \320\275\320\265\321\200\320\260\321\201\321\207\320\265\321\202\320\275\321\213\321\205 \321\201\320\274\320\265\320\275: 	0</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">   \320\232\320\276\320\273\320\270\321\207\320\265\321\201\321\202\320\262\320\276 \320\276\320\277\320\273\320\260\321\207\320\265\320\275\320\275\321\213\321\205 \321\201\320\274\320\265\320\275:	0</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">   \320\232\320\276\320\273\320\270\321\207\320\265\321\201\321\202\320\262\320\276 \320\275\320\265\320\276\320\277\320\273\320\260\321\207\320\265\320\275\320\275\321\213\321\205 \321\201\320\274\320\265\320\275:	0</spa"
+                        "n></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">   \320\227\320\260\320\264\320\265\320\271\321\201\321\202\320\262\320\276\320\262\320\260\320\275\320\276 \321\201\320\276\321\202\321\200\321\203\320\264\320\275\320\270\320\272\320\276\320\262:		0 / 0</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">      \320\241\320\276\321\202\321\200\321\203\320\264\320\275\320\270\320\272 </span><span style=\" font-size:8pt; font-style:italic;\">employee_name</span><span style=\" font-size:8pt;\">: </span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">         \320\236\321\202\321\200\320\260\320\261\320\276\321\202\320\260\320\275\320\276:	0</span></p>\n"
+"<p style=\" margin-t"
+                        "op:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">         \320\236\320\277\320\273\320\260\321\207\320\265\320\275\320\276:	0</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">         \320\222\321\213\320\277\320\273\320\260\321\207\320\265\320\275\320\276:	0 \321\200\321\203\320\261.</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">      </span><span style=\" font-size:8pt; font-style:italic;\">========== EOL ==========</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">   \320\222\321\201\320\265\320\263\320\276 \320\262\321\213\320\277\320\273\320\260\321\207\320\265\320\275\320"
+                        "\276:		0 \321\200\321\203\320\261.</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">   \320\241\320\260\320\274\321\213\320\271 \320\264\320\276\321\200\320\276\320\263\320\276\320\271 \320\264\320\265\320\275\321\214:		</span><span style=\" font-size:8pt; font-style:italic;\">day</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">   \320\241\320\260\320\274\321\213\320\271 \320\264\320\276\321\200\320\276\320\263\320\276\320\271 \320\274\320\265\321\201\321\217\321\206:		</span><span style=\" font-size:8pt; font-style:italic;\">month</span></p></body></html>", nullptr));
         toolButtonSelectDir->setText(QCoreApplication::translate("MainWindow", "...", nullptr));
+        buttonStatistics->setText(QCoreApplication::translate("MainWindow", "\320\241\321\202\320\260\321\202\320\270\321\201\321\202\320\270\320\272\320\260", nullptr));
         buttonReport->setText(QCoreApplication::translate("MainWindow", "\320\236\321\202\321\207\320\265\321\202", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tab_3), QCoreApplication::translate("MainWindow", "\320\237\321\203\320\275\320\272\321\202\321\213", nullptr));
     } // retranslateUi

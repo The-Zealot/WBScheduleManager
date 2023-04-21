@@ -26,6 +26,7 @@
 #include "colorwidget.h"
 #include "defines.h"
 #include "deletedialog.h"
+#include "editpointdialog.h"
 
 #undef FINISHED_DAY_HEX
 #undef PAYED_DAY_HEX
@@ -50,11 +51,16 @@ private slots:
     void payEverything();
     void setStatusBarMessage();
     void doActionToolbar();
+    void updatePointList();
 
     void addEmployee();
     void removeEmployee();
     void updateEmployee();
     void tableItemSelect(const QModelIndex &index);
+
+    void addPoint();
+    void removePoint();
+    void changePoint();
 
     void saveSettings();
     void openDocInfo();
@@ -67,7 +73,9 @@ private:
     void readJson();
     void readSchedleList();
     void loadCalendarStyle();
-    void loadEditedDaysFromDB();
+    void loadEditedDaysFromDB(int pointID);
+    void loadPointData(int selectedPoint);
+    void editPointData(const QModelIndex &index);
 
     QString FINISHED_DAY_HEX;
     QString PAYED_DAY_HEX;
@@ -79,14 +87,14 @@ private:
     ToolBar _toolBar;
     QMap<QDate, EmployeeShift> _editedDays;
     QMap<QString, Employee> _employees;
-    QString _comboboxText;
+    QString _scheduleText;
 
+    quint32 _pointID;
     quint32 _employeeID;
     quint32 _salary;
     quint32 _daysOfFirstEmployee;
     quint32 _daysOfSecondEmployee;
 
-    QDate _lastPayday;
     QDate _startDate;
     QDate _openWBPoint;
 
