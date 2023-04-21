@@ -549,6 +549,7 @@ public:
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
         buttonStatistics = new QPushButton(layoutWidget3);
         buttonStatistics->setObjectName(QString::fromUtf8("buttonStatistics"));
+        buttonStatistics->setEnabled(false);
 
         horizontalLayout->addWidget(buttonStatistics);
 
@@ -615,7 +616,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(2);
+        tabWidget->setCurrentIndex(0);
         buttonReport->setDefault(false);
 
 
