@@ -26,6 +26,7 @@
 #include "colorwidget.h"
 #include "defines.h"
 #include "deletedialog.h"
+#include "editpointdialog.h"
 
 #undef FINISHED_DAY_HEX
 #undef PAYED_DAY_HEX
@@ -74,7 +75,7 @@ private:
     void loadCalendarStyle();
     void loadEditedDaysFromDB(int pointID);
     void loadPointData(int selectedPoint);
-    void editPointData(int pointID);
+    void editPointData(const QModelIndex &index);
 
     QString FINISHED_DAY_HEX;
     QString PAYED_DAY_HEX;

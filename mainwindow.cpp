@@ -38,6 +38,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->tableViewPoints->setModel(_modelPoint);
     ui->tableViewPoints->hideColumn(DB_TABLE_POINTS_ID);
+    ui->tableViewPoints->hideColumn(DB_TABLE_POINTS_OPEN_DATE);
+    ui->tableViewPoints->hideColumn(DB_TABLE_POINTS_START_DATE);
     ui->tableViewPoints->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     updatePointList();
@@ -115,13 +117,7 @@ MainWindow::MainWindow(QWidget *parent)
 
         ui->editPointName->setText(pointName);
     });
-    connect(ui->tableViewPoints, &QTableView::doubleClicked, [this](){
-        int row = ui->tableViewPoints->currentIndex().row();
-        int pointID = _modelPoint->data(_modelPoint->index(row, DB_TABLE_POINTS_ID)).toUInt();
-
-        qDebug() << "Selected ID:" << pointID;
-        editPointData(pointID);
-    });
+    connect(ui->tableViewPoints, &QTableView::doubleClicked, this, &MainWindow::editPointData);
     connect(ui->buttonDeletePoint, &QPushButton::clicked, this, &MainWindow::removePoint);
     connect(ui->buttonAddPoint, &QPushButton::clicked, this, &MainWindow::addPoint);
     connect(ui->comboBoxPoint, &QComboBox::currentIndexChanged, this, &MainWindow::changePoint);
@@ -255,7 +251,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::takeColor(QLineEdit* edit)                                                            // to rework ???
 {
-    ColorWidget* obj = qobject_cast<ColorWidget*>(sender());
+    ColorWidget* obj = qobject_cast<ColorWidget*>(this->sender());
 
     qDebug() << edit->objectName();
 
@@ -883,14 +879,14 @@ void MainWindow::loadEditedDaysFromDB(int pointID)
 void MainWindow::loadPointData(int selectedPoint)
 {
     _pointID        = _modelPoint->data((_modelPoint->index(selectedPoint, DB_TABLE_POINTS_ID))).toUInt();
-    _employee1.name = _modelPoint->data(_modelPoint->index(selectedPoint, DB_TABLE_POINT_EMPLOYEE1)).toString();
-    _employee2.name = _modelPoint->data(_modelPoint->index(selectedPoint, DB_TABLE_POINT_EMPLOYEE2)).toString();
+    _employee1.name = _modelPoint->data(_modelPoint->index(selectedPoint, DB_TABLE_POINTS_EMPLOYEE1)).toString();
+    _employee2.name = _modelPoint->data(_modelPoint->index(selectedPoint, DB_TABLE_POINTS_EMPLOYEE2)).toString();
 
-    _scheduleText   = _modelPoint->data(_modelPoint->index(selectedPoint, DB_TABLE_POINT_SCHEDULE)).toString();
+    _scheduleText   = _modelPoint->data(_modelPoint->index(selectedPoint, DB_TABLE_POINTS_SCHEDULE)).toString();
 
-    _openWBPoint    = QDate::fromString(_modelPoint->data(_modelPoint->index(selectedPoint, DB_TABLE_POINT_OPEN_DATE)).toString());
-    _startDate      = QDate::fromString(_modelPoint->data(_modelPoint->index(selectedPoint, DB_TABLE_POINT_START_DATE)).toString());
-    _lastPayday     = QDate::fromString(_modelPoint->data(_modelPoint->index(selectedPoint, DB_TABLE_POINT_LAST_PAYDAY)).toString());
+    _openWBPoint    = QDate::fromString(_modelPoint->data(_modelPoint->index(selectedPoint, DB_TABLE_POINTS_OPEN_DATE)).toString());
+    _startDate      = QDate::fromString(_modelPoint->data(_modelPoint->index(selectedPoint, DB_TABLE_POINTS_START_DATE)).toString());
+    _lastPayday     = QDate::fromString(_modelPoint->data(_modelPoint->index(selectedPoint, DB_TABLE_POINTS_LAST_PAYDAY)).toString());
 
     qDebug() << "Loaded:";
     qDebug() << "  Poind id:       " << _pointID;
@@ -902,7 +898,14 @@ void MainWindow::loadPointData(int selectedPoint)
     qDebug() << "  Last  payday:   " << _lastPayday.toString();
 }
 
-void MainWindow::editPointData(int pointID)
+void MainWindow::editPointData(const QModelIndex &index)
 {
+    qDebug() << "Selected ID:" << index.row();
 
+    EditPointDialog dialog(this);
+    dialog.setScheduleList("schedle.txt");
+    dialog.setEmployeeList(_modelEmployee);
+    dialog.setModel(_modelPoint);
+    dialog.setModelIndex(index);
+    dialog.exec();
 }
