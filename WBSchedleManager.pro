@@ -4,10 +4,10 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 MAJOR   = 2;
 MINOR   = 2;
-RELEASE = 4;
-BUILD   = 230418;
+RELEASE = 5;
+BUILD   = 230421;
 
-VERSION = 2.2.4.230418
+VERSION = 2.2.5.230421
 QMAKE_TARGET_COMPANY = The_Zealot
 QMAKE_TARGET_PRODUCT = WBSchedleManager
 QMAKE_TARGET_DESCRIPTION = Managment the shifts of all employees involved in the WBPoint
