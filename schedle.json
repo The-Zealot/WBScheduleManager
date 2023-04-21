@@ -1,9 +1,10 @@
 {
-    "Employee_1": "Сорокина К",
-    "Employee_2": "Соловьев Я",
-    "color_1": "#008080",
-    "color_2": "#ff8000",
-    "lastPayday": "Mon Feb 17 2023",
-    "salary": 1300,
-    "startDate": "Sat Feb 18 2023"
+    "FinishedDayColor": "#808080",
+    "FirstEmployee": "Сорокина К",
+    "OpenDate": "Wed Dec 8 2021",
+    "PayedDayColor": "#00aa00",
+    "SecondEmployee": "Соловьев Я",
+    "StartDate": "Sat Feb 18 2023",
+    "currentSchedle": "2/2",
+    "lastPayday": "Tue Feb 28 2023"
 }
