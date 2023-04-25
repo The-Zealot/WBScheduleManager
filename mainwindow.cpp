@@ -917,5 +917,64 @@ void MainWindow::editPointData(const QModelIndex &index)
 
 void MainWindow::calculateStats()
 {
+    QMap<QDate, EmployeeShift> days;
+    QMap<QString, Employee> employees;
 
+    int selectedPoint = ui->tableViewPoints->currentIndex().row();
+
+    int pointID = _modelPoint->data((_modelPoint->index(selectedPoint, DB_TABLE_POINTS_ID))).toUInt();
+    QDate openDate = QDate::fromString(_modelPoint->data(_modelPoint->index(selectedPoint, DB_TABLE_POINTS_OPEN_DATE)).toString());
+    int employeeCount = _modelEmployee->rowCount();
+    loadEditedDaysFromDB(pointID, days);
+
+    int uncountedShifts = 0;
+    int payedShifts = 0;
+    int finishedShifts = 0;
+    int allDays = openDate.daysTo(QDate::currentDate());
+    int payedMoney = 0;
+
+    for (int i = 0; i < allDays; i++)
+    {
+        QDate date = openDate.addDays(i);
+        if (date > QDate::currentDate())
+        {
+            break;
+        }
+
+        days[date];
+
+        if (days[date].name == "")
+        {
+            uncountedShifts++;
+            continue;
+        }
+
+        payedShifts += days[date].isPayed;
+        finishedShifts += days[date].isFinished;
+
+        if (days[date].isPayed)
+        {
+            payedMoney += days[date].salary;
+        }
+
+        employees[days[date].name].shifts += days[date].isFinished;
+        employees[days[date].name].payedShifts += days[date].isPayed;
+        employees[days[date].name].salary += days[date].salary;
+    }
+
+    qDebug() << "Days from open:    " << allDays;
+    qDebug() << "Uncounted days:    " << uncountedShifts;
+    qDebug() << "Payed shifts:      " << payedShifts;
+    qDebug() << "Unpayed shifts:    " << finishedShifts - payedShifts;
+    qDebug() << "Employees involved:" << employees.size() << "/" << employeeCount;
+
+    for (auto & iter : employees.keys())
+    {
+        qDebug() << "  Employee:" << iter;
+        qDebug() << "    Worked:" << employees[iter].shifts;
+        qDebug() << "    Payed: " << employees[iter].payedShifts;
+        qDebug() << "    Earned:" << employees[iter].salary;
+    }
+
+    qDebug() << "All money was paid:" << payedMoney;
 }
