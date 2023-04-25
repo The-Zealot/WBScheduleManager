@@ -47,7 +47,7 @@ private slots:
     void takeColor(QLineEdit* edit);
     void changeSchedle();
     void updateCalendar();                      // changeSchedle v2.0
-    void resetCalendar();
+    void resetCalendar(QDate date, bool isFullReset = true);
     void payEverything();
     void setStatusBarMessage();
     void doActionToolbar();
@@ -71,7 +71,7 @@ private:
     void fillTextBrowse();
     void writeJson();
     void readJson();
-    void readSchedleList();
+    void readScheduleList();
     void loadCalendarStyle();
     void loadEditedDaysFromDB(int pointID);
     void loadPointData(int selectedPoint);

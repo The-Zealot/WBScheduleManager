@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent)
     qDebug() << "Reading file data...";
 
     readJson();                                                                         // rework
-    readSchedleList();
+    readScheduleList();
 
     _pointID                = 0;
     _salary                 = 1300;
@@ -167,7 +167,8 @@ MainWindow::MainWindow(QWidget *parent)
         setStatusBarMessage();
     });
     connect(ui->toolButtonCalculate, &QAbstractButton::clicked, [this](){
-        resetCalendar();
+        QDate date = QDate::currentDate();
+        resetCalendar(date, false);
         AlertWidget::showAlert("График перерасчитан!");
     });
     connect(ui->toolButtonSave, &QAbstractButton::clicked, [this](){
@@ -214,18 +215,22 @@ MainWindow::MainWindow(QWidget *parent)
         ui->textBrowserShiftInfo->clear();
         AlertWidget::showAlert("Данные загружены");
     });
-    connect(ui->toolButtonInfo, &QAbstractButton::clicked, this, &MainWindow::openDocInfo);
+//    connect(ui->toolButtonInfo, &QAbstractButton::clicked, this, &MainWindow::openDocInfo);
+    connect(ui->toolButtonReset, &QAbstractButton::clicked, [this](){
+        resetCalendar(_startDate);
+        AlertWidget::showAlert("Данные сброшены");
+    });
 
     ui->toolButtonArrow->setIcon(QIcon(":/image/toolBar/arrow.png"));
     ui->toolButtonEmployees->setIcon(QIcon(":/image/toolBar/employee.png"));
     ui->toolButtonSalary->setIcon(QIcon(":/image/toolBar/salary.png"));
     ui->toolButtonPaymentTarget->setIcon(QIcon(":/image/toolBar/paymentTarget.png"));
     ui->toolButtonPaymentGeneral->setIcon(QIcon(":/image/toolBar/paymentGeneral.png"));
-    ui->toolButtonClear->setIcon(QIcon(":/image/toolBar/clear.png"));
+    ui->toolButtonClear->setIcon(QIcon(":/image/toolBar/clearTarget.png"));
     ui->toolButtonCalculate->setIcon(QIcon(":/image/toolBar/calculator.png"));
     ui->toolButtonSave->setIcon(QIcon(":/image/toolBar/save.png"));
     ui->toolButtonLoad->setIcon(QIcon(":/image/toolBar/load.png"));
-    ui->toolButtonInfo->setIcon(QIcon(":/image/toolBar/info.png"));
+    ui->toolButtonReset->setIcon(QIcon(":/image/toolBar/clearGeneral.png"));
 
     ui->toolButtonArrow->setToolTip("Выделение");
     ui->toolButtonEmployees->setToolTip("Выбрать сотрудника");
@@ -236,7 +241,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->toolButtonCalculate->setToolTip("Перерасчет графика");
     ui->toolButtonSave->setToolTip("Сохранить");
     ui->toolButtonLoad->setToolTip("Загрузить данные");
-    ui->toolButtonInfo->setToolTip("Справка");
+    ui->toolButtonReset->setToolTip("Сброс графика");
 }
 
 MainWindow::~MainWindow()
@@ -368,7 +373,7 @@ void MainWindow::updateCalendar()
     fillTextBrowse();
 }
 
-void MainWindow::resetCalendar()
+void MainWindow::resetCalendar(QDate date, bool isFullReset)
 {
     if (_scheduleText == "")
     {
@@ -403,8 +408,6 @@ void MainWindow::resetCalendar()
         }
     };
 
-    _editedDays.clear();
-    QDate date = _startDate;
     QStringList shiftList = _scheduleText.split("/");
 
     int DAYS_FIRST_EMPLOYEE     = shiftList.at(0).toInt();
@@ -421,9 +424,14 @@ void MainWindow::resetCalendar()
 
     ui->calendarWidget->setDateRange(_openWBPoint, QDate::currentDate().addYears(1));
 
-    reformatCalendar(_openWBPoint, 1, 1, empty, _openWBPoint.daysTo(QDate::currentDate().addYears(1)));
+    if (isFullReset)
+    {
+        qDebug() << "Reseting calendar...";
+        _editedDays.clear();
+        reformatCalendar(_openWBPoint, 1, 1, empty, _openWBPoint.daysTo(QDate::currentDate().addYears(1)));
+    }
     reformatCalendar(date, DAYS_FIRST_EMPLOYEE, DAYS_ALL_EMPLOYEE, first, LENGTH_REFORMAT);
-    date = _startDate.addDays(DAYS_FIRST_EMPLOYEE);
+    date = date.addDays(DAYS_FIRST_EMPLOYEE);
     reformatCalendar(date, DAYS_SECOND_EMPLOYEE, DAYS_ALL_EMPLOYEE, second, LENGTH_REFORMAT);
 
     qDebug() << "Calculating finished days...";
@@ -810,7 +818,7 @@ void MainWindow::readJson()
     _scheduleText       = jObject["currentSchedle"].toString();
 }
 
-void MainWindow::readSchedleList()
+void MainWindow::readScheduleList()
 {
     QFile file("schedle.txt");
     if (!file.open(QIODevice::ReadOnly))
@@ -836,7 +844,7 @@ void MainWindow::loadCalendarStyle()
 
 void MainWindow::loadEditedDaysFromDB(int pointID)
 {
-    resetCalendar();
+    resetCalendar(_startDate);
 
     qDebug() << "Loading data from database...";
     qDebug() << "Current point id:" << pointID;
