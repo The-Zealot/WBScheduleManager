@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>356</width>
+    <width>355</width>
     <height>234</height>
    </rect>
   </property>
@@ -51,7 +51,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>11</x>
@@ -207,6 +207,20 @@
    </layout>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>editPointName</tabstop>
+  <tabstop>comboBoxFirstEmployee</tabstop>
+  <tabstop>comboBoxMarketplace</tabstop>
+  <tabstop>comboBoxSecondEmployee</tabstop>
+  <tabstop>dateEditOpen</tabstop>
+  <tabstop>dateEditStart</tabstop>
+  <tabstop>timeEditEndOfShift</tabstop>
+  <tabstop>comboBoxSchedule</tabstop>
+  <tabstop>buttonApply</tabstop>
+  <tabstop>buttonClose</tabstop>
+  <tabstop>editStartDate</tabstop>
+  <tabstop>editOpenDate</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

@@ -33,7 +33,7 @@ public:
     QVBoxLayout *verticalLayout;
     QLineEdit *editStartDate;
     QLineEdit *editOpenDate;
-    QWidget *widget;
+    QWidget *layoutWidget;
     QGridLayout *gridLayout_2;
     QGridLayout *gridLayout;
     QLabel *label_3;
@@ -62,7 +62,7 @@ public:
     {
         if (EditPointDialog->objectName().isEmpty())
             EditPointDialog->setObjectName(QString::fromUtf8("EditPointDialog"));
-        EditPointDialog->resize(356, 234);
+        EditPointDialog->resize(355, 234);
         groupBox = new QGroupBox(EditPointDialog);
         groupBox->setObjectName(QString::fromUtf8("groupBox"));
         groupBox->setEnabled(false);
@@ -83,52 +83,52 @@ public:
 
         verticalLayout->addWidget(editOpenDate);
 
-        widget = new QWidget(EditPointDialog);
-        widget->setObjectName(QString::fromUtf8("widget"));
-        widget->setGeometry(QRect(11, 11, 336, 214));
-        gridLayout_2 = new QGridLayout(widget);
+        layoutWidget = new QWidget(EditPointDialog);
+        layoutWidget->setObjectName(QString::fromUtf8("layoutWidget"));
+        layoutWidget->setGeometry(QRect(11, 11, 336, 214));
+        gridLayout_2 = new QGridLayout(layoutWidget);
         gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
         gridLayout_2->setContentsMargins(0, 0, 0, 0);
         gridLayout = new QGridLayout();
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
-        label_3 = new QLabel(widget);
+        label_3 = new QLabel(layoutWidget);
         label_3->setObjectName(QString::fromUtf8("label_3"));
 
         gridLayout->addWidget(label_3, 0, 0, 1, 1);
 
-        dateEditOpen = new QDateEdit(widget);
+        dateEditOpen = new QDateEdit(layoutWidget);
         dateEditOpen->setObjectName(QString::fromUtf8("dateEditOpen"));
 
         gridLayout->addWidget(dateEditOpen, 0, 1, 1, 1);
 
-        label_4 = new QLabel(widget);
+        label_4 = new QLabel(layoutWidget);
         label_4->setObjectName(QString::fromUtf8("label_4"));
 
         gridLayout->addWidget(label_4, 1, 0, 1, 1);
 
-        dateEditStart = new QDateEdit(widget);
+        dateEditStart = new QDateEdit(layoutWidget);
         dateEditStart->setObjectName(QString::fromUtf8("dateEditStart"));
 
         gridLayout->addWidget(dateEditStart, 1, 1, 1, 1);
 
-        label_5 = new QLabel(widget);
+        label_5 = new QLabel(layoutWidget);
         label_5->setObjectName(QString::fromUtf8("label_5"));
 
         gridLayout->addWidget(label_5, 2, 0, 1, 1);
 
-        timeEditEndOfShift = new QTimeEdit(widget);
+        timeEditEndOfShift = new QTimeEdit(layoutWidget);
         timeEditEndOfShift->setObjectName(QString::fromUtf8("timeEditEndOfShift"));
         timeEditEndOfShift->setEnabled(false);
         timeEditEndOfShift->setDateTime(QDateTime(QDate(2000, 1, 1), QTime(21, 0, 0)));
 
         gridLayout->addWidget(timeEditEndOfShift, 2, 1, 1, 1);
 
-        label_6 = new QLabel(widget);
+        label_6 = new QLabel(layoutWidget);
         label_6->setObjectName(QString::fromUtf8("label_6"));
 
         gridLayout->addWidget(label_6, 3, 0, 1, 1);
 
-        comboBoxSchedule = new QComboBox(widget);
+        comboBoxSchedule = new QComboBox(layoutWidget);
         comboBoxSchedule->setObjectName(QString::fromUtf8("comboBoxSchedule"));
 
         gridLayout->addWidget(comboBoxSchedule, 3, 1, 1, 1);
@@ -138,12 +138,12 @@ public:
 
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
-        buttonApply = new QPushButton(widget);
+        buttonApply = new QPushButton(layoutWidget);
         buttonApply->setObjectName(QString::fromUtf8("buttonApply"));
 
         horizontalLayout->addWidget(buttonApply);
 
-        buttonClose = new QPushButton(widget);
+        buttonClose = new QPushButton(layoutWidget);
         buttonClose->setObjectName(QString::fromUtf8("buttonClose"));
 
         horizontalLayout->addWidget(buttonClose);
@@ -153,12 +153,12 @@ public:
 
         verticalLayout_2 = new QVBoxLayout();
         verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
-        label = new QLabel(widget);
+        label = new QLabel(layoutWidget);
         label->setObjectName(QString::fromUtf8("label"));
 
         verticalLayout_2->addWidget(label);
 
-        editPointName = new QLineEdit(widget);
+        editPointName = new QLineEdit(layoutWidget);
         editPointName->setObjectName(QString::fromUtf8("editPointName"));
 
         verticalLayout_2->addWidget(editPointName);
@@ -168,12 +168,12 @@ public:
 
         verticalLayout_3 = new QVBoxLayout();
         verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
-        label_2 = new QLabel(widget);
+        label_2 = new QLabel(layoutWidget);
         label_2->setObjectName(QString::fromUtf8("label_2"));
 
         verticalLayout_3->addWidget(label_2);
 
-        comboBoxMarketplace = new QComboBox(widget);
+        comboBoxMarketplace = new QComboBox(layoutWidget);
         comboBoxMarketplace->addItem(QString());
         comboBoxMarketplace->addItem(QString());
         comboBoxMarketplace->addItem(QString());
@@ -187,17 +187,17 @@ public:
 
         verticalLayout_4 = new QVBoxLayout();
         verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
-        label_7 = new QLabel(widget);
+        label_7 = new QLabel(layoutWidget);
         label_7->setObjectName(QString::fromUtf8("label_7"));
 
         verticalLayout_4->addWidget(label_7);
 
-        comboBoxFirstEmployee = new QComboBox(widget);
+        comboBoxFirstEmployee = new QComboBox(layoutWidget);
         comboBoxFirstEmployee->setObjectName(QString::fromUtf8("comboBoxFirstEmployee"));
 
         verticalLayout_4->addWidget(comboBoxFirstEmployee);
 
-        comboBoxSecondEmployee = new QComboBox(widget);
+        comboBoxSecondEmployee = new QComboBox(layoutWidget);
         comboBoxSecondEmployee->setObjectName(QString::fromUtf8("comboBoxSecondEmployee"));
 
         verticalLayout_4->addWidget(comboBoxSecondEmployee);
@@ -205,6 +205,17 @@ public:
 
         gridLayout_2->addLayout(verticalLayout_4, 2, 0, 2, 1);
 
+        QWidget::setTabOrder(editPointName, comboBoxFirstEmployee);
+        QWidget::setTabOrder(comboBoxFirstEmployee, comboBoxMarketplace);
+        QWidget::setTabOrder(comboBoxMarketplace, comboBoxSecondEmployee);
+        QWidget::setTabOrder(comboBoxSecondEmployee, dateEditOpen);
+        QWidget::setTabOrder(dateEditOpen, dateEditStart);
+        QWidget::setTabOrder(dateEditStart, timeEditEndOfShift);
+        QWidget::setTabOrder(timeEditEndOfShift, comboBoxSchedule);
+        QWidget::setTabOrder(comboBoxSchedule, buttonApply);
+        QWidget::setTabOrder(buttonApply, buttonClose);
+        QWidget::setTabOrder(buttonClose, editStartDate);
+        QWidget::setTabOrder(editStartDate, editOpenDate);
 
         retranslateUi(EditPointDialog);
 
