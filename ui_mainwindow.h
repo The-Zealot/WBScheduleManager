@@ -554,7 +554,7 @@ public:
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
         buttonStatistics = new QPushButton(layoutWidget3);
         buttonStatistics->setObjectName(QString::fromUtf8("buttonStatistics"));
-        buttonStatistics->setEnabled(false);
+        buttonStatistics->setEnabled(true);
 
         horizontalLayout->addWidget(buttonStatistics);
 
