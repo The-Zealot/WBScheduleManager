@@ -71,6 +71,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->editEmployee1->setText(_employee1.name);
     ui->editEmployee2->setText(_employee2.name);
 
+    ui->textBrowserStats->setFontFamily("consolas");
+
     ui->calendarWidget->setDateRange(_openWBPoint, QDate::currentDate().addYears(1));
 
     ui->editSalary->setValidator(new QRegularExpressionValidator(QRegularExpression("[1-9][0-9]{0,3}")));
@@ -913,6 +915,8 @@ void MainWindow::editPointData(const QModelIndex &index)
     dialog.setModel(_modelPoint);
     dialog.setModelIndex(index);
     dialog.exec();
+
+    changePoint();
 }
 
 void MainWindow::calculateStats()
@@ -924,6 +928,7 @@ void MainWindow::calculateStats()
 
     int pointID = _modelPoint->data((_modelPoint->index(selectedPoint, DB_TABLE_POINTS_ID))).toUInt();
     QDate openDate = QDate::fromString(_modelPoint->data(_modelPoint->index(selectedPoint, DB_TABLE_POINTS_OPEN_DATE)).toString());
+    QString name = _modelPoint->data((_modelPoint->index(selectedPoint, DB_TABLE_POINTS_NAME))).toString();
     int employeeCount = _modelEmployee->rowCount();
     loadEditedDaysFromDB(pointID, days);
 
@@ -968,13 +973,47 @@ void MainWindow::calculateStats()
     qDebug() << "Unpayed shifts:    " << finishedShifts - payedShifts;
     qDebug() << "Employees involved:" << employees.size() << "/" << employeeCount;
 
+
+    //////////////// separate ////////////////
+    ui->textBrowserStats->clear();
+
+    ui->textBrowserStats->append(name);
+    ui->textBrowserStats->append("  Дней с момента открытия:        " + QVariant(allDays).toString());
+    ui->textBrowserStats->append("  Количество нерасчетных смен:    " + QVariant(uncountedShifts).toString());
+    ui->textBrowserStats->append("  Количество оплаченных смен:     " + QVariant(payedShifts).toString());
+    ui->textBrowserStats->append("  Количество неоплаченных смен:   " + QVariant(finishedShifts - payedShifts).toString());
+    ui->textBrowserStats->append("  Задействовано сотрудников:      " + QVariant(employees.size()).toString() + " / " + QVariant(employeeCount).toString());
+
     for (auto & iter : employees.keys())
     {
         qDebug() << "  Employee:" << iter;
         qDebug() << "    Worked:" << employees[iter].shifts;
         qDebug() << "    Payed: " << employees[iter].payedShifts;
         qDebug() << "    Earned:" << employees[iter].salary;
+
+        ui->textBrowserStats->append("    Сотрудник " + iter + ":");
+        ui->textBrowserStats->append("      Отработано:   " + QVariant(employees[iter].shifts).toString());
+        ui->textBrowserStats->append("      Оплачено:     " + QVariant(employees[iter].payedShifts).toString());
+        ui->textBrowserStats->append("      Заработано:   " + QVariant(employees[iter].salary).toString() + " руб.");
     }
 
+    ui->textBrowserStats->append("  Всего выплачено:                " + QVariant(payedMoney).toString() + " руб.");
     qDebug() << "All money was paid:" << payedMoney;
+
+//    point_name
+//       Прошло дней с момента открытия: 	0
+//       Количество нерасчетных смен: 	0
+//       Количество оплаченных смен:	0
+//       Количество неоплаченных смен:	0
+//       Задействовано сотрудников:		0 / 0
+//          Сотрудник employee_name:
+//             Отработано:	0
+//             Оплачено:	0
+//             Выплачено:	0 руб.
+//          ========== EOL ==========
+//       Всего выплачено:		0 руб.
+//       Самый дорогой день:		day
+//       Самый дорогой месяц:		month
+
+    //////////////////////////////////////////
 }
