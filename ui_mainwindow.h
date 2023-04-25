@@ -621,7 +621,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(2);
         buttonReport->setDefault(false);
 
 
@@ -677,24 +677,7 @@ public:
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:7.8pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt; font-style:italic;\">point_name</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">   \320\237\321\200\320\276\321\210\320\273\320\276 \320\264\320\275\320\265\320\271 \321\201 \320\274\320\276\320\274\320\265\320\275\321\202\320\260 \320\276\321\202\320\272\321\200\321\213\321\202\320\270\321\217: 	0</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-inde"
-                        "nt:0; text-indent:0px;\"><span style=\" font-size:8pt;\">   \320\232\320\276\320\273\320\270\321\207\320\265\321\201\321\202\320\262\320\276 \320\275\320\265\321\200\320\260\321\201\321\207\320\265\321\202\320\275\321\213\321\205 \321\201\320\274\320\265\320\275: 	0</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">   \320\232\320\276\320\273\320\270\321\207\320\265\321\201\321\202\320\262\320\276 \320\276\320\277\320\273\320\260\321\207\320\265\320\275\320\275\321\213\321\205 \321\201\320\274\320\265\320\275:	0</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">   \320\232\320\276\320\273\320\270\321\207\320\265\321\201\321\202\320\262\320\276 \320\275\320\265\320\276\320\277\320\273\320\260\321\207\320\265\320\275\320\275\321\213\321\205 \321\201\320\274\320\265\320\275:	0</spa"
-                        "n></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">   \320\227\320\260\320\264\320\265\320\271\321\201\321\202\320\262\320\276\320\262\320\260\320\275\320\276 \321\201\320\276\321\202\321\200\321\203\320\264\320\275\320\270\320\272\320\276\320\262:		0 / 0</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">      \320\241\320\276\321\202\321\200\321\203\320\264\320\275\320\270\320\272 </span><span style=\" font-size:8pt; font-style:italic;\">employee_name</span><span style=\" font-size:8pt;\">: </span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">         \320\236\321\202\321\200\320\260\320\261\320\276\321\202\320\260\320\275\320\276:	0</span></p>\n"
-"<p style=\" margin-t"
-                        "op:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">         \320\236\320\277\320\273\320\260\321\207\320\265\320\275\320\276:	0</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">         \320\222\321\213\320\277\320\273\320\260\321\207\320\265\320\275\320\276:	0 \321\200\321\203\320\261.</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">      </span><span style=\" font-size:8pt; font-style:italic;\">========== EOL ==========</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">   \320\222\321\201\320\265\320\263\320\276 \320\262\321\213\320\277\320\273\320\260\321\207\320\265\320\275\320"
-                        "\276:		0 \321\200\321\203\320\261.</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">   \320\241\320\260\320\274\321\213\320\271 \320\264\320\276\321\200\320\276\320\263\320\276\320\271 \320\264\320\265\320\275\321\214:		</span><span style=\" font-size:8pt; font-style:italic;\">day</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">   \320\241\320\260\320\274\321\213\320\271 \320\264\320\276\321\200\320\276\320\263\320\276\320\271 \320\274\320\265\321\201\321\217\321\206:		</span><span style=\" font-size:8pt; font-style:italic;\">month</span></p></body></html>", nullptr));
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", nullptr));
         toolButtonSelectDir->setText(QCoreApplication::translate("MainWindow", "...", nullptr));
         buttonStatistics->setText(QCoreApplication::translate("MainWindow", "\320\241\321\202\320\260\321\202\320\270\321\201\321\202\320\270\320\272\320\260", nullptr));
         buttonReport->setText(QCoreApplication::translate("MainWindow", "\320\236\321\202\321\207\320\265\321\202", nullptr));
