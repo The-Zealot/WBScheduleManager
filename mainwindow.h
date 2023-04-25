@@ -47,7 +47,7 @@ private slots:
     void takeColor(QLineEdit* edit);
     void changeSchedle();
     void updateCalendar();                      // changeSchedle v2.0
-    void resetCalendar(QDate date, bool isFullReset = true);
+    void resetCalendar(QMap<QDate, EmployeeShift> &editedDays, QDate date, bool isFullReset = true);
     void payEverything();
     void setStatusBarMessage();
     void doActionToolbar();
@@ -66,16 +66,17 @@ private slots:
     void openDocInfo();
 
 private:
-    void calculateWorks();
-    void calculateFinishedDays();
-    void fillTextBrowse();
+    void calculateWorks(QMap<QDate, EmployeeShift> &editDays, QMap<QString, Employee> &employyes);
+    void calculateFinishedDays(QMap<QDate, EmployeeShift> &editDays);
+    void fillTextBrowse(QMap<QString, Employee> &employyes);
     void writeJson();
     void readJson();
     void readScheduleList();
     void loadCalendarStyle();
-    void loadEditedDaysFromDB(int pointID);
+    void loadEditedDaysFromDB(int pointID, QMap<QDate, EmployeeShift> &editDays);
     void loadPointData(int selectedPoint);
     void editPointData(const QModelIndex &index);
+    void calculateStats();
 
     QString FINISHED_DAY_HEX;
     QString PAYED_DAY_HEX;

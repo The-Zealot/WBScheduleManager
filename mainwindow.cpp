@@ -79,7 +79,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->editColorFinishedDay->setValidator(new QRegularExpressionValidator(QRegularExpression("#[a-f0-9]{6}")));
     ui->editPointName->setValidator(new QRegularExpressionValidator(QRegularExpression("\\S[0-9a-zA-zА-яа-я ]{255}")));
 
-    loadEditedDaysFromDB(_pointID);
+    loadEditedDaysFromDB(_pointID, _editedDays);
     updateCalendar();
 
     connect(ui->colorWidgetPayedDay, &QPushButton::clicked, [this](){
@@ -121,6 +121,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->buttonDeletePoint, &QPushButton::clicked, this, &MainWindow::removePoint);
     connect(ui->buttonAddPoint, &QPushButton::clicked, this, &MainWindow::addPoint);
     connect(ui->comboBoxPoint, &QComboBox::currentIndexChanged, this, &MainWindow::changePoint);
+    connect(ui->buttonStatistics, &QPushButton::clicked, this, &MainWindow::calculateStats);
 
     qDebug() << "Initialization of Toolbar...";
 
@@ -168,7 +169,7 @@ MainWindow::MainWindow(QWidget *parent)
     });
     connect(ui->toolButtonCalculate, &QAbstractButton::clicked, [this](){
         QDate date = QDate::currentDate();
-        resetCalendar(date, false);
+        resetCalendar(_editedDays, date, false);
         AlertWidget::showAlert("График перерасчитан!");
     });
     connect(ui->toolButtonSave, &QAbstractButton::clicked, [this](){
@@ -210,14 +211,14 @@ MainWindow::MainWindow(QWidget *parent)
         qDebug() << "Records processed:" << list.size();
     });
     connect(ui->toolButtonLoad, &QAbstractButton::clicked, [this](){
-        loadEditedDaysFromDB(_pointID);
+        loadEditedDaysFromDB(_pointID, _editedDays);
         updateCalendar();
         ui->textBrowserShiftInfo->clear();
         AlertWidget::showAlert("Данные загружены");
     });
 //    connect(ui->toolButtonInfo, &QAbstractButton::clicked, this, &MainWindow::openDocInfo);
     connect(ui->toolButtonReset, &QAbstractButton::clicked, [this](){
-        resetCalendar(_startDate);
+        resetCalendar(_editedDays, _startDate);
         AlertWidget::showAlert("Данные сброшены");
     });
 
@@ -341,8 +342,8 @@ void MainWindow::changeSchedle()
         ui->calendarWidget->setDateTextFormat(iter, format);
     }
 
-    calculateWorks();
-    fillTextBrowse();
+    calculateWorks(_editedDays, _employees);
+    fillTextBrowse(_employees);
 
     qDebug() << "Map size:" << _editedDays.count();
 }
@@ -369,11 +370,11 @@ void MainWindow::updateCalendar()
 
         ui->calendarWidget->setDateTextFormat(iter, format);
     }
-    calculateWorks();
-    fillTextBrowse();
+    calculateWorks(_editedDays, _employees);
+    fillTextBrowse(_employees);
 }
 
-void MainWindow::resetCalendar(QDate date, bool isFullReset)
+void MainWindow::resetCalendar(QMap<QDate, EmployeeShift> &editDays, QDate date, bool isFullReset)
 {
     if (_scheduleText == "")
     {
@@ -381,7 +382,7 @@ void MainWindow::resetCalendar(QDate date, bool isFullReset)
         return;
     }
 
-    auto reformatCalendar = [this](QDate startDate, int employeeDayCount, int allEmployeeDays, EmployeeShift &shift, int lengthReformat){
+    auto reformatCalendar = [this, &editDays](QDate startDate, int employeeDayCount, int allEmployeeDays, EmployeeShift &shift, int lengthReformat){
         for (int i = 0; i < lengthReformat; i += allEmployeeDays)
         {
             for (int j = 0; j < employeeDayCount; j++)
@@ -394,14 +395,14 @@ void MainWindow::resetCalendar(QDate date, bool isFullReset)
                 {
                     if (name == _modelEmployee->data(_modelEmployee->index(k, DB_TABLE_EMPLOYEE_NAME)).toString())
                     {
-                        _editedDays[selectedDate].name      = name;
-                        _editedDays[selectedDate].salary    = _modelEmployee->data(_modelEmployee->index(k, DB_TABLE_EMPLOYEE_SALARY)).toUInt();
-                        _editedDays[selectedDate].colorHex  = _modelEmployee->data(_modelEmployee->index(k, DB_TABLE_EMPLOYEE_COLOR)).toString();
+                        editDays[selectedDate].name      = name;
+                        editDays[selectedDate].salary    = _modelEmployee->data(_modelEmployee->index(k, DB_TABLE_EMPLOYEE_SALARY)).toUInt();
+                        editDays[selectedDate].colorHex  = _modelEmployee->data(_modelEmployee->index(k, DB_TABLE_EMPLOYEE_COLOR)).toString();
                     }
                     else if (name == "")
                     {
                         EmployeeShift empty;
-                        _editedDays[selectedDate] = empty;
+                        editDays[selectedDate] = empty;
                     }
                 }
             }
@@ -427,7 +428,7 @@ void MainWindow::resetCalendar(QDate date, bool isFullReset)
     if (isFullReset)
     {
         qDebug() << "Reseting calendar...";
-        _editedDays.clear();
+        editDays.clear();
         reformatCalendar(_openWBPoint, 1, 1, empty, _openWBPoint.daysTo(QDate::currentDate().addYears(1)));
     }
     reformatCalendar(date, DAYS_FIRST_EMPLOYEE, DAYS_ALL_EMPLOYEE, first, LENGTH_REFORMAT);
@@ -436,7 +437,7 @@ void MainWindow::resetCalendar(QDate date, bool isFullReset)
 
     qDebug() << "Calculating finished days...";
 
-    calculateFinishedDays();
+    calculateFinishedDays(_editedDays);
     updateCalendar();
 }
 
@@ -454,8 +455,8 @@ void MainWindow::payEverything()
     }
 
     updateCalendar();
-    calculateWorks();
-    fillTextBrowse();
+    calculateWorks(_editedDays, _employees);
+    fillTextBrowse(_employees);
 }
 
 void MainWindow::setStatusBarMessage()
@@ -697,7 +698,7 @@ void MainWindow::changePoint()
     qDebug() << "Set current point id = " << selectedPoint;
 
     qDebug() << "Loading data...";
-    loadEditedDaysFromDB(_pointID);
+    loadEditedDaysFromDB(_pointID, _editedDays);
 
     qDebug() << "Updating calendar...";
     updateCalendar();
@@ -719,7 +720,7 @@ void MainWindow::openDocInfo()
     }
 }
 
-void MainWindow::calculateWorks()
+void MainWindow::calculateWorks(QMap<QDate, EmployeeShift> &editDays, QMap<QString, Employee> &employyes)
 {
     int days = _startDate.daysTo(QDate::currentDate());
     _employees.clear();
@@ -730,16 +731,16 @@ void MainWindow::calculateWorks()
     for (int i = 1; i < days; i++)
     {
         QDate date = _startDate.addDays(i);
-        QString name = _editedDays[date].name;
-        if (!_editedDays[date].isPayed)
+        QString name = editDays[date].name;
+        if (!editDays[date].isPayed)
         {
-            _employees[name].salary += _editedDays[date].salary;
-            _employees[name].shifts++;
+            employyes[name].salary += editDays[date].salary;
+            employyes[name].shifts++;
         }
     }
 }
 
-void MainWindow::calculateFinishedDays()
+void MainWindow::calculateFinishedDays(QMap<QDate, EmployeeShift> &editDays)
 {
     qDebug() << "Calculating days...";
 
@@ -751,27 +752,27 @@ void MainWindow::calculateFinishedDays()
     for (int i = 0; i < days; i++)
     {
         QDate date = _openWBPoint.addDays(i);
-        _editedDays[date].isFinished = true;
+        editDays[date].isFinished = true;
     }
 }
 
-void MainWindow::fillTextBrowse()
+void MainWindow::fillTextBrowse(QMap<QString, Employee> &employyes)
 {
     ui->textBrowserLoggs->clear();
 
-    if (_employees.isEmpty())
+    if (employyes.isEmpty())
     {
         ui->textBrowserLoggs->setText("Долгов по выплатам нет");
         return;
     }
 
-    for (auto iter : _employees.keys())
+    for (auto iter : employyes.keys())
     {
         if (iter == "")
             continue;
         ui->textBrowserLoggs->append("Сотрудник <b>" + iter + "</b>");
-        ui->textBrowserLoggs->append("   Заработано: " + QVariant(_employees[iter].salary).toString() + " руб.");
-        ui->textBrowserLoggs->append("   Смен: " + QVariant(_employees[iter].shifts).toString());
+        ui->textBrowserLoggs->append("   Заработано: " + QVariant(employyes[iter].salary).toString() + " руб.");
+        ui->textBrowserLoggs->append("   Смен: " + QVariant(employyes[iter].shifts).toString());
     }
 }
 
@@ -842,9 +843,9 @@ void MainWindow::loadCalendarStyle()
     file.close();
 }
 
-void MainWindow::loadEditedDaysFromDB(int pointID)
+void MainWindow::loadEditedDaysFromDB(int pointID, QMap<QDate, EmployeeShift> &editDays)
 {
-    resetCalendar(_startDate);
+    resetCalendar(editDays, _startDate);
 
     qDebug() << "Loading data from database...";
     qDebug() << "Current point id:" << pointID;
@@ -861,16 +862,16 @@ void MainWindow::loadEditedDaysFromDB(int pointID)
     {
         QDate date = QDate::fromString(_query->value(DB_TABLE_DAYS_DATE).toString());
 
-        _editedDays[date].name          = _query->value(DB_TABLE_DAYS_EMPLOYEE).toString();
-        _editedDays[date].salary        = _query->value(DB_TABLE_DAYS_SALARY).toUInt();
-        _editedDays[date].isPayed       = _query->value(DB_TABLE_DAYS_ISPAYED).toBool();
-        _editedDays[date].isFinished    = _query->value(DB_TABLE_DAYS_ISFINISHED).toBool();
+        editDays[date].name          = _query->value(DB_TABLE_DAYS_EMPLOYEE).toString();
+        editDays[date].salary        = _query->value(DB_TABLE_DAYS_SALARY).toUInt();
+        editDays[date].isPayed       = _query->value(DB_TABLE_DAYS_ISPAYED).toBool();
+        editDays[date].isFinished    = _query->value(DB_TABLE_DAYS_ISFINISHED).toBool();
 
         for (int j = 0; j < employees; j++)
         {
-            if (_editedDays[date].name == _modelEmployee->data(_modelEmployee->index(j, DB_TABLE_EMPLOYEE_NAME)))
+            if (editDays[date].name == _modelEmployee->data(_modelEmployee->index(j, DB_TABLE_EMPLOYEE_NAME)))
             {
-                _editedDays[date].colorHex = _modelEmployee->data(_modelEmployee->index(j, DB_TABLE_EMPLOYEE_COLOR)).toString();
+                editDays[date].colorHex = _modelEmployee->data(_modelEmployee->index(j, DB_TABLE_EMPLOYEE_COLOR)).toString();
             }
         }
         days++;
@@ -879,7 +880,7 @@ void MainWindow::loadEditedDaysFromDB(int pointID)
     qDebug() << "Rows loaded from DAYS:" << days;
     qDebug() << "Rows loaded from EMPLOYEES:" << employees;
 
-    calculateFinishedDays();
+    calculateFinishedDays(editDays);
 }
 
 void MainWindow::loadPointData(int selectedPoint)
@@ -912,4 +913,9 @@ void MainWindow::editPointData(const QModelIndex &index)
     dialog.setModel(_modelPoint);
     dialog.setModelIndex(index);
     dialog.exec();
+}
+
+void MainWindow::calculateStats()
+{
+
 }
