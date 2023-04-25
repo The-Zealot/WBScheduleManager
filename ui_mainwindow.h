@@ -54,7 +54,7 @@ public:
     QToolButton *toolButtonCalculate;
     QToolButton *toolButtonSave;
     QToolButton *toolButtonLoad;
-    QToolButton *toolButtonInfo;
+    QToolButton *toolButtonReset;
     QWidget *layoutWidget;
     QVBoxLayout *verticalLayout_6;
     QTextBrowser *textBrowserShiftInfo;
@@ -65,16 +65,16 @@ public:
     QCheckBox *checkBoxFinishedDays;
     QCheckBox *checkBoxPayedDays;
     QCheckBox *checkBoxShifts;
-    QComboBox *comboBoxPoint;
-    QVBoxLayout *verticalLayout_5;
-    QLineEdit *editEmployee1;
-    QLineEdit *editEmployee2;
     QHBoxLayout *horizontalLayout_2;
     QLineEdit *editColorPayedDay;
     ColorWidget *colorWidgetPayedDay;
     QHBoxLayout *horizontalLayout_7;
     QLineEdit *editColorFinishedDay;
     ColorWidget *colorWidgetFinishedDay;
+    QComboBox *comboBoxPoint;
+    QVBoxLayout *verticalLayout_5;
+    QLineEdit *editEmployee1;
+    QLineEdit *editEmployee2;
     QHBoxLayout *horizontalLayout_8;
     QLabel *label;
     QDateEdit *dateEditOpen;
@@ -238,11 +238,11 @@ public:
 
         horizontalLayout_9->addWidget(toolButtonLoad);
 
-        toolButtonInfo = new QToolButton(groupBox);
-        toolButtonInfo->setObjectName(QString::fromUtf8("toolButtonInfo"));
-        toolButtonInfo->setIconSize(QSize(32, 32));
+        toolButtonReset = new QToolButton(groupBox);
+        toolButtonReset->setObjectName(QString::fromUtf8("toolButtonReset"));
+        toolButtonReset->setIconSize(QSize(32, 32));
 
-        horizontalLayout_9->addWidget(toolButtonInfo);
+        horizontalLayout_9->addWidget(toolButtonReset);
 
         layoutWidget = new QWidget(tab);
         layoutWidget->setObjectName(QString::fromUtf8("layoutWidget"));
@@ -296,23 +296,6 @@ public:
 
         verticalLayout_7->addLayout(verticalLayout_3);
 
-        comboBoxPoint = new QComboBox(groupBox_2);
-        comboBoxPoint->setObjectName(QString::fromUtf8("comboBoxPoint"));
-
-        verticalLayout_7->addWidget(comboBoxPoint);
-
-        verticalLayout_5 = new QVBoxLayout();
-        verticalLayout_5->setObjectName(QString::fromUtf8("verticalLayout_5"));
-        editEmployee1 = new QLineEdit(groupBox_2);
-        editEmployee1->setObjectName(QString::fromUtf8("editEmployee1"));
-
-        verticalLayout_5->addWidget(editEmployee1);
-
-        editEmployee2 = new QLineEdit(groupBox_2);
-        editEmployee2->setObjectName(QString::fromUtf8("editEmployee2"));
-
-        verticalLayout_5->addWidget(editEmployee2);
-
         horizontalLayout_2 = new QHBoxLayout();
         horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
         editColorPayedDay = new QLineEdit(groupBox_2);
@@ -332,7 +315,7 @@ public:
         horizontalLayout_2->addWidget(colorWidgetPayedDay);
 
 
-        verticalLayout_5->addLayout(horizontalLayout_2);
+        verticalLayout_7->addLayout(horizontalLayout_2);
 
         horizontalLayout_7 = new QHBoxLayout();
         horizontalLayout_7->setObjectName(QString::fromUtf8("horizontalLayout_7"));
@@ -350,7 +333,26 @@ public:
         horizontalLayout_7->addWidget(colorWidgetFinishedDay);
 
 
-        verticalLayout_5->addLayout(horizontalLayout_7);
+        verticalLayout_7->addLayout(horizontalLayout_7);
+
+        comboBoxPoint = new QComboBox(groupBox_2);
+        comboBoxPoint->setObjectName(QString::fromUtf8("comboBoxPoint"));
+
+        verticalLayout_7->addWidget(comboBoxPoint);
+
+        verticalLayout_5 = new QVBoxLayout();
+        verticalLayout_5->setObjectName(QString::fromUtf8("verticalLayout_5"));
+        editEmployee1 = new QLineEdit(groupBox_2);
+        editEmployee1->setObjectName(QString::fromUtf8("editEmployee1"));
+        editEmployee1->setEnabled(false);
+
+        verticalLayout_5->addWidget(editEmployee1);
+
+        editEmployee2 = new QLineEdit(groupBox_2);
+        editEmployee2->setObjectName(QString::fromUtf8("editEmployee2"));
+        editEmployee2->setEnabled(false);
+
+        verticalLayout_5->addWidget(editEmployee2);
 
         horizontalLayout_8 = new QHBoxLayout();
         horizontalLayout_8->setObjectName(QString::fromUtf8("horizontalLayout_8"));
@@ -361,6 +363,7 @@ public:
 
         dateEditOpen = new QDateEdit(groupBox_2);
         dateEditOpen->setObjectName(QString::fromUtf8("dateEditOpen"));
+        dateEditOpen->setEnabled(false);
 
         horizontalLayout_8->addWidget(dateEditOpen);
 
@@ -376,6 +379,7 @@ public:
 
         dateEditStartpoint = new QDateEdit(groupBox_2);
         dateEditStartpoint->setObjectName(QString::fromUtf8("dateEditStartpoint"));
+        dateEditStartpoint->setEnabled(false);
         dateEditStartpoint->setDateTime(QDateTime(QDate(2023, 2, 20), QTime(0, 0, 0)));
 
         horizontalLayout_6->addWidget(dateEditStartpoint);
@@ -392,6 +396,7 @@ public:
 
         comboBoxSchedle = new QComboBox(groupBox_2);
         comboBoxSchedle->setObjectName(QString::fromUtf8("comboBoxSchedle"));
+        comboBoxSchedle->setEnabled(false);
         QSizePolicy sizePolicy3(QSizePolicy::Minimum, QSizePolicy::Fixed);
         sizePolicy3.setHorizontalStretch(0);
         sizePolicy3.setVerticalStretch(0);
@@ -580,8 +585,8 @@ public:
         QWidget::setTabOrder(toolButtonClear, toolButtonCalculate);
         QWidget::setTabOrder(toolButtonCalculate, toolButtonSave);
         QWidget::setTabOrder(toolButtonSave, toolButtonLoad);
-        QWidget::setTabOrder(toolButtonLoad, toolButtonInfo);
-        QWidget::setTabOrder(toolButtonInfo, calendarWidget);
+        QWidget::setTabOrder(toolButtonLoad, toolButtonReset);
+        QWidget::setTabOrder(toolButtonReset, calendarWidget);
         QWidget::setTabOrder(calendarWidget, textBrowserShiftInfo);
         QWidget::setTabOrder(textBrowserShiftInfo, textBrowserLoggs);
         QWidget::setTabOrder(textBrowserLoggs, checkBoxFinishedDays);
@@ -636,25 +641,22 @@ public:
         toolButtonCalculate->setText(QString());
         toolButtonSave->setText(QString());
         toolButtonLoad->setText(QString());
-        toolButtonInfo->setText(QString());
+        toolButtonReset->setText(QString());
         textBrowserLoggs->setHtml(QCoreApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:7.8pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">\320\241\320\274\320\265\320\275 \320\276\321\202\321\200\320\260\320\261\320\276\321\202\320\260\320\275\320\276:</p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">\320\241\320\276\321\202\321\200\321\203\320\264\320\275\320\270\320\272 %1: %2 (%3 \321\200\321\203\320\261.)</p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">\320\241\320\276\321\202\321\200\321\203\320\264\320\275\320\270\320\272 %4: "
-                        "%5 (%6 \321\200\321\203\320\261.)</p></body></html>", nullptr));
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", nullptr));
         groupBox_2->setTitle(QCoreApplication::translate("MainWindow", "\320\235\320\260\321\201\321\202\321\200\320\276\320\271\320\272\320\270", nullptr));
         checkBoxFinishedDays->setText(QCoreApplication::translate("MainWindow", "\320\236\321\202\321\200\320\260\320\261\320\276\321\202\320\260\320\275\320\275\321\213\320\265 \320\264\320\275\320\270", nullptr));
         checkBoxPayedDays->setText(QCoreApplication::translate("MainWindow", "\320\236\320\277\320\273\320\260\321\207\320\265\320\275\320\275\321\213\320\265 \320\264\320\275\320\270", nullptr));
         checkBoxShifts->setText(QCoreApplication::translate("MainWindow", "\320\241\320\274\320\265\320\275\321\213", nullptr));
-        editEmployee1->setPlaceholderText(QCoreApplication::translate("MainWindow", "\320\230\320\274\321\217 \321\201\320\276\321\202\321\200\321\203\320\264\320\275\320\270\320\272\320\260 \342\204\2261", nullptr));
-        editEmployee2->setPlaceholderText(QCoreApplication::translate("MainWindow", "\320\230\320\274\321\217 \321\201\320\276\321\202\321\200\321\203\320\264\320\275\320\270\320\272\320\260 \342\204\2262", nullptr));
         editColorPayedDay->setPlaceholderText(QCoreApplication::translate("MainWindow", "\320\246\320\262\320\265\321\202 \320\276\320\277\320\273\320\260\321\207\320\265\320\275\320\275\320\276\320\263\320\276 \320\264\320\275\321\217", nullptr));
         colorWidgetPayedDay->setText(QString());
         editColorFinishedDay->setPlaceholderText(QCoreApplication::translate("MainWindow", "\320\246\320\262\320\265\321\202 \320\276\321\202\321\200\320\260\320\261\320\276\321\202\320\260\320\275\320\275\320\276\320\263\320\276 \320\264\320\275\321\217", nullptr));
         colorWidgetFinishedDay->setText(QString());
+        editEmployee1->setPlaceholderText(QCoreApplication::translate("MainWindow", "\320\230\320\274\321\217 \321\201\320\276\321\202\321\200\321\203\320\264\320\275\320\270\320\272\320\260 \342\204\2261", nullptr));
+        editEmployee2->setPlaceholderText(QCoreApplication::translate("MainWindow", "\320\230\320\274\321\217 \321\201\320\276\321\202\321\200\321\203\320\264\320\275\320\270\320\272\320\260 \342\204\2262", nullptr));
         label->setText(QCoreApplication::translate("MainWindow", "\320\224\320\260\321\202\320\260 \320\276\321\202\320\272\321\200\321\213\321\202\320\270\321\217:", nullptr));
         label_4->setText(QCoreApplication::translate("MainWindow", "\320\235\320\260\321\207\320\260\320\273\321\214\320\275\320\260\321\217 \320\264\320\260\321\202\320\260:", nullptr));
         label_3->setText(QCoreApplication::translate("MainWindow", "\320\223\321\200\320\260\321\204\320\270\320\272:", nullptr));
