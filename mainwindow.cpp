@@ -961,6 +961,10 @@ void MainWindow::calculateStats()
         {
             payedMoney += days[date].salary;
         }
+        else
+        {
+            employees[days[date].name].unpayedMoney += days[date].salary;
+        }
 
         employees[days[date].name].shifts += days[date].isFinished;
         employees[days[date].name].payedShifts += days[date].isPayed;
@@ -978,11 +982,11 @@ void MainWindow::calculateStats()
     ui->textBrowserStats->clear();
 
     ui->textBrowserStats->append(name);
-    ui->textBrowserStats->append("  Дней с момента открытия:        " + QVariant(allDays).toString());
-    ui->textBrowserStats->append("  Количество нерасчетных смен:    " + QVariant(uncountedShifts).toString());
-    ui->textBrowserStats->append("  Количество оплаченных смен:     " + QVariant(payedShifts).toString());
-    ui->textBrowserStats->append("  Количество неоплаченных смен:   " + QVariant(finishedShifts - payedShifts).toString());
-    ui->textBrowserStats->append("  Задействовано сотрудников:      " + QVariant(employees.size()).toString() + " / " + QVariant(employeeCount).toString());
+    ui->textBrowserStats->append("  Дней с момента открытия:    " + QVariant(allDays).toString());
+    ui->textBrowserStats->append("    Нерасчетных смен:         " + QVariant(uncountedShifts).toString());
+    ui->textBrowserStats->append("    Оплаченных смен:          " + QVariant(payedShifts).toString());
+    ui->textBrowserStats->append("    Неоплаченных смен:        " + QVariant(finishedShifts - payedShifts).toString());
+    ui->textBrowserStats->append("  Задействовано сотрудников:  " + QVariant(employees.size()).toString() + " / " + QVariant(employeeCount).toString());
 
     for (auto & iter : employees.keys())
     {
@@ -990,14 +994,16 @@ void MainWindow::calculateStats()
         qDebug() << "    Worked:" << employees[iter].shifts;
         qDebug() << "    Payed: " << employees[iter].payedShifts;
         qDebug() << "    Earned:" << employees[iter].salary;
+        qDebug() << "    Unpaid:" << employees[iter].unpayedMoney;
 
         ui->textBrowserStats->append("    Сотрудник " + iter + ":");
-        ui->textBrowserStats->append("      Отработано:   " + QVariant(employees[iter].shifts).toString());
-        ui->textBrowserStats->append("      Оплачено:     " + QVariant(employees[iter].payedShifts).toString());
-        ui->textBrowserStats->append("      Заработано:   " + QVariant(employees[iter].salary).toString() + " руб.");
+        ui->textBrowserStats->append("      Отработано:     " + QVariant(employees[iter].shifts).toString());
+        ui->textBrowserStats->append("      Оплачено:       " + QVariant(employees[iter].payedShifts).toString());
+        ui->textBrowserStats->append("      Заработано:     " + QVariant(employees[iter].salary).toString() + " руб.");
+        ui->textBrowserStats->append("      Не выплачено:   " + QVariant(employees[iter].unpayedMoney).toString() + " руб.");
     }
 
-    ui->textBrowserStats->append("  Всего выплачено:                " + QVariant(payedMoney).toString() + " руб.");
+    ui->textBrowserStats->append("  Всего выплачено:            " + QVariant(payedMoney).toString() + " руб.");
     qDebug() << "All money was paid:" << payedMoney;
 
 //    point_name

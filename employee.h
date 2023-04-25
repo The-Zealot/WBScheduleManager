@@ -20,7 +20,8 @@ struct Employee
     quint32 salary = 0;
     quint32 shifts = 0;
 
-    quint32 payedShifts = 0;
+    quint32 payedShifts     = 0;
+    quint32 unpayedMoney    = 0;
 };
 
 #endif // EMPLOYEE_H
