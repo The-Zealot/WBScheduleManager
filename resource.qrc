@@ -12,4 +12,7 @@
         <file alias="clearGeneral.png">toolBar/icons/clearGeneral.png</file>
         <file alias="clearTarget.png">toolBar/icons/clearTarget.png</file>
     </qresource>
+    <qresource prefix="/image/icons">
+        <file alias="help.png">icons/help.png</file>
+    </qresource>
 </RCC>
