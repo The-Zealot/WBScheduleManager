@@ -458,7 +458,7 @@ void MainWindow::payEverything()
     else
         date = QDate::currentDate();
 
-    for (int i = 1; i <= _startDate.daysTo(date); i++)
+    for (int i = 0; i <= _startDate.daysTo(date); i++)
     {
         _editedDays[_startDate.addDays(i)].isPayed = true;
     }
