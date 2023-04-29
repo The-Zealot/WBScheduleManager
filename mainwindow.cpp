@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(const QString &databaseName, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     _buttonHelp->setIcon(QIcon(":/image/icons/help.png"));
 
     _db = QSqlDatabase::addDatabase("QSQLITE");
-    _db.setDatabaseName("./schedle.db");
+    _db.setDatabaseName(databaseName);
     if (!_db.open())
     {
         qDebug() << "Cannot open database" << _db.databaseName();
