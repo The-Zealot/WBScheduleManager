@@ -9,6 +9,13 @@ MainWindow::MainWindow(QWidget *parent)
 
     this->setFixedSize(this->size());
 
+    _buttonHelp = new QPushButton(this);
+    int sizeButton = 24;
+    _buttonHelp->setGeometry(this->width() - sizeButton, 0, sizeButton, sizeButton);
+    _buttonHelp->show();
+    _buttonHelp->setFlat(true);
+    _buttonHelp->setIcon(QIcon(":/image/icons/help.png"));
+
     _db = QSqlDatabase::addDatabase("QSQLITE");
     _db.setDatabaseName("./schedle.db");
     if (!_db.open())
@@ -218,7 +225,7 @@ MainWindow::MainWindow(QWidget *parent)
         ui->textBrowserShiftInfo->clear();
         AlertWidget::showAlert("Данные загружены");
     });
-//    connect(ui->toolButtonInfo, &QAbstractButton::clicked, this, &MainWindow::openDocInfo);
+    connect(_buttonHelp, &QAbstractButton::clicked, this, &MainWindow::openDocInfo);
     connect(ui->toolButtonReset, &QAbstractButton::clicked, [this](){
         resetCalendar(_editedDays, _startDate);
         AlertWidget::showAlert("Данные сброшены");

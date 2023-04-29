@@ -82,6 +82,7 @@ private:
     QString PAYED_DAY_HEX;
 
     Ui::MainWindow *ui;
+    QPushButton* _buttonHelp;
     EmployeeShift _employee1;
     EmployeeShift _employee2;
     EmployeeShift _employee;
