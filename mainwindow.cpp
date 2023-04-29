@@ -622,12 +622,11 @@ void MainWindow::addPoint()
         return;
     }
 
-    QString query       = "INSERT INTO points (name, open_date, start_date, last_payday) VALUES (\'%1\', \'%2\', \'%3\', \'%4\');";
+    QString query       = "INSERT INTO points (name, open_date, start_date) VALUES (\'%1\', \'%2\', \'%3\');";
     QString name        = ui->editPointName->text();
     QString today       = QDate::currentDate().toString();
-    QString yesterday   = QDate::currentDate().addDays(-1).toString();
 
-    query = query.arg(name).arg(today).arg(today).arg(yesterday);
+    query = query.arg(name).arg(today).arg(today);
 
     qDebug() << "Insert record into points...";
     if (!_query->exec(query))
@@ -730,7 +729,7 @@ void MainWindow::calculateWorks(QMap<QDate, EmployeeShift> &editDays, QMap<QStri
     if (QTime::currentTime().hour() >= END_OF_SHIFT)
         days++;
 
-    for (int i = 1; i < days; i++)
+    for (int i = 0; i < days; i++)
     {
         QDate date = _startDate.addDays(i);
         QString name = editDays[date].name;
