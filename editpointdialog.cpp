@@ -44,6 +44,7 @@ void EditPointDialog::setModel(QAbstractItemModel *model)
     _mapper->addMapping(ui->comboBoxSecondEmployee, DB_TABLE_POINTS_EMPLOYEE2);
     _mapper->addMapping(ui->editOpenDate, DB_TABLE_POINTS_OPEN_DATE);
     _mapper->addMapping(ui->editStartDate, DB_TABLE_POINTS_START_DATE);
+    _mapper->addMapping(ui->comboBoxSchedule, DB_TABLE_POINTS_SCHEDULE);
 }
 
 void EditPointDialog::setEmployeeList(QAbstractItemModel *model)
