@@ -39,6 +39,16 @@ MainWindow::MainWindow(const QString &databaseName, QWidget *parent)
     _modelPoint->select();
     _query = new QSqlQuery(_db);
 
+    _modelEmployee->setHeaderData(DB_TABLE_EMPLOYEE_NAME, Qt::Horizontal, QVariant("Сотрудник"));
+    _modelEmployee->setHeaderData(DB_TABLE_EMPLOYEE_SALARY, Qt::Horizontal, QVariant("Ставка"));
+    _modelEmployee->setHeaderData(DB_TABLE_EMPLOYEE_COLOR, Qt::Horizontal, QVariant("Цвет"));
+
+    _modelPoint->setHeaderData(DB_TABLE_POINTS_NAME, Qt::Horizontal, QVariant("Название"));
+    _modelPoint->setHeaderData(DB_TABLE_POINTS_MARKET, Qt::Horizontal, QVariant("Площадка"));
+    _modelPoint->setHeaderData(DB_TABLE_POINTS_EMPLOYEE1, Qt::Horizontal, QVariant("Cотрудник 1"));
+    _modelPoint->setHeaderData(DB_TABLE_POINTS_EMPLOYEE2, Qt::Horizontal, QVariant("Сотрудник 2"));
+    _modelPoint->setHeaderData(DB_TABLE_POINTS_SCHEDULE, Qt::Horizontal, QVariant("График"));
+
     ui->tableView->setModel(_modelEmployee);
     ui->tableView->hideColumn(DB_TABLE_EMPLOYEE_ID);
     ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
