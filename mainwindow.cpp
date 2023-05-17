@@ -81,10 +81,10 @@ MainWindow::MainWindow(const QString &databaseName, QWidget *parent)
 
     qDebug() << "Initialization class members...";
 
-    ui->colorWidgetPayedDay->setColor(PAYED_DAY_HEX);
-    ui->colorWidgetFinishedDay->setColor(FINISHED_DAY_HEX);
-    ui->editColorFinishedDay->setText(FINISHED_DAY_HEX);
-    ui->editColorPayedDay->setText(PAYED_DAY_HEX);
+    ui->colorWidgetPayedDay_2->setColor(PAYED_DAY_HEX);
+    ui->colorWidgetFinishedDay_2->setColor(FINISHED_DAY_HEX);
+    ui->editColorFinishedDay_2->setText(FINISHED_DAY_HEX);
+    ui->editColorPayedDay_2->setText(PAYED_DAY_HEX);
     ui->editEmployee1->setText(_employee1.name);
     ui->editEmployee2->setText(_employee2.name);
 
@@ -94,20 +94,20 @@ MainWindow::MainWindow(const QString &databaseName, QWidget *parent)
 
     ui->editSalary->setValidator(new QRegularExpressionValidator(QRegularExpression("[1-9][0-9]{0,3}")));
     ui->editHex->setValidator(new QRegularExpressionValidator(QRegularExpression("#[a-f0-9]{6}")));
-    ui->editColorPayedDay->setValidator(new QRegularExpressionValidator(QRegularExpression("#[a-f0-9]{6}")));
-    ui->editColorFinishedDay->setValidator(new QRegularExpressionValidator(QRegularExpression("#[a-f0-9]{6}")));
+    ui->editColorPayedDay_2->setValidator(new QRegularExpressionValidator(QRegularExpression("#[a-f0-9]{6}")));
+    ui->editColorFinishedDay_2->setValidator(new QRegularExpressionValidator(QRegularExpression("#[a-f0-9]{6}")));
     ui->editPointName->setValidator(new QRegularExpressionValidator(QRegularExpression("\\S[0-9a-zA-zА-яа-я ]{255}")));
 
     loadEditedDaysFromDB(_pointID, _editedDays);
     updateCalendar();
 
-    connect(ui->colorWidgetPayedDay, &QPushButton::clicked, [this](){
-        PAYED_DAY_HEX = QVariant(ui->colorWidgetPayedDay->getColor()).toString();
-        ui->editColorPayedDay->setText(PAYED_DAY_HEX);                                                          // DRY
+    connect(ui->colorWidgetPayedDay_2, &QPushButton::clicked, [this](){
+        PAYED_DAY_HEX = QVariant(ui->colorWidgetPayedDay_2->getColor()).toString();
+        ui->editColorPayedDay_2->setText(PAYED_DAY_HEX);                                                          // DRY
     });
-    connect(ui->colorWidgetFinishedDay, &QPushButton::clicked, [this](){
-        FINISHED_DAY_HEX = QVariant(ui->colorWidgetFinishedDay->getColor()).toString();
-        ui->editColorFinishedDay->setText(FINISHED_DAY_HEX);                                                    // DRY
+    connect(ui->colorWidgetFinishedDay_2, &QPushButton::clicked, [this](){
+        FINISHED_DAY_HEX = QVariant(ui->colorWidgetFinishedDay_2->getColor()).toString();
+        ui->editColorFinishedDay_2->setText(FINISHED_DAY_HEX);                                                    // DRY
     });
     connect(ui->dateEditOpen, &QDateEdit::dateChanged, [this](){
         _openWBPoint = ui->dateEditOpen->date();
@@ -240,36 +240,14 @@ MainWindow::MainWindow(const QString &databaseName, QWidget *parent)
         resetCalendar(_editedDays, _startDate);
         AlertWidget::showAlert("Данные сброшены");
     });
-
-    ui->toolButtonArrow->setIcon(QIcon(":/image/toolBar/arrow.png"));
-    ui->toolButtonEmployees->setIcon(QIcon(":/image/toolBar/employee.png"));
-    ui->toolButtonSalary->setIcon(QIcon(":/image/toolBar/salary.png"));
-    ui->toolButtonPaymentTarget->setIcon(QIcon(":/image/toolBar/paymentTarget.png"));
-    ui->toolButtonPaymentGeneral->setIcon(QIcon(":/image/toolBar/paymentGeneral.png"));
-    ui->toolButtonClear->setIcon(QIcon(":/image/toolBar/clearTarget.png"));
-    ui->toolButtonCalculate->setIcon(QIcon(":/image/toolBar/calculator.png"));
-    ui->toolButtonSave->setIcon(QIcon(":/image/toolBar/save.png"));
-    ui->toolButtonLoad->setIcon(QIcon(":/image/toolBar/load.png"));
-    ui->toolButtonReset->setIcon(QIcon(":/image/toolBar/clearGeneral.png"));
-
-    ui->toolButtonArrow->setToolTip("Выделение");
-    ui->toolButtonEmployees->setToolTip("Выбрать сотрудника");
-    ui->toolButtonSalary->setToolTip("Установить ставку");
-    ui->toolButtonPaymentTarget->setToolTip("Оплатить конкретную смену");
-    ui->toolButtonPaymentGeneral->setToolTip("Оплатить все смены");
-    ui->toolButtonClear->setToolTip("Сбросить день");
-    ui->toolButtonCalculate->setToolTip("Перерасчет графика");
-    ui->toolButtonSave->setToolTip("Сохранить");
-    ui->toolButtonLoad->setToolTip("Загрузить данные");
-    ui->toolButtonReset->setToolTip("Сброс графика");
 }
 
 MainWindow::~MainWindow()
 {
     delete ui->editSalary->validator();
     delete ui->editHex->validator();
-    delete ui->editColorPayedDay->validator();
-    delete ui->editColorFinishedDay->validator();
+    delete ui->editColorPayedDay_2->validator();
+    delete ui->editColorFinishedDay_2->validator();
     delete ui->editPointName->validator();
     delete ui;
 }
