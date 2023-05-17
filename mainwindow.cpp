@@ -887,6 +887,11 @@ void MainWindow::loadEditedDaysFromDB(int pointID, QMap<QDate, EmployeeShift> &e
 
         for (int j = 0; j < employees; j++)
         {
+            if (editDays[date].name.isEmpty())
+            {
+                editDays[date].colorHex = FINISHED_DAY_HEX;
+                continue;
+            }
             if (editDays[date].name == _modelEmployee->data(_modelEmployee->index(j, DB_TABLE_EMPLOYEE_NAME)))
             {
                 editDays[date].colorHex = _modelEmployee->data(_modelEmployee->index(j, DB_TABLE_EMPLOYEE_COLOR)).toString();
