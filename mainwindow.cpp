@@ -187,9 +187,8 @@ MainWindow::MainWindow(const QString &databaseName, QWidget *parent)
         setStatusBarMessage();
     });
     connect(ui->toolButtonCalculate, &QAbstractButton::clicked, [this](){
-        QDate date = QDate::currentDate();
-        resetCalendar(_editedDays, date, false);
-        AlertWidget::showAlert("График перерасчитан!");
+        _toolBar.setTool(ToolBar::CalcDateTool);
+        setStatusBarMessage();
     });
     connect(ui->toolButtonSave, &QAbstractButton::clicked, [this](){
         QList<QDate> list = _editedDays.keys();
@@ -475,6 +474,9 @@ void MainWindow::setStatusBarMessage()
     case ToolBar::ClearTool:
         ui->statusBar->showMessage("Выбран инструмент \"Очистка\"");
         break;
+    case ToolBar::CalcDateTool:
+            ui->statusBar->showMessage("Выбор начальной точки расчета (даты)");
+        break;
     default:
         ui->statusBar->showMessage("Selected unknown tool");
     }
@@ -504,6 +506,10 @@ void MainWindow::doActionToolbar()
         _editedDays[date].colorHex  = QVariant(QColor(FINISHED_DAY_HEX)).toString();
         _editedDays[date].salary    = 0;
         _editedDays[date].isPayed   = false;
+        break;
+    case ToolBar::CalcDateTool:
+        resetCalendar(_editedDays, date, false);
+        AlertWidget::showAlert("График перерасчитан!");
         break;
     default:
         QMessageBox::critical(this, "Error", "Unkwonw tool selected");

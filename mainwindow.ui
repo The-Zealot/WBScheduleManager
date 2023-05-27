@@ -1073,7 +1073,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Разница между версиями 2.2.7 и 3.0.0a&lt;/p&gt;&lt;p&gt;- Изменен дизайн вкладки &lt;span style=&quot; font-weight:600;&quot;&gt;График&lt;/span&gt;. &lt;/p&gt;&lt;p&gt;- Раздел с настройками вынесен в отдельную вкладку.&lt;/p&gt;&lt;p&gt;- Добавлена вкладка для описания последнего обновления &lt;span style=&quot; font-weight:600;&quot;&gt;Что нового?&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Разница между версиями 2.2.7 и 3.0.0a&lt;/p&gt;&lt;p&gt;- Изменен дизайн вкладки &lt;span style=&quot; font-weight:600;&quot;&gt;График&lt;/span&gt;. &lt;/p&gt;&lt;p&gt;- Раздел с настройками вынесен в отдельную вкладку.&lt;/p&gt;&lt;p&gt;- Добавлена вкладка для описания последнего обновления &lt;span style=&quot; font-weight:600;&quot;&gt;Что нового?&lt;/span&gt;&lt;/p&gt;&lt;p&gt;- Изменен принцип работы перерасчета графика. Теперь, прежде чем график будет пересчитан с новыми параметрами, пользователю необходимо выбрать начальную дату отсчета.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="textFormat">
        <enum>Qt::AutoText</enum>

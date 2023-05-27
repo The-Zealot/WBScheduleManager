@@ -11,6 +11,7 @@ public:
         SalaryTool,
         PaymentTool,
         ClearTool,
+        CalcDateTool,
     };
 
     ToolBar();
