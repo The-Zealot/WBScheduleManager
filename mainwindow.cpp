@@ -724,7 +724,7 @@ void MainWindow::openDocInfo()
 
 void MainWindow::calculateWorks(QMap<QDate, EmployeeShift> &editDays, QMap<QString, Employee> &employyes)
 {
-    int days = _startDate.daysTo(QDate::currentDate());
+    int days = _openWBPoint.daysTo(QDate::currentDate());
     _employees.clear();
 
     if (QTime::currentTime().hour() >= END_OF_SHIFT)
@@ -732,7 +732,7 @@ void MainWindow::calculateWorks(QMap<QDate, EmployeeShift> &editDays, QMap<QStri
 
     for (int i = 0; i < days; i++)
     {
-        QDate date = _startDate.addDays(i);
+        QDate date = _openWBPoint.addDays(i);
         QString name = editDays[date].name;
         if (!editDays[date].isPayed)
         {
