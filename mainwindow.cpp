@@ -445,17 +445,18 @@ void MainWindow::doActionToolbar()
     _editedDays[date].isPayed ? isPayed = "Оплачена" : isPayed = "Не оплачена";
     _editedDays[date].isFinished ? isFinished = "Окончен" : isFinished = "Не окончен";
 
-    ui->textBrowserShiftInfo->setText(QString("Сотрудник %2\nДата: %1\nСтавка: %3\nСтатус смены: %4\nДень: %5")
+    ui->textBrowserShiftInfo->setText(QString("Сотрудник: %2\nПункт: %6\nДата: %1\nСтоимость дня: %3 руб.\nСтатус смены: %4\nСтатус дня: %5")
                                       .arg(date.toString("dd.MM.yy"))
                                       .arg(_editedDays[date].name)
                                       .arg(_editedDays[date].salary)
                                       .arg(isPayed)
-                                      .arg(isFinished));
+                                      .arg(isFinished)
+                                      .arg(ui->comboBoxPoint->currentText()));
 
     qDebug() << "Selected date" << date.toString("dd.MM.yyyy") << "info:";
     qDebug() << "\tEmployee name is" << _editedDays[date].name;
     qDebug() << "\tEmployee color is" << _editedDays[date].colorHex;
-    qDebug() << "\tEmployee salary is" << _editedDays[date].salary;
+    qDebug() << "\tDay cost is" << _editedDays[date].salary;
     qDebug() << "\tThis shift is payed" << _editedDays[date].isPayed;
     qDebug() << "\tThis shift is finished" << _editedDays[date].isFinished;
 }
@@ -491,18 +492,24 @@ void MainWindow::addEmployee()
 
 void MainWindow::removeEmployee()
 {
-    QString query = QString("DELETE FROM Employees WHERE id = \'%1\';")
-            .arg(_employeeID);
-    _query->exec(query);
+    QString messageText = "Вы собираетесь удалить сотрудника %1. Обратите внимание, что это действие необратимо.\nПродолжить?";
+    messageText = messageText.arg(ui->editEmployeeName->text());
+    if (QMessageBox::warning(this, "Удаление сотрудника", messageText, QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Ok)
+    {
 
-    qDebug() << "Query:" << query;
+        QString query = QString("DELETE FROM Employees WHERE id = \'%1\';")
+                .arg(_employeeID);
+        _query->exec(query);
 
-    ui->editEmployeeName->clear();
-    ui->editHex->clear();
-    ui->editSalary->clear();
-    ui->colorWidget->clear();
+        qDebug() << "Query:" << query;
 
-    _modelEmployee->select();
+        ui->editEmployeeName->clear();
+        ui->editHex->clear();
+        ui->editSalary->clear();
+        ui->colorWidget->clear();
+
+        _modelEmployee->select();
+    }
 }
 
 void MainWindow::updateEmployee()
