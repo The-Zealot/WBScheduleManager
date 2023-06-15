@@ -83,6 +83,7 @@ private:
 
     Ui::MainWindow *ui;
     QPushButton* _buttonHelp;
+    QPushButton* _buttonBugReport;
     EmployeeShift _employee1;
     EmployeeShift _employee2;
     EmployeeShift _employee;

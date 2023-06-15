@@ -9,12 +9,20 @@ MainWindow::MainWindow(const QString &databaseName, QWidget *parent)
 
     this->setFixedSize(this->size());
 
-    _buttonHelp = new QPushButton(this);
     int sizeButton = 24;
+    _buttonHelp = new QPushButton(this);
     _buttonHelp->setGeometry(this->width() - sizeButton, 0, sizeButton, sizeButton);
-    _buttonHelp->show();
     _buttonHelp->setFlat(true);
+    _buttonHelp->show();
     _buttonHelp->setIcon(QIcon(":/image/icons/help.png"));
+    _buttonHelp->setToolTip("Справка");
+
+    _buttonBugReport = new QPushButton(this);
+    _buttonBugReport->setGeometry(this->width() - sizeButton * 2, 0, sizeButton, sizeButton);
+    _buttonBugReport->show();
+    _buttonBugReport->setFlat(true);
+    _buttonBugReport->setIcon(QIcon(":/image/icons/bugReport.png"));
+    _buttonBugReport->setToolTip("Сообщить об ошибке");
 
     _db = QSqlDatabase::addDatabase("QSQLITE");
     _db.setDatabaseName(databaseName);
@@ -223,9 +231,15 @@ MainWindow::MainWindow(const QString &databaseName, QWidget *parent)
         AlertWidget::showAlert("Данные загружены");
     });
     connect(_buttonHelp, &QAbstractButton::clicked, this, &MainWindow::openDocInfo);
+    connect(_buttonBugReport, &QAbstractButton::clicked, [this](){
+        AlertWidget::showAlert("In development");
+    });
     connect(ui->toolButtonReset, &QAbstractButton::clicked, [this](){
         resetCalendar(_editedDays, _startDate);
         AlertWidget::showAlert("Данные сброшены");
+    });
+    connect(ui->toolButtonServerLoad, &QAbstractButton::clicked, [this](){
+        AlertWidget::showAlert("In development");
     });
 }
 
