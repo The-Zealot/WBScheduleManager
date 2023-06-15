@@ -66,6 +66,8 @@ MainWindow::MainWindow(const QString &databaseName, QWidget *parent)
     readJson();                                                                         // rework
     readScheduleList();
 
+    ui->labelNews->setText(readFile("readme.html"));
+
     _pointID                = 0;
     _salary                 = 1300;
     _daysOfFirstEmployee    = 0;
@@ -73,20 +75,15 @@ MainWindow::MainWindow(const QString &databaseName, QWidget *parent)
 
     loadPointData(_pointID);
 
-    ui->comboBoxSchedle->setCurrentText(_scheduleText);
-    ui->dateEditOpen->setDate(_openWBPoint);
-    ui->dateEditStartpoint->setDate(_startDate);
     _toolBar.setTool(ToolBar::Arrow);
     setStatusBarMessage();
 
     qDebug() << "Initialization class members...";
 
-    ui->colorWidgetPayedDay_2->setColor(PAYED_DAY_HEX);
-    ui->colorWidgetFinishedDay_2->setColor(FINISHED_DAY_HEX);
-    ui->editColorFinishedDay_2->setText(FINISHED_DAY_HEX);
-    ui->editColorPayedDay_2->setText(PAYED_DAY_HEX);
-    ui->editEmployee1->setText(_employee1.name);
-    ui->editEmployee2->setText(_employee2.name);
+    ui->colorWidgetPayedDay->setColor(PAYED_DAY_HEX);
+    ui->colorWidgetFinishedDay->setColor(FINISHED_DAY_HEX);
+    ui->editColorFinishedDay->setText(FINISHED_DAY_HEX);
+    ui->editColorPayedDay->setText(PAYED_DAY_HEX);
 
     ui->textBrowserStats->setFontFamily("consolas");
 
@@ -94,29 +91,20 @@ MainWindow::MainWindow(const QString &databaseName, QWidget *parent)
 
     ui->editSalary->setValidator(new QRegularExpressionValidator(QRegularExpression("[1-9][0-9]{0,3}")));
     ui->editHex->setValidator(new QRegularExpressionValidator(QRegularExpression("#[a-f0-9]{6}")));
-    ui->editColorPayedDay_2->setValidator(new QRegularExpressionValidator(QRegularExpression("#[a-f0-9]{6}")));
-    ui->editColorFinishedDay_2->setValidator(new QRegularExpressionValidator(QRegularExpression("#[a-f0-9]{6}")));
+    ui->editColorPayedDay->setValidator(new QRegularExpressionValidator(QRegularExpression("#[a-f0-9]{6}")));
+    ui->editColorFinishedDay->setValidator(new QRegularExpressionValidator(QRegularExpression("#[a-f0-9]{6}")));
     ui->editPointName->setValidator(new QRegularExpressionValidator(QRegularExpression("\\S[0-9a-zA-zА-яа-я ]{255}")));
 
     loadEditedDaysFromDB(_pointID, _editedDays);
     updateCalendar();
 
-    connect(ui->colorWidgetPayedDay_2, &QPushButton::clicked, [this](){
-        PAYED_DAY_HEX = QVariant(ui->colorWidgetPayedDay_2->getColor()).toString();
-        ui->editColorPayedDay_2->setText(PAYED_DAY_HEX);                                                          // DRY
+    connect(ui->colorWidgetPayedDay, &QPushButton::clicked, [this](){
+        PAYED_DAY_HEX = QVariant(ui->colorWidgetPayedDay->getColor()).toString();
+        ui->editColorPayedDay->setText(PAYED_DAY_HEX);                                                          // DRY
     });
-    connect(ui->colorWidgetFinishedDay_2, &QPushButton::clicked, [this](){
-        FINISHED_DAY_HEX = QVariant(ui->colorWidgetFinishedDay_2->getColor()).toString();
-        ui->editColorFinishedDay_2->setText(FINISHED_DAY_HEX);                                                    // DRY
-    });
-    connect(ui->dateEditOpen, &QDateEdit::dateChanged, [this](){
-        _openWBPoint = ui->dateEditOpen->date();
-    });
-    connect(ui->dateEditStartpoint, &QDateEdit::dateChanged, [this](){
-        _startDate = ui->dateEditStartpoint->date();
-    });
-    connect(ui->comboBoxSchedle, &QComboBox::currentTextChanged, [this](){
-        _scheduleText = ui->comboBoxSchedle->currentText();
+    connect(ui->colorWidgetFinishedDay, &QPushButton::clicked, [this](){
+        FINISHED_DAY_HEX = QVariant(ui->colorWidgetFinishedDay->getColor()).toString();
+        ui->editColorFinishedDay->setText(FINISHED_DAY_HEX);                                                    // DRY
     });
     connect(ui->calendarWidget, &QCalendarWidget::clicked, this, &MainWindow::doActionToolbar);
     connect(ui->buttonAdd, &QPushButton::clicked, this, &MainWindow::addEmployee);
@@ -245,8 +233,8 @@ MainWindow::~MainWindow()
 {
     delete ui->editSalary->validator();
     delete ui->editHex->validator();
-    delete ui->editColorPayedDay_2->validator();
-    delete ui->editColorFinishedDay_2->validator();
+    delete ui->editColorPayedDay->validator();
+    delete ui->editColorFinishedDay->validator();
     delete ui->editPointName->validator();
     delete ui;
 }
@@ -260,88 +248,6 @@ void MainWindow::takeColor(QLineEdit* edit)                                     
     edit->setText(QVariant(obj->getColor()).toString());
 
     updateCalendar();
-}
-
-void MainWindow::changeSchedle()
-{
-    if (ui->comboBoxSchedle->currentText() == "")
-    {
-        qDebug() << "Can't parse comboBox->currentText()";
-        return;
-    }
-
-    auto reformatCalendar = [this](QDate startDate, int employeeDayCount, int allEmployeeDays, QTextCharFormat format, int lengthReformat){
-        for (int i = 0; i < lengthReformat; i += allEmployeeDays)
-        {
-            for (int j = 0; j < employeeDayCount; j++)
-            {
-                QDate selectedDate(startDate.addDays(i + j));
-                QString colorHex = QVariant(format.background().color()).toString();
-
-                qint32 employeeCount = _modelEmployee->rowCount();
-                for (int k = 0 ; k < employeeCount; k++)
-                {
-                    if (_modelEmployee->data(_modelEmployee->index(k, 2)).toString() == colorHex)
-                    {
-                        _editedDays[selectedDate].name = _modelEmployee->data(_modelEmployee->index(k, 0)).toString();
-                        _editedDays[selectedDate].salary = _modelEmployee->data(_modelEmployee->index(k, 1)).toUInt();
-                        _editedDays[selectedDate].colorHex = colorHex;
-                    }
-                }
-                ui->calendarWidget->setDateTextFormat(selectedDate, format);
-            }
-        }
-    };
-
-    QTextCharFormat first, second, nobody;
-    first.setForeground(Qt::black);
-    first.setBackground(QColor(_employee1.colorHex));
-    second.setForeground(Qt::black);
-    second.setBackground(QColor(_employee2.colorHex));
-    nobody.setForeground(Qt::black);
-    nobody.setBackground(QColor(FINISHED_DAY_HEX));
-
-    QStringList list = ui->comboBoxSchedle->currentText().split("/");
-
-    int DAYS_FIRST_EMPLOYEE     = list.at(0).toInt();
-    int DAYS_SECOND_EMPLOYEE    = list.at(1).toInt();
-    int DAYS_ALL_EMPLOYEE       = DAYS_FIRST_EMPLOYEE + DAYS_SECOND_EMPLOYEE;
-
-
-    reformatCalendar(_openWBPoint, 1, 1, nobody, _openWBPoint.daysTo(QDate::currentDate().addYears(1)));
-
-    QDate date = ui->dateEditStartpoint->date();
-    int yearAhead = date.daysTo(QDate::currentDate().addYears(1));
-
-    reformatCalendar(date, DAYS_FIRST_EMPLOYEE, DAYS_ALL_EMPLOYEE, first, yearAhead);
-    date = ui->dateEditStartpoint->date().addDays(DAYS_FIRST_EMPLOYEE);
-    reformatCalendar(date, DAYS_SECOND_EMPLOYEE, DAYS_ALL_EMPLOYEE, second, yearAhead);
-
-    for (auto iter : _editedDays.keys())
-    {
-        QTextCharFormat format;
-        format.setForeground(Qt::black);
-
-        if (_editedDays[iter].name == "")
-        {
-            format.setBackground(QColor(FINISHED_DAY_HEX));
-        }
-        else
-        {
-            format.setBackground(QColor(_editedDays[iter].colorHex));
-        }
-        if (_editedDays[iter].isPayed)
-        {
-            format.setBackground(QColor(PAYED_DAY_HEX));
-        }
-
-        ui->calendarWidget->setDateTextFormat(iter, format);
-    }
-
-    calculateWorks(_editedDays, _employees);
-    fillTextBrowse(_employees);
-
-    qDebug() << "Map size:" << _editedDays.count();
 }
 
 void MainWindow::updateCalendar()
@@ -687,16 +593,6 @@ void MainWindow::changePoint()
 
     loadPointData(selectedPoint);
 
-    //////////////////// separate ////////////////////
-
-    ui->editEmployee1->setText(_employee1.name);
-    ui->editEmployee2->setText(_employee2.name);
-    ui->dateEditOpen->setDate(_openWBPoint);
-    ui->dateEditStartpoint->setDate(_startDate);
-    ui->comboBoxSchedle->setCurrentText(_scheduleText);
-
-    //////////////////////////////////////////////////
-
     qDebug() << "Set current point id = " << selectedPoint;
 
     qDebug() << "Loading data...";
@@ -788,8 +684,6 @@ void MainWindow::writeJson()
     }
     QJsonObject jObject;
 
-    jObject["FirstEmployee"]    = ui->editEmployee1->text();
-    jObject["SecondEmployee"]   = ui->editEmployee2->text();
     jObject["PayedDayColor"]    = PAYED_DAY_HEX;
     jObject["FinishedDayColor"] = FINISHED_DAY_HEX;
     jObject["StartDate"]        = _startDate.toString();
@@ -821,7 +715,7 @@ void MainWindow::readJson()
     _scheduleText       = jObject["currentSchedle"].toString();
 }
 
-void MainWindow::readScheduleList()
+void MainWindow::readScheduleList()                                     // to remove
 {
     QFile file("schedle.txt");
     if (!file.open(QIODevice::ReadOnly))
@@ -829,7 +723,7 @@ void MainWindow::readScheduleList()
         qDebug() << "File " + file.fileName() + " not found";
         return;
     }
-    ui->comboBoxSchedle->addItems(QString(file.readAll()).split("\n"));
+//    ui->comboBoxSchedle->addItems(QString(file.readAll()).split("\n"));
     file.close();
 }
 
@@ -1027,4 +921,19 @@ void MainWindow::calculateStats()
 //       Самый дорогой месяц:		month
 
     //////////////////////////////////////////
+}
+
+QString MainWindow::readFile(QString filename)
+{
+    QFile file(filename);
+    if (file.open(QIODevice::ReadOnly))
+    {
+        QString result = file.readAll();
+        file.close();
+        return result;
+    }
+    else
+    {
+        qDebug() << "File not open";
+    }
 }
