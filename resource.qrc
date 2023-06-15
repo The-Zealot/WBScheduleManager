@@ -15,5 +15,6 @@
     </qresource>
     <qresource prefix="/image/icons">
         <file alias="help.png">icons/help.png</file>
+        <file alias="bugReport.png">icons/bugReport.png</file>
     </qresource>
 </RCC>
