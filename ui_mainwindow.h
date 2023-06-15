@@ -187,7 +187,6 @@ public:
         groupBox_3->setObjectName(QString::fromUtf8("groupBox_3"));
         groupBox_3->setAlignment(Qt::AlignCenter);
         groupBox_3->setFlat(false);
-        groupBox_3->setCheckable(true);
         gridLayout_6 = new QGridLayout(groupBox_3);
         gridLayout_6->setSpacing(0);
         gridLayout_6->setObjectName(QString::fromUtf8("gridLayout_6"));
@@ -426,8 +425,8 @@ public:
 
         line_4 = new QFrame(frame);
         line_4->setObjectName(QString::fromUtf8("line_4"));
+        line_4->setFrameShadow(QFrame::Raised);
         line_4->setFrameShape(QFrame::VLine);
-        line_4->setFrameShadow(QFrame::Sunken);
 
         horizontalLayout_2->addWidget(line_4);
 
@@ -951,11 +950,11 @@ public:
 #endif // QT_CONFIG(tooltip)
         toolButtonSalary->setText(QString());
 #if QT_CONFIG(tooltip)
-        toolButtonPaymentTarget->setToolTip(QCoreApplication::translate("MainWindow", "\320\236\320\277\320\273\320\260\321\202\320\270\321\202\321\214 \320\272\320\276\320\275\320\272\321\200\320\265\321\202\320\275\321\203\321\216 \321\201\320\274\320\265\320\275\321\203", nullptr));
+        toolButtonPaymentTarget->setToolTip(QCoreApplication::translate("MainWindow", "\320\236\320\277\320\273\320\260\321\202\320\270\321\202\321\214 \321\201\320\274\320\265\320\275\321\203", nullptr));
 #endif // QT_CONFIG(tooltip)
         toolButtonPaymentTarget->setText(QString());
 #if QT_CONFIG(tooltip)
-        toolButtonPaymentGeneral->setToolTip(QCoreApplication::translate("MainWindow", "\320\236\320\277\320\273\320\260\321\202\320\270\321\202\321\214 \320\262\321\201\320\265 \321\201\320\274\320\265\320\275\321\213", nullptr));
+        toolButtonPaymentGeneral->setToolTip(QCoreApplication::translate("MainWindow", "\320\236\320\277\320\273\320\260\321\202\320\270\321\202\321\214 \320\275\320\265\321\201\320\272\320\276\320\273\321\214\320\272\320\276 \321\201\320\274\320\265\320\275", nullptr));
 #endif // QT_CONFIG(tooltip)
         toolButtonPaymentGeneral->setText(QString());
 #if QT_CONFIG(tooltip)
