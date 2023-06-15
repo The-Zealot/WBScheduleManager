@@ -47,7 +47,7 @@ private slots:
     void takeColor(QLineEdit* edit);
     void updateCalendar();                      // changeSchedle v2.0
     void resetCalendar(QMap<QDate, EmployeeShift> &editedDays, QDate date, bool isFullReset = true);
-    void payEverything();
+    void payEverything(QDate date);
     void setStatusBarMessage();
     void doActionToolbar();
     void updatePointList();

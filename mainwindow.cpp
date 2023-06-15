@@ -175,8 +175,8 @@ MainWindow::MainWindow(const QString &databaseName, QWidget *parent)
         setStatusBarMessage();
     });
     connect(ui->toolButtonPaymentGeneral, &QAbstractButton::clicked, [this](){
-        payEverything();
-        AlertWidget::showAlert("Все смены успешно оплачены!");
+        _toolBar.setTool(ToolBar::GeneralPaymentTool);
+        setStatusBarMessage();
     });
     connect(ui->toolButtonClear, &QAbstractButton::clicked, [this](){
         _toolBar.setTool(ToolBar::ClearTool);
@@ -357,13 +357,10 @@ void MainWindow::resetCalendar(QMap<QDate, EmployeeShift> &editDays, QDate date,
     updateCalendar();
 }
 
-void MainWindow::payEverything()
+void MainWindow::payEverything(QDate date)
 {
-    QDate date;
-    if (QTime::currentTime().hour() < END_OF_SHIFT)
-        date = QDate::currentDate().addDays(-1);
-    else
-        date = QDate::currentDate();
+//    if (QTime::currentTime().hour() < END_OF_SHIFT)
+//        date = date.addDays(-1);
 
     for (int i = 0; i <= _startDate.daysTo(date); i++)
     {
@@ -396,6 +393,9 @@ void MainWindow::setStatusBarMessage()
         break;
     case ToolBar::CalcDateTool:
             ui->statusBar->showMessage("Выбор начальной точки расчета (даты)");
+        break;
+    case ToolBar::GeneralPaymentTool:
+        ui->statusBar->showMessage("Выбор конечной даты для оплаты");
         break;
     default:
         ui->statusBar->showMessage("Selected unknown tool");
@@ -430,6 +430,10 @@ void MainWindow::doActionToolbar()
     case ToolBar::CalcDateTool:
         resetCalendar(_editedDays, date, false);
         AlertWidget::showAlert("График перерасчитан!");
+        break;
+    case ToolBar::GeneralPaymentTool:
+        payEverything(date);
+        AlertWidget::showAlert("Смены оплачены");
         break;
     default:
         QMessageBox::critical(this, "Error", "Unkwonw tool selected");

@@ -12,6 +12,7 @@ public:
         PaymentTool,
         ClearTool,
         CalcDateTool,
+        GeneralPaymentTool,
     };
 
     ToolBar();
