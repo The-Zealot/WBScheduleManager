@@ -11,6 +11,7 @@
         <file alias="info.png">toolBar/icons/info.png</file>
         <file alias="clearGeneral.png">toolBar/icons/clearGeneral.png</file>
         <file alias="clearTarget.png">toolBar/icons/clearTarget.png</file>
+        <file alias="serverLoad.png">toolBar/icons/serverLoad.png</file>
     </qresource>
     <qresource prefix="/image/icons">
         <file alias="help.png">icons/help.png</file>

@@ -70,7 +70,8 @@ DISTFILES += \
     toolBar/icons/paymentGeneral.png \
     toolBar/icons/paymentTarget.png \
     toolBar/icons/salary.png \
-    toolBar/icons/save.png
+    toolBar/icons/save.png \
+    toolBar/icons/serverLoad.png
 
 RESOURCES += \
     resource.qrc
