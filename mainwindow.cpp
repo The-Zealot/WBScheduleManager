@@ -87,10 +87,14 @@ MainWindow::MainWindow(const QString &databaseName, QWidget *parent)
 
     qDebug() << "Initialization class members...";
 
+    ui->colorWidget->setLineEdit(ui->editHex);
+    ui->colorWidgetPayedDay->setLineEdit(ui->editColorPayedDay);
+    ui->colorWidgetFinishedDay->setLineEdit(ui->editColorFinishedDay);
+    ui->colorWidgetHoliday->setLineEdit(ui->editColorHoliday);
+    ui->colorWidgetWorkDay->setLineEdit(ui->editColorWorkDay);
+
     ui->colorWidgetPayedDay->setColor(PAYED_DAY_HEX);
     ui->colorWidgetFinishedDay->setColor(FINISHED_DAY_HEX);
-    ui->editColorFinishedDay->setText(FINISHED_DAY_HEX);
-    ui->editColorPayedDay->setText(PAYED_DAY_HEX);
 
     ui->textBrowserStats->setFontFamily("consolas");
 
@@ -553,7 +557,6 @@ void MainWindow::tableItemSelect(const QModelIndex &index)
 
     ui->editEmployeeName->setText(_modelEmployee->data(_modelEmployee->index(id, DB_TABLE_EMPLOYEE_NAME)).toString());
     ui->editSalary->setText(_modelEmployee->data(_modelEmployee->index(id, DB_TABLE_EMPLOYEE_SALARY)).toString());
-    ui->editHex->setText(colorHex);
     ui->colorWidget->setColor(colorHex);
 }
 

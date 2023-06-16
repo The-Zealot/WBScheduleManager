@@ -4,6 +4,8 @@ ColorWidget::ColorWidget(QWidget *parent) : QPushButton(parent)
 {
     connect(this, &QPushButton::clicked, this, &ColorWidget::openColorDialog);
 
+    _edit = nullptr;
+
     this->setAutoFillBackground(true);
     this->setFocusPolicy(Qt::NoFocus);
 
@@ -19,12 +21,22 @@ void ColorWidget::setColor(QColor color)
 {
     _color = color;
     this->setStyleSheet("border: 1px solid; background-color: " + QVariant(_color).toString());
+
+    if (_edit != nullptr)
+    {
+        _edit->setText(QVariant(_color).toString());
+    }
 }
 
 void ColorWidget::clear()
 {
     _color = "#e1e1e1";
     setColor(_color);
+}
+
+void ColorWidget::setLineEdit(QLineEdit *edit)
+{
+    _edit = edit;
 }
 
 void ColorWidget::openColorDialog()
