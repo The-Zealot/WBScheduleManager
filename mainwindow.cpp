@@ -661,12 +661,15 @@ void MainWindow::changeSchedule()
 
 void MainWindow::onSliderValueChanged()
 {
-    int first = ui->sliderFirst->value();
-    int second = ui->sliderSecond->value();
+    int first   = ui->sliderFirst->value();
+    int second  = ui->sliderSecond->value();
+
+    float sumPare = 30.f / (first + second);
 
     ui->labelSchedule->setText(QString("%1/%2").arg(first).arg(second));
-}
 
+    ui->labelShiftCount->setText(QString("First: %1\nSecond: %2").arg(int(sumPare * first)).arg(int(sumPare * second)));
+}
 void MainWindow::openDocInfo()
 {
     if (!QDesktopServices::openUrl(QUrl("schedle.doc")))
