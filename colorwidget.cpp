@@ -6,6 +6,8 @@ ColorWidget::ColorWidget(QWidget *parent) : QPushButton(parent)
 
     this->setAutoFillBackground(true);
     this->setFocusPolicy(Qt::NoFocus);
+
+    setColor("#e1e1e1");
 }
 
 QColor ColorWidget::getColor()
@@ -21,8 +23,8 @@ void ColorWidget::setColor(QColor color)
 
 void ColorWidget::clear()
 {
-    _color = "#000000";
-    this->setStyleSheet("");
+    _color = "#e1e1e1";
+    setColor(_color);
 }
 
 void ColorWidget::openColorDialog()
