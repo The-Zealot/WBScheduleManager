@@ -73,7 +73,6 @@ public:
     QFrame *line;
     QToolButton *toolButtonSave;
     QToolButton *toolButtonLoad;
-    QFrame *line_4;
     QToolButton *toolButtonServerLoad;
     QSpacerItem *horizontalSpacer;
     QWidget *tab_2;
@@ -117,28 +116,27 @@ public:
     QFrame *line_3;
     QSpacerItem *verticalSpacer_3;
     QGroupBox *groupBox_6;
-    QGridLayout *gridLayout_4;
+    QGridLayout *gridLayout_13;
     QGridLayout *gridLayout_5;
     QLineEdit *lineEdit_3;
     QLabel *label_5;
     QLineEdit *lineEdit_4;
     QProgressBar *progressBar;
+    QCheckBox *checkBox;
     QHBoxLayout *horizontalLayout_11;
     QLineEdit *lineEdit_5;
     QToolButton *toolButton;
+    QGridLayout *gridLayout_4;
+    QHBoxLayout *horizontalLayout_5;
+    QSlider *sliderFirst;
+    QSlider *sliderSecond;
+    QVBoxLayout *verticalLayout_2;
     QHBoxLayout *horizontalLayout_13;
-    QComboBox *comboBox;
-    QToolButton *toolButton_2;
-    QHBoxLayout *horizontalLayout_6;
-    QVBoxLayout *verticalLayout_14;
-    QLabel *label_12;
-    QLabel *label_13;
-    QVBoxLayout *verticalLayout_13;
-    QSlider *horizontalSlider;
-    QSlider *horizontalSlider_3;
-    QVBoxLayout *verticalLayout_12;
-    QLabel *label_2;
-    QLabel *label_11;
+    QComboBox *comboBoxSchedule;
+    QToolButton *buttonDeleteSchedule;
+    QToolButton *buttonAddSchedule;
+    QLabel *labelSchedule;
+    QSpacerItem *verticalSpacer_4;
     QSpacerItem *verticalSpacer;
     QLabel *label_4;
     QHBoxLayout *horizontalLayout_12;
@@ -146,7 +144,7 @@ public:
     QPushButton *pushButton_2;
     QPushButton *buttonSaveSettings;
     QGroupBox *groupBox_2;
-    QVBoxLayout *verticalLayout_11;
+    QGridLayout *gridLayout_24;
     QHBoxLayout *horizontalLayout_4;
     QVBoxLayout *verticalLayout_7;
     QLabel *label_3;
@@ -154,6 +152,9 @@ public:
     QVBoxLayout *verticalLayout_5;
     QLineEdit *editServerIP;
     QLineEdit *editServerPort;
+    QHBoxLayout *horizontalLayout_8;
+    QCheckBox *checkBox_2;
+    QPushButton *pushButton;
     QCheckBox *checkBox_10;
     QWidget *tab_5;
     QGridLayout *gridLayout_10;
@@ -423,13 +424,6 @@ public:
 
         horizontalLayout_2->addWidget(toolButtonLoad);
 
-        line_4 = new QFrame(frame);
-        line_4->setObjectName(QString::fromUtf8("line_4"));
-        line_4->setFrameShadow(QFrame::Raised);
-        line_4->setFrameShape(QFrame::VLine);
-
-        horizontalLayout_2->addWidget(line_4);
-
         toolButtonServerLoad = new QToolButton(frame);
         toolButtonServerLoad->setObjectName(QString::fromUtf8("toolButtonServerLoad"));
         QIcon icon10;
@@ -665,8 +659,8 @@ public:
 
         groupBox_6 = new QGroupBox(tab_4);
         groupBox_6->setObjectName(QString::fromUtf8("groupBox_6"));
-        gridLayout_4 = new QGridLayout(groupBox_6);
-        gridLayout_4->setObjectName(QString::fromUtf8("gridLayout_4"));
+        gridLayout_13 = new QGridLayout(groupBox_6);
+        gridLayout_13->setObjectName(QString::fromUtf8("gridLayout_13"));
         gridLayout_5 = new QGridLayout();
         gridLayout_5->setObjectName(QString::fromUtf8("gridLayout_5"));
         lineEdit_3 = new QLineEdit(groupBox_6);
@@ -691,106 +685,115 @@ public:
         gridLayout_5->addWidget(progressBar, 1, 0, 1, 3);
 
 
-        gridLayout_4->addLayout(gridLayout_5, 0, 0, 1, 1);
+        gridLayout_13->addLayout(gridLayout_5, 0, 0, 1, 1);
+
+        checkBox = new QCheckBox(groupBox_6);
+        checkBox->setObjectName(QString::fromUtf8("checkBox"));
+        checkBox->setEnabled(false);
+
+        gridLayout_13->addWidget(checkBox, 1, 0, 1, 1);
 
         horizontalLayout_11 = new QHBoxLayout();
         horizontalLayout_11->setObjectName(QString::fromUtf8("horizontalLayout_11"));
         lineEdit_5 = new QLineEdit(groupBox_6);
         lineEdit_5->setObjectName(QString::fromUtf8("lineEdit_5"));
+        lineEdit_5->setEnabled(false);
 
         horizontalLayout_11->addWidget(lineEdit_5);
 
         toolButton = new QToolButton(groupBox_6);
         toolButton->setObjectName(QString::fromUtf8("toolButton"));
+        toolButton->setEnabled(false);
 
         horizontalLayout_11->addWidget(toolButton);
 
 
-        gridLayout_4->addLayout(horizontalLayout_11, 1, 0, 1, 1);
+        gridLayout_13->addLayout(horizontalLayout_11, 2, 0, 1, 1);
 
+        gridLayout_4 = new QGridLayout();
+        gridLayout_4->setObjectName(QString::fromUtf8("gridLayout_4"));
+        horizontalLayout_5 = new QHBoxLayout();
+        horizontalLayout_5->setObjectName(QString::fromUtf8("horizontalLayout_5"));
+        sliderFirst = new QSlider(groupBox_6);
+        sliderFirst->setObjectName(QString::fromUtf8("sliderFirst"));
+        sliderFirst->setMaximum(7);
+        sliderFirst->setValue(0);
+        sliderFirst->setOrientation(Qt::Vertical);
+        sliderFirst->setInvertedAppearance(false);
+        sliderFirst->setInvertedControls(false);
+
+        horizontalLayout_5->addWidget(sliderFirst);
+
+        sliderSecond = new QSlider(groupBox_6);
+        sliderSecond->setObjectName(QString::fromUtf8("sliderSecond"));
+        sliderSecond->setMinimum(0);
+        sliderSecond->setMaximum(7);
+        sliderSecond->setValue(0);
+        sliderSecond->setOrientation(Qt::Vertical);
+
+        horizontalLayout_5->addWidget(sliderSecond);
+
+
+        gridLayout_4->addLayout(horizontalLayout_5, 0, 0, 1, 1);
+
+        verticalLayout_2 = new QVBoxLayout();
+        verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
         horizontalLayout_13 = new QHBoxLayout();
         horizontalLayout_13->setObjectName(QString::fromUtf8("horizontalLayout_13"));
-        comboBox = new QComboBox(groupBox_6);
-        comboBox->setObjectName(QString::fromUtf8("comboBox"));
+        comboBoxSchedule = new QComboBox(groupBox_6);
+        comboBoxSchedule->setObjectName(QString::fromUtf8("comboBoxSchedule"));
+        QSizePolicy sizePolicy3(QSizePolicy::Expanding, QSizePolicy::Fixed);
+        sizePolicy3.setHorizontalStretch(0);
+        sizePolicy3.setVerticalStretch(0);
+        sizePolicy3.setHeightForWidth(comboBoxSchedule->sizePolicy().hasHeightForWidth());
+        comboBoxSchedule->setSizePolicy(sizePolicy3);
 
-        horizontalLayout_13->addWidget(comboBox);
+        horizontalLayout_13->addWidget(comboBoxSchedule);
 
-        toolButton_2 = new QToolButton(groupBox_6);
-        toolButton_2->setObjectName(QString::fromUtf8("toolButton_2"));
+        buttonDeleteSchedule = new QToolButton(groupBox_6);
+        buttonDeleteSchedule->setObjectName(QString::fromUtf8("buttonDeleteSchedule"));
+        QIcon icon11;
+        icon11.addFile(QString::fromUtf8(":/image/icons/delete.png"), QSize(), QIcon::Normal, QIcon::Off);
+        buttonDeleteSchedule->setIcon(icon11);
 
-        horizontalLayout_13->addWidget(toolButton_2);
+        horizontalLayout_13->addWidget(buttonDeleteSchedule);
 
+        buttonAddSchedule = new QToolButton(groupBox_6);
+        buttonAddSchedule->setObjectName(QString::fromUtf8("buttonAddSchedule"));
+        QIcon icon12;
+        icon12.addFile(QString::fromUtf8(":/image/icons/add.png"), QSize(), QIcon::Normal, QIcon::Off);
+        buttonAddSchedule->setIcon(icon12);
 
-        gridLayout_4->addLayout(horizontalLayout_13, 2, 0, 1, 1);
-
-        horizontalLayout_6 = new QHBoxLayout();
-        horizontalLayout_6->setObjectName(QString::fromUtf8("horizontalLayout_6"));
-        verticalLayout_14 = new QVBoxLayout();
-        verticalLayout_14->setObjectName(QString::fromUtf8("verticalLayout_14"));
-        label_12 = new QLabel(groupBox_6);
-        label_12->setObjectName(QString::fromUtf8("label_12"));
-
-        verticalLayout_14->addWidget(label_12);
-
-        label_13 = new QLabel(groupBox_6);
-        label_13->setObjectName(QString::fromUtf8("label_13"));
-
-        verticalLayout_14->addWidget(label_13);
-
-
-        horizontalLayout_6->addLayout(verticalLayout_14);
-
-        verticalLayout_13 = new QVBoxLayout();
-        verticalLayout_13->setObjectName(QString::fromUtf8("verticalLayout_13"));
-        horizontalSlider = new QSlider(groupBox_6);
-        horizontalSlider->setObjectName(QString::fromUtf8("horizontalSlider"));
-        horizontalSlider->setMaximum(7);
-        horizontalSlider->setValue(2);
-        horizontalSlider->setOrientation(Qt::Horizontal);
-        horizontalSlider->setInvertedAppearance(false);
-        horizontalSlider->setInvertedControls(false);
-
-        verticalLayout_13->addWidget(horizontalSlider);
-
-        horizontalSlider_3 = new QSlider(groupBox_6);
-        horizontalSlider_3->setObjectName(QString::fromUtf8("horizontalSlider_3"));
-        horizontalSlider_3->setMinimum(0);
-        horizontalSlider_3->setMaximum(2);
-        horizontalSlider_3->setValue(0);
-        horizontalSlider_3->setOrientation(Qt::Horizontal);
-
-        verticalLayout_13->addWidget(horizontalSlider_3);
+        horizontalLayout_13->addWidget(buttonAddSchedule);
 
 
-        horizontalLayout_6->addLayout(verticalLayout_13);
+        verticalLayout_2->addLayout(horizontalLayout_13);
 
-        verticalLayout_12 = new QVBoxLayout();
-        verticalLayout_12->setObjectName(QString::fromUtf8("verticalLayout_12"));
-        label_2 = new QLabel(groupBox_6);
-        label_2->setObjectName(QString::fromUtf8("label_2"));
+        labelSchedule = new QLabel(groupBox_6);
+        labelSchedule->setObjectName(QString::fromUtf8("labelSchedule"));
+        labelSchedule->setAlignment(Qt::AlignCenter);
 
-        verticalLayout_12->addWidget(label_2);
+        verticalLayout_2->addWidget(labelSchedule);
 
-        label_11 = new QLabel(groupBox_6);
-        label_11->setObjectName(QString::fromUtf8("label_11"));
+        verticalSpacer_4 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        verticalLayout_12->addWidget(label_11);
+        verticalLayout_2->addItem(verticalSpacer_4);
 
 
-        horizontalLayout_6->addLayout(verticalLayout_12);
+        gridLayout_4->addLayout(verticalLayout_2, 0, 1, 1, 1);
 
 
-        gridLayout_4->addLayout(horizontalLayout_6, 3, 0, 1, 1);
+        gridLayout_13->addLayout(gridLayout_4, 3, 0, 1, 1);
 
         verticalSpacer = new QSpacerItem(20, 35, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        gridLayout_4->addItem(verticalSpacer, 4, 0, 1, 1);
+        gridLayout_13->addItem(verticalSpacer, 4, 0, 1, 1);
 
         label_4 = new QLabel(groupBox_6);
         label_4->setObjectName(QString::fromUtf8("label_4"));
         label_4->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
-        gridLayout_4->addWidget(label_4, 5, 0, 1, 1);
+        gridLayout_13->addWidget(label_4, 5, 0, 1, 1);
 
         horizontalLayout_12 = new QHBoxLayout();
         horizontalLayout_12->setObjectName(QString::fromUtf8("horizontalLayout_12"));
@@ -809,15 +812,15 @@ public:
         horizontalLayout_12->addWidget(buttonSaveSettings);
 
 
-        gridLayout_4->addLayout(horizontalLayout_12, 6, 0, 1, 1);
+        gridLayout_13->addLayout(horizontalLayout_12, 6, 0, 1, 1);
 
 
         gridLayout_9->addWidget(groupBox_6, 0, 1, 2, 1);
 
         groupBox_2 = new QGroupBox(tab_4);
         groupBox_2->setObjectName(QString::fromUtf8("groupBox_2"));
-        verticalLayout_11 = new QVBoxLayout(groupBox_2);
-        verticalLayout_11->setObjectName(QString::fromUtf8("verticalLayout_11"));
+        gridLayout_24 = new QGridLayout(groupBox_2);
+        gridLayout_24->setObjectName(QString::fromUtf8("gridLayout_24"));
         horizontalLayout_4 = new QHBoxLayout();
         horizontalLayout_4->setObjectName(QString::fromUtf8("horizontalLayout_4"));
         verticalLayout_7 = new QVBoxLayout();
@@ -851,13 +854,36 @@ public:
         horizontalLayout_4->addLayout(verticalLayout_5);
 
 
-        verticalLayout_11->addLayout(horizontalLayout_4);
+        gridLayout_24->addLayout(horizontalLayout_4, 0, 0, 1, 1);
+
+        horizontalLayout_8 = new QHBoxLayout();
+        horizontalLayout_8->setObjectName(QString::fromUtf8("horizontalLayout_8"));
+        checkBox_2 = new QCheckBox(groupBox_2);
+        checkBox_2->setObjectName(QString::fromUtf8("checkBox_2"));
+        checkBox_2->setEnabled(false);
+
+        horizontalLayout_8->addWidget(checkBox_2);
+
+        pushButton = new QPushButton(groupBox_2);
+        pushButton->setObjectName(QString::fromUtf8("pushButton"));
+        QFont font;
+        font.setFamilies({QString::fromUtf8("Arial")});
+        font.setItalic(true);
+        font.setUnderline(true);
+        pushButton->setFont(font);
+        pushButton->setCursor(QCursor(Qt::PointingHandCursor));
+        pushButton->setFlat(true);
+
+        horizontalLayout_8->addWidget(pushButton);
+
+
+        gridLayout_24->addLayout(horizontalLayout_8, 1, 0, 1, 1);
 
         checkBox_10 = new QCheckBox(groupBox_2);
         checkBox_10->setObjectName(QString::fromUtf8("checkBox_10"));
         checkBox_10->setEnabled(false);
 
-        verticalLayout_11->addWidget(checkBox_10);
+        gridLayout_24->addWidget(checkBox_10, 2, 0, 1, 1);
 
 
         gridLayout_9->addWidget(groupBox_2, 1, 0, 1, 1);
@@ -1023,19 +1049,18 @@ public:
         colorWidgetHoliday->setText(QString());
         groupBox_6->setTitle(QCoreApplication::translate("MainWindow", "\320\236\320\261\321\211\320\270\320\265", nullptr));
         label_5->setText(QCoreApplication::translate("MainWindow", "convert to", nullptr));
+        checkBox->setText(QCoreApplication::translate("MainWindow", "\320\233\320\276\320\263\320\270\321\200\320\276\320\262\320\260\320\275\320\270\320\265 \320\270\320\267\320\274\320\265\320\275\320\265\320\275\320\270\320\271", nullptr));
         lineEdit_5->setPlaceholderText(QCoreApplication::translate("MainWindow", "log file", nullptr));
         toolButton->setText(QCoreApplication::translate("MainWindow", "...", nullptr));
-        toolButton_2->setText(QCoreApplication::translate("MainWindow", "...", nullptr));
-        label_12->setText(QCoreApplication::translate("MainWindow", "\320\224\320\275\320\265\320\271 \320\262 \320\277\320\260\321\200\320\265", nullptr));
-        label_13->setText(QCoreApplication::translate("MainWindow", "\320\224\320\275\320\265\320\271 \320\262 \321\201\320\274\320\265\320\275\320\265", nullptr));
-        label_2->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
-        label_11->setText(QCoreApplication::translate("MainWindow", "0/0", nullptr));
+        labelSchedule->setText(QCoreApplication::translate("MainWindow", "0/0", nullptr));
         label_4->setText(QCoreApplication::translate("MainWindow", "current soft version: 3.0.2a", nullptr));
         pushButton_2->setText(QCoreApplication::translate("MainWindow", "\320\241\320\261\321\200\320\276\321\201", nullptr));
         buttonSaveSettings->setText(QCoreApplication::translate("MainWindow", "\320\241\320\276\321\205\321\200\320\260\320\275\320\270\321\202\321\214", nullptr));
         groupBox_2->setTitle(QCoreApplication::translate("MainWindow", "\320\241\320\265\321\202\321\214 \320\270 \321\201\320\265\321\200\320\262\320\265\321\200", nullptr));
         label_3->setText(QCoreApplication::translate("MainWindow", "IP \320\260\320\264\321\200\320\265\321\201 \321\201\320\265\321\200\320\262\320\265\321\200\320\260", nullptr));
         label->setText(QCoreApplication::translate("MainWindow", "\320\237\320\276\321\200\321\202 \321\201\320\265\321\200\320\262\320\265\321\200\320\260", nullptr));
+        checkBox_2->setText(QCoreApplication::translate("MainWindow", "\320\241\321\202\320\260\321\202\321\203\321\201 \321\201\320\265\321\200\320\262\320\265\321\200\320\260", nullptr));
+        pushButton->setText(QCoreApplication::translate("MainWindow", "check state", nullptr));
         checkBox_10->setText(QCoreApplication::translate("MainWindow", "\320\227\320\260\320\277\321\203\321\201\320\272 \321\201\320\265\321\200\320\262\320\265\321\200\320\260 \320\277\321\200\320\270 \321\201\321\202\320\260\321\200\321\202\320\265 \320\272\320\276\320\274\320\277\321\214\321\216\321\202\320\265\321\200\320\260", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tab_4), QCoreApplication::translate("MainWindow", "\320\235\320\260\321\201\321\202\321\200\320\276\320\271\320\272\320\270", nullptr));
         labelNews->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p>\320\230\320\267\320\274\320\265\320\275\320\265\320\275\320\270\321\217 \320\262 \320\262\320\265\321\200\321\201\320\270\320\270 3.0.2a</p><p>- \320\230\320\267\320\274\320\265\320\275\320\265\320\275 \320\264\320\270\320\267\320\260\320\271\320\275 \320\262\320\272\320\273\320\260\320\264\320\272\320\270 <span style=\" font-weight:600;\">\320\223\321\200\320\260\321\204\320\270\320\272</span>. </p><p>- \320\240\320\260\320\267\320\264\320\265\320\273 \321\201 \320\275\320\260\321\201\321\202\321\200\320\276\320\271\320\272\320\260\320\274\320\270 \320\262\321\213\320\275\320\265\321\201\320\265\320\275 \320\262 \320\276\321\202\320\264\320\265\320\273\321\214\320\275\321\203\321\216 \320\262\320\272\320\273\320\260\320\264\320\272\321\203.</p><p>- \320\224\320\276\320\261\320\260\320\262\320\273\320\265\320\275\320\260 \320\262\320\272\320\273\320\260\320\264\320\272\320\260 \320\264\320\273\321\217 \320\276\320\277\320\270\321\201\320\260\320\275\320\270\321\217 \320\277\320\276\321\201"
