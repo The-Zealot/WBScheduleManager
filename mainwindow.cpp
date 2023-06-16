@@ -72,7 +72,6 @@ MainWindow::MainWindow(const QString &databaseName, QWidget *parent)
     qDebug() << "Reading file data...";
 
     readJson();                                                                         // rework
-    readScheduleList();
 
     ui->labelNews->setText(readFile("readme.html"));
 
@@ -137,6 +136,18 @@ MainWindow::MainWindow(const QString &databaseName, QWidget *parent)
     connect(ui->buttonAddPoint, &QPushButton::clicked, this, &MainWindow::addPoint);
     connect(ui->comboBoxPoint, &QComboBox::currentIndexChanged, this, &MainWindow::changePoint);
     connect(ui->buttonStatistics, &QPushButton::clicked, this, &MainWindow::calculateStats);
+
+    connect(ui->comboBoxSchedule, &QComboBox::currentTextChanged, this, &MainWindow::changeSchedule);
+    connect(ui->buttonDeleteSchedule, &QAbstractButton::clicked, [this](){
+        ui->comboBoxSchedule->removeItem(ui->comboBoxSchedule->currentIndex());
+    });
+    connect(ui->buttonAddSchedule, &QAbstractButton::clicked, [this](){
+        ui->comboBoxSchedule->addItem(ui->labelSchedule->text());
+    });
+    connect(ui->sliderFirst, &QSlider::valueChanged, this, &MainWindow::onSliderValueChanged);
+    connect(ui->sliderSecond, &QSlider::valueChanged, this, &MainWindow::onSliderValueChanged);
+
+    readScheduleList();
 
     qDebug() << "Initialization of Toolbar...";
 
@@ -634,6 +645,28 @@ void MainWindow::saveSettings()
     QMessageBox::information(this, "Успешный успех", "Настройки были успешно сохранены. Перезапустите программу, чтобы изменения вступили в силу.");
 }
 
+void MainWindow::changeSchedule()
+{
+    auto sender = qobject_cast<QComboBox*>(this->sender());
+
+    if (sender->currentText().isEmpty())
+        return;
+
+    QStringList days = sender->currentText().split("/");
+
+    ui->labelSchedule->setText(sender->currentText());
+    ui->sliderFirst->setValue(QVariant(days.at(0)).toInt());
+    ui->sliderSecond->setValue(QVariant(days.at(1)).toInt());
+}
+
+void MainWindow::onSliderValueChanged()
+{
+    int first = ui->sliderFirst->value();
+    int second = ui->sliderSecond->value();
+
+    ui->labelSchedule->setText(QString("%1/%2").arg(first).arg(second));
+}
+
 void MainWindow::openDocInfo()
 {
     if (!QDesktopServices::openUrl(QUrl("schedle.doc")))
@@ -748,7 +781,7 @@ void MainWindow::readScheduleList()                                     // to re
         qDebug() << "File " + file.fileName() + " not found";
         return;
     }
-//    ui->comboBoxSchedle->addItems(QString(file.readAll()).split("\n"));
+    ui->comboBoxSchedule->addItems(QString(file.readAll()).split("\n"));
     file.close();
 }
 
@@ -960,5 +993,6 @@ QString MainWindow::readFile(QString filename)
     else
     {
         qDebug() << "File not open";
+        return "";
     }
 }

@@ -62,6 +62,8 @@ private slots:
     void changePoint();
 
     void saveSettings();
+    void changeSchedule();
+    void onSliderValueChanged();
     void openDocInfo();
 
 private:
