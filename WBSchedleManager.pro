@@ -5,9 +5,9 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 MAJOR   = 3;
 MINOR   = 0;
 RELEASE = 2a;
-BUILD   = 23061514;
+BUILD   = 23061612;
 
-VERSION = 3.0.2a.23061514
+VERSION = 3.0.2a.23061612
 QMAKE_TARGET_COMPANY = The_Zealot
 QMAKE_TARGET_PRODUCT = WBScheduleManager
 QMAKE_TARGET_DESCRIPTION = Managment the shifts of all employees involved in the WBPoint
@@ -57,6 +57,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
+    icons/add.png \
+    icons/bugReport.png \
+    icons/delete.png \
     icons/help.png \
     readme.html \
     toolBar/icons/arrow.png \
