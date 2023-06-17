@@ -422,13 +422,15 @@ void MainWindow::showDataOfSelectedDay()
     _editedDays[date].isPayed ? isPayed = "Оплачена" : isPayed = "Не оплачена";
     _editedDays[date].isFinished ? isFinished = "Окончен" : isFinished = "Не окончен";
 
-    ui->textBrowserShiftInfo->setText(QString("Сотрудник: %2\nПункт: %6\nДата: %1\nСтоимость дня: %3 руб.\nСтатус смены: %4\nСтатус дня: %5")
+    QString info = "Сотрудник: %2 <span style=\"color:%7\">●</span><p/>Пункт: %6<p/>Дата: %1<p/>Стоимость дня: %3 руб.<p/>Статус смены: %4<p/>Статус дня: %5";
+    ui->textBrowserShiftInfo->setText(info
                                       .arg(date.toString("dd.MM.yy"))
                                       .arg(_editedDays[date].name)
                                       .arg(_editedDays[date].salary)
                                       .arg(isPayed)
                                       .arg(isFinished)
-                                      .arg(ui->comboBoxPoint->currentText()));
+                                      .arg(ui->comboBoxPoint->currentText())
+                                      .arg(_editedDays[date].colorHex));
 
     qDebug() << "Selected date" << date.toString("dd.MM.yyyy") << "info:";
     qDebug() << "\tEmployee name is" << _editedDays[date].name;
