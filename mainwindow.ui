@@ -61,45 +61,52 @@
            <bool>false</bool>
           </property>
           <layout class="QGridLayout" name="gridLayout_6">
-           <property name="leftMargin">
-            <number>5</number>
-           </property>
-           <property name="topMargin">
-            <number>5</number>
-           </property>
-           <property name="rightMargin">
-            <number>5</number>
-           </property>
-           <property name="bottomMargin">
-            <number>5</number>
-           </property>
-           <property name="spacing">
-            <number>0</number>
-           </property>
            <item row="0" column="0">
-            <layout class="QVBoxLayout" name="verticalLayout">
-             <property name="spacing">
-              <number>3</number>
-             </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_6">
              <item>
-              <widget class="QComboBox" name="comboBoxPoint"/>
-             </item>
-             <item>
-              <widget class="QCalendarWidget" name="calendarWidget">
+              <widget class="QCheckBox" name="checkBoxEmployeeView">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>0</height>
-                </size>
+               <property name="toolTip">
+                <string>Отображение от лица сотрудника</string>
                </property>
-               <property name="styleSheet">
-                <string notr="true">QCalendarWidget QToolButton {
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_2">
+               <property name="text">
+                <string>Выбранный пункт:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="comboBoxPoint"/>
+             </item>
+            </layout>
+           </item>
+           <item row="1" column="0">
+            <widget class="QCalendarWidget" name="calendarWidget">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QCalendarWidget QToolButton {
   	color: white;
 	background-color: rgb(0, 120, 215);
   }
@@ -132,54 +139,52 @@ QCalendarWidget QAbstractItemView:disabled
 { 
 color: rgb(77, 77, 77); 
 }</string>
+             </property>
+             <property name="gridVisible">
+              <bool>true</bool>
+             </property>
+             <property name="verticalHeaderFormat">
+              <enum>QCalendarWidget::NoVerticalHeader</enum>
+             </property>
+             <property name="navigationBarVisible">
+              <bool>true</bool>
+             </property>
+             <property name="dateEditEnabled">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <layout class="QHBoxLayout" name="horizontalLayout_3">
+             <item>
+              <widget class="QCheckBox" name="checkBoxPayedDays">
+               <property name="text">
+                <string>Оплаченные</string>
                </property>
-               <property name="gridVisible">
-                <bool>true</bool>
-               </property>
-               <property name="verticalHeaderFormat">
-                <enum>QCalendarWidget::NoVerticalHeader</enum>
-               </property>
-               <property name="navigationBarVisible">
-                <bool>true</bool>
-               </property>
-               <property name="dateEditEnabled">
+               <property name="checked">
                 <bool>true</bool>
                </property>
               </widget>
              </item>
              <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_3">
-               <item>
-                <widget class="QCheckBox" name="checkBoxPayedDays">
-                 <property name="text">
-                  <string>Оплаченные</string>
-                 </property>
-                 <property name="checked">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QCheckBox" name="checkBoxFinishedDays">
-                 <property name="text">
-                  <string>Отработанные</string>
-                 </property>
-                 <property name="checked">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QCheckBox" name="checkBoxShifts">
-                 <property name="text">
-                  <string>Смены</string>
-                 </property>
-                 <property name="checked">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-              </layout>
+              <widget class="QCheckBox" name="checkBoxFinishedDays">
+               <property name="text">
+                <string>Отработанные</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="checkBoxShifts">
+               <property name="text">
+                <string>Смены</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
              </item>
             </layout>
            </item>
@@ -312,7 +317,7 @@ p, li { white-space: pre-wrap; }
              </property>
              <property name="icon">
               <iconset resource="resource.qrc">
-               <normaloff>:/image/toolBar/employee.png</normaloff>:/image/toolBar/employee.png</iconset>
+               <normaloff>:/image/toolBar/employeeNew.png</normaloff>:/image/toolBar/employeeNew.png</iconset>
              </property>
              <property name="iconSize">
               <size>
@@ -524,12 +529,48 @@ p, li { white-space: pre-wrap; }
            </item>
            <item>
             <widget class="QToolButton" name="toolButtonServerLoad">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="toolTip">
               <string>Загрузить с сервера</string>
              </property>
              <property name="icon">
               <iconset resource="resource.qrc">
                <normaloff>:/image/toolBar/serverLoad.png</normaloff>:/image/toolBar/serverLoad.png</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>24</width>
+               <height>24</height>
+              </size>
+             </property>
+             <property name="autoRaise">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="Line" name="line_2">
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QToolButton" name="toolButtonExportToExcel">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>Экспорт в Excel</string>
+             </property>
+             <property name="icon">
+              <iconset resource="resource.qrc">
+               <normaloff>:/image/toolBar/toExcel.png</normaloff>:/image/toolBar/toExcel.png</iconset>
              </property>
              <property name="iconSize">
               <size>
@@ -998,6 +1039,9 @@ p, li { white-space: pre-wrap; }
                  <property name="maximum">
                   <number>7</number>
                  </property>
+                 <property name="pageStep">
+                  <number>1</number>
+                 </property>
                  <property name="value">
                   <number>0</number>
                  </property>
@@ -1019,6 +1063,9 @@ p, li { white-space: pre-wrap; }
                  </property>
                  <property name="maximum">
                   <number>7</number>
+                 </property>
+                 <property name="pageStep">
+                  <number>1</number>
                  </property>
                  <property name="value">
                   <number>0</number>
@@ -1046,6 +1093,9 @@ p, li { white-space: pre-wrap; }
                  </item>
                  <item>
                   <widget class="QToolButton" name="buttonDeleteSchedule">
+                   <property name="toolTip">
+                    <string>Удалить расписание</string>
+                   </property>
                    <property name="icon">
                     <iconset resource="resource.qrc">
                      <normaloff>:/image/icons/delete.png</normaloff>:/image/icons/delete.png</iconset>
@@ -1054,6 +1104,9 @@ p, li { white-space: pre-wrap; }
                  </item>
                  <item>
                   <widget class="QToolButton" name="buttonAddSchedule">
+                   <property name="toolTip">
+                    <string>Добавить расписание</string>
+                   </property>
                    <property name="icon">
                     <iconset resource="resource.qrc">
                      <normaloff>:/image/icons/add.png</normaloff>:/image/icons/add.png</iconset>
@@ -1073,17 +1126,20 @@ p, li { white-space: pre-wrap; }
                 </widget>
                </item>
                <item>
-                <spacer name="verticalSpacer_4">
-                 <property name="orientation">
-                  <enum>Qt::Vertical</enum>
+                <widget class="QLabel" name="labelShiftCount">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
                  </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>20</width>
-                   <height>40</height>
-                  </size>
+                 <property name="text">
+                  <string>Shift count per month</string>
                  </property>
-                </spacer>
+                 <property name="alignment">
+                  <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                 </property>
+                </widget>
                </item>
               </layout>
              </item>
@@ -1274,7 +1330,7 @@ p, li { white-space: pre-wrap; }
             <item row="0" column="0">
              <widget class="QLabel" name="labelNews">
               <property name="text">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Изменения в версии 3.0.2a&lt;/p&gt;&lt;p&gt;- Изменен дизайн вкладки &lt;span style=&quot; font-weight:600;&quot;&gt;График&lt;/span&gt;. &lt;/p&gt;&lt;p&gt;- Раздел с настройками вынесен в отдельную вкладку.&lt;/p&gt;&lt;p&gt;- Добавлена вкладка для описания последнего обновления &lt;span style=&quot; font-weight:600;&quot;&gt;Что нового?&lt;/span&gt;&lt;/p&gt;&lt;p&gt;- Изменен принцип работы перерасчета графика. Теперь, прежде чем график будет пересчитан с новыми параметрами, пользователю необходимо выбрать начальную дату отсчета.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Изменения в версии MAJOR.MINOR.RELEASE&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;Change list:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;change #1&lt;/li&gt;&lt;li&gt;change #2&lt;/li&gt;&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="textFormat">
                <enum>Qt::AutoText</enum>
