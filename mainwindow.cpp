@@ -108,23 +108,20 @@ MainWindow::MainWindow(const QString &databaseName, QWidget *parent)
 
     loadEditedDaysFromDB(_pointID, _editedDays);
     updateCalendar();
+    showDataOfSelectedDay();
 
     connect(ui->colorWidgetPayedDay, &QPushButton::clicked, [this](){
         PAYED_DAY_HEX = QVariant(ui->colorWidgetPayedDay->getColor()).toString();
-        ui->editColorPayedDay->setText(PAYED_DAY_HEX);                                                          // DRY
     });
     connect(ui->colorWidgetFinishedDay, &QPushButton::clicked, [this](){
         FINISHED_DAY_HEX = QVariant(ui->colorWidgetFinishedDay->getColor()).toString();
-        ui->editColorFinishedDay->setText(FINISHED_DAY_HEX);                                                    // DRY
     });
     connect(ui->calendarWidget, &QCalendarWidget::clicked, this, &MainWindow::doActionToolbar);
+    connect(ui->calendarWidget, &QCalendarWidget::selectionChanged, this, &MainWindow::showDataOfSelectedDay);
     connect(ui->buttonAdd, &QPushButton::clicked, this, &MainWindow::addEmployee);
     connect(ui->buttonRemove, &QPushButton::clicked, this, &MainWindow::removeEmployee);
     connect(ui->buttonEdit, &QPushButton::clicked, this, &MainWindow::updateEmployee);
     connect(ui->tableView, &QTableView::clicked, this, &MainWindow::tableItemSelect);
-    connect(ui->colorWidget, &QPushButton::clicked, [this](){
-        ui->editHex->setText(QVariant(ui->colorWidget->getColor()).toString());                                 // DRY
-    });
     connect(ui->checkBoxShifts, &QCheckBox::clicked, this, &MainWindow::updateCalendar);
     connect(ui->checkBoxPayedDays, &QCheckBox::clicked, this, &MainWindow::updateCalendar);
     connect(ui->checkBoxFinishedDays, &QCheckBox::clicked, this, &MainWindow::updateCalendar);
@@ -242,7 +239,7 @@ MainWindow::MainWindow(const QString &databaseName, QWidget *parent)
     connect(ui->toolButtonLoad, &QAbstractButton::clicked, [this](){
         loadEditedDaysFromDB(_pointID, _editedDays);
         updateCalendar();
-        ui->textBrowserShiftInfo->clear();
+        showDataOfSelectedDay();
         AlertWidget::showAlert("Данные загружены");
     });
     connect(_buttonHelp, &QAbstractButton::clicked, this, &MainWindow::openDocInfo);
@@ -417,6 +414,30 @@ void MainWindow::setStatusBarMessage()
     }
 }
 
+void MainWindow::showDataOfSelectedDay()
+{
+    QDate date = ui->calendarWidget->selectedDate();
+
+    QString isPayed, isFinished;
+    _editedDays[date].isPayed ? isPayed = "Оплачена" : isPayed = "Не оплачена";
+    _editedDays[date].isFinished ? isFinished = "Окончен" : isFinished = "Не окончен";
+
+    ui->textBrowserShiftInfo->setText(QString("Сотрудник: %2\nПункт: %6\nДата: %1\nСтоимость дня: %3 руб.\nСтатус смены: %4\nСтатус дня: %5")
+                                      .arg(date.toString("dd.MM.yy"))
+                                      .arg(_editedDays[date].name)
+                                      .arg(_editedDays[date].salary)
+                                      .arg(isPayed)
+                                      .arg(isFinished)
+                                      .arg(ui->comboBoxPoint->currentText()));
+
+    qDebug() << "Selected date" << date.toString("dd.MM.yyyy") << "info:";
+    qDebug() << "\tEmployee name is" << _editedDays[date].name;
+    qDebug() << "\tEmployee color is" << _editedDays[date].colorHex;
+    qDebug() << "\tDay cost is" << _editedDays[date].salary;
+    qDebug() << "\tThis shift is payed" << _editedDays[date].isPayed;
+    qDebug() << "\tThis shift is finished" << _editedDays[date].isFinished;
+}
+
 void MainWindow::doActionToolbar()
 {
     QDate date = ui->calendarWidget->selectedDate();
@@ -456,24 +477,7 @@ void MainWindow::doActionToolbar()
 
     updateCalendar();
 
-    QString isPayed, isFinished;
-    _editedDays[date].isPayed ? isPayed = "Оплачена" : isPayed = "Не оплачена";
-    _editedDays[date].isFinished ? isFinished = "Окончен" : isFinished = "Не окончен";
-
-    ui->textBrowserShiftInfo->setText(QString("Сотрудник: %2\nПункт: %6\nДата: %1\nСтоимость дня: %3 руб.\nСтатус смены: %4\nСтатус дня: %5")
-                                      .arg(date.toString("dd.MM.yy"))
-                                      .arg(_editedDays[date].name)
-                                      .arg(_editedDays[date].salary)
-                                      .arg(isPayed)
-                                      .arg(isFinished)
-                                      .arg(ui->comboBoxPoint->currentText()));
-
-    qDebug() << "Selected date" << date.toString("dd.MM.yyyy") << "info:";
-    qDebug() << "\tEmployee name is" << _editedDays[date].name;
-    qDebug() << "\tEmployee color is" << _editedDays[date].colorHex;
-    qDebug() << "\tDay cost is" << _editedDays[date].salary;
-    qDebug() << "\tThis shift is payed" << _editedDays[date].isPayed;
-    qDebug() << "\tThis shift is finished" << _editedDays[date].isFinished;
+    showDataOfSelectedDay();
 }
 
 void MainWindow::updatePointList()
@@ -639,6 +643,7 @@ void MainWindow::changePoint()
 
     qDebug() << "Updating calendar...";
     updateCalendar();
+    showDataOfSelectedDay();
 }
 
 void MainWindow::saveSettings()

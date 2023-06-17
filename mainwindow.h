@@ -42,13 +42,14 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(const QString &databaseName, QWidget *parent = nullptr);
     ~MainWindow();
-    
+
 private slots:
     void takeColor(QLineEdit* edit);
     void updateCalendar();                      // changeSchedle v2.0
     void resetCalendar(QMap<QDate, EmployeeShift> &editedDays, QDate date, bool isFullReset = true);
     void payEverything(QDate date);
     void setStatusBarMessage();
+    void showDataOfSelectedDay();
     void doActionToolbar();
     void updatePointList();
 
