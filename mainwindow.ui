@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>607</width>
-    <height>490</height>
+    <height>498</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -607,23 +607,14 @@ p, li { white-space: pre-wrap; }
        </attribute>
        <layout class="QGridLayout" name="gridLayout_7">
         <item row="0" column="0" rowspan="2">
-         <widget class="QTableView" name="tableView"/>
+         <widget class="QTableView" name="tableView">
+          <property name="sortingEnabled">
+           <bool>true</bool>
+          </property>
+         </widget>
         </item>
         <item row="0" column="1">
          <layout class="QGridLayout" name="gridLayout">
-          <item row="1" column="0">
-           <widget class="QLineEdit" name="editHex">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="placeholderText">
-             <string>Цвет</string>
-            </property>
-           </widget>
-          </item>
           <item row="1" column="1">
            <widget class="ColorWidget" name="colorWidget">
             <property name="sizePolicy">
@@ -640,19 +631,6 @@ p, li { white-space: pre-wrap; }
             </property>
             <property name="text">
              <string/>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0" colspan="2">
-           <widget class="QLineEdit" name="editEmployeeName">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="placeholderText">
-             <string>Имя сотрудника</string>
             </property>
            </widget>
           </item>
@@ -676,10 +654,16 @@ p, li { white-space: pre-wrap; }
             </property>
            </widget>
           </item>
-          <item row="4" column="0" colspan="2">
-           <widget class="QPushButton" name="buttonRemove">
-            <property name="text">
-             <string>Удалить</string>
+          <item row="0" column="0" colspan="2">
+           <widget class="QLineEdit" name="editEmployeeName">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="placeholderText">
+             <string>Имя сотрудника</string>
             </property>
            </widget>
           </item>
@@ -687,6 +671,36 @@ p, li { white-space: pre-wrap; }
            <widget class="QPushButton" name="buttonEdit">
             <property name="text">
              <string>Изменить</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLineEdit" name="editHex">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="placeholderText">
+             <string>Цвет</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0" colspan="2">
+           <widget class="QPushButton" name="buttonRemove">
+            <property name="text">
+             <string>Удалить</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0" colspan="2">
+           <widget class="QPushButton" name="buttonLoadEmployee">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Загрузить</string>
             </property>
            </widget>
           </item>
@@ -713,7 +727,11 @@ p, li { white-space: pre-wrap; }
        </attribute>
        <layout class="QGridLayout" name="gridLayout_2">
         <item row="0" column="0" colspan="2">
-         <widget class="QTableView" name="tableViewPoints"/>
+         <widget class="QTableView" name="tableViewPoints">
+          <property name="sortingEnabled">
+           <bool>true</bool>
+          </property>
+         </widget>
         </item>
         <item row="0" column="2" colspan="2">
          <widget class="QTextBrowser" name="textBrowserStats">
@@ -844,6 +862,39 @@ p, li { white-space: pre-wrap; }
              </item>
             </layout>
            </item>
+           <item row="3" column="0">
+            <layout class="QHBoxLayout" name="horizontalLayout_24">
+             <item>
+              <widget class="QLineEdit" name="editColorHoliday">
+               <property name="toolTip">
+                <string>Цвет выходного дня</string>
+               </property>
+               <property name="placeholderText">
+                <string>Цвет выходного дня</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="ColorWidget" name="colorWidgetHoliday">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>42</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
            <item row="1" column="0">
             <layout class="QHBoxLayout" name="horizontalLayout_9">
              <item>
@@ -910,59 +961,6 @@ p, li { white-space: pre-wrap; }
              </item>
             </layout>
            </item>
-           <item row="3" column="0">
-            <layout class="QHBoxLayout" name="horizontalLayout_24">
-             <item>
-              <widget class="QLineEdit" name="editColorHoliday">
-               <property name="toolTip">
-                <string>Цвет выходного дня</string>
-               </property>
-               <property name="placeholderText">
-                <string>Цвет выходного дня</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="ColorWidget" name="colorWidgetHoliday">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>42</width>
-                 <height>0</height>
-                </size>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item row="4" column="0">
-            <widget class="Line" name="line_3">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="0">
-            <spacer name="verticalSpacer_3">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
           </layout>
          </widget>
         </item>
@@ -997,41 +995,100 @@ p, li { white-space: pre-wrap; }
             </layout>
            </item>
            <item row="1" column="0">
-            <widget class="QCheckBox" name="checkBox">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="text">
-              <string>Логирование изменений</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <layout class="QHBoxLayout" name="horizontalLayout_11">
+            <layout class="QHBoxLayout" name="horizontalLayout_10">
              <item>
-              <widget class="QLineEdit" name="lineEdit_5">
-               <property name="enabled">
-                <bool>false</bool>
-               </property>
-               <property name="placeholderText">
-                <string>log file</string>
-               </property>
-              </widget>
+              <layout class="QVBoxLayout" name="verticalLayout_4">
+               <item>
+                <widget class="QCheckBox" name="checkBox_3">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="text">
+                  <string>backup</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="checkBox">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="toolTip">
+                  <string>Логирование изменений</string>
+                 </property>
+                 <property name="text">
+                  <string>logging</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
              <item>
-              <widget class="QToolButton" name="toolButton">
-               <property name="enabled">
-                <bool>false</bool>
-               </property>
-               <property name="text">
-                <string>...</string>
-               </property>
-              </widget>
+              <layout class="QVBoxLayout" name="verticalLayout">
+               <item>
+                <widget class="QComboBox" name="comboBoxBackup">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <item>
+                  <property name="text">
+                   <string>Каждый день</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Каждую неделю</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Каждый месяц</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_7">
+                 <item>
+                  <widget class="QLineEdit" name="lineEdit_5">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="toolTip">
+                    <string>Лог-файл</string>
+                   </property>
+                   <property name="placeholderText">
+                    <string>Лог-файл</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QToolButton" name="toolButton">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="text">
+                    <string>...</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
              </item>
             </layout>
            </item>
-           <item row="3" column="0">
+           <item row="2" column="0">
             <layout class="QGridLayout" name="gridLayout_4">
+             <property name="spacing">
+              <number>0</number>
+             </property>
              <item row="0" column="0">
               <layout class="QHBoxLayout" name="horizontalLayout_5">
                <item>
@@ -1079,8 +1136,14 @@ p, li { white-space: pre-wrap; }
              </item>
              <item row="0" column="1">
               <layout class="QVBoxLayout" name="verticalLayout_2">
+               <property name="spacing">
+                <number>0</number>
+               </property>
                <item>
                 <layout class="QHBoxLayout" name="horizontalLayout_13">
+                 <property name="spacing">
+                  <number>7</number>
+                 </property>
                  <item>
                   <widget class="QComboBox" name="comboBoxSchedule">
                    <property name="sizePolicy">
@@ -1137,7 +1200,7 @@ p, li { white-space: pre-wrap; }
                   <string>Shift count per month</string>
                  </property>
                  <property name="alignment">
-                  <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                  <set>Qt::AlignCenter</set>
                  </property>
                 </widget>
                </item>
@@ -1145,7 +1208,7 @@ p, li { white-space: pre-wrap; }
              </item>
             </layout>
            </item>
-           <item row="4" column="0">
+           <item row="3" column="0">
             <spacer name="verticalSpacer">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
@@ -1158,17 +1221,17 @@ p, li { white-space: pre-wrap; }
              </property>
             </spacer>
            </item>
-           <item row="5" column="0">
+           <item row="4" column="0">
             <widget class="QLabel" name="label_4">
              <property name="text">
-              <string>current soft version: 3.0.2a</string>
+              <string>current soft version: 3.0.3a</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
              </property>
             </widget>
            </item>
-           <item row="6" column="0">
+           <item row="5" column="0">
             <layout class="QHBoxLayout" name="horizontalLayout_12">
              <item>
               <spacer name="horizontalSpacer_2">
@@ -1208,6 +1271,29 @@ p, li { white-space: pre-wrap; }
            <string>Сеть и сервер</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_24">
+           <item row="2" column="0">
+            <widget class="QCheckBox" name="checkBox_10">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>Запускать сервер при каждом запуске компьютера</string>
+             </property>
+             <property name="text">
+              <string>Запуск при старте компьютера</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QCheckBox" name="checkBox_4">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Сохранять последний ответ</string>
+             </property>
+            </widget>
+           </item>
            <item row="0" column="0">
             <layout class="QHBoxLayout" name="horizontalLayout_4">
              <item>
@@ -1226,6 +1312,13 @@ p, li { white-space: pre-wrap; }
                  </property>
                 </widget>
                </item>
+               <item>
+                <widget class="QLabel" name="label_6">
+                 <property name="text">
+                  <string>Пароль</string>
+                 </property>
+                </widget>
+               </item>
               </layout>
              </item>
              <item>
@@ -1235,6 +1328,9 @@ p, li { white-space: pre-wrap; }
                </item>
                <item>
                 <widget class="QLineEdit" name="editServerPort"/>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="editServerPassword"/>
                </item>
               </layout>
              </item>
@@ -1274,15 +1370,18 @@ p, li { white-space: pre-wrap; }
              </item>
             </layout>
            </item>
-           <item row="2" column="0">
-            <widget class="QCheckBox" name="checkBox_10">
-             <property name="enabled">
-              <bool>false</bool>
+           <item row="4" column="0">
+            <spacer name="verticalSpacer_3">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
              </property>
-             <property name="text">
-              <string>Запуск сервера при старте компьютера</string>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
              </property>
-            </widget>
+            </spacer>
            </item>
           </layout>
          </widget>
@@ -1323,7 +1422,7 @@ p, li { white-space: pre-wrap; }
              <x>0</x>
              <y>0</y>
              <width>603</width>
-             <height>432</height>
+             <height>440</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_11">

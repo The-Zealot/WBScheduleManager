@@ -83,13 +83,14 @@ public:
     QGridLayout *gridLayout_7;
     QTableView *tableView;
     QGridLayout *gridLayout;
-    QLineEdit *editHex;
     ColorWidget *colorWidget;
-    QLineEdit *editEmployeeName;
     QLineEdit *editSalary;
     QPushButton *buttonAdd;
-    QPushButton *buttonRemove;
+    QLineEdit *editEmployeeName;
     QPushButton *buttonEdit;
+    QLineEdit *editHex;
+    QPushButton *buttonRemove;
+    QPushButton *buttonLoadEmployee;
     QSpacerItem *verticalSpacer_2;
     QWidget *tab_3;
     QGridLayout *gridLayout_2;
@@ -108,17 +109,15 @@ public:
     QHBoxLayout *horizontalLayout;
     QLineEdit *editColorPayedDay;
     ColorWidget *colorWidgetPayedDay;
+    QHBoxLayout *horizontalLayout_24;
+    QLineEdit *editColorHoliday;
+    ColorWidget *colorWidgetHoliday;
     QHBoxLayout *horizontalLayout_9;
     QLineEdit *editColorFinishedDay;
     ColorWidget *colorWidgetFinishedDay;
     QHBoxLayout *horizontalLayout_23;
     QLineEdit *editColorWorkDay;
     ColorWidget *colorWidgetWorkDay;
-    QHBoxLayout *horizontalLayout_24;
-    QLineEdit *editColorHoliday;
-    ColorWidget *colorWidgetHoliday;
-    QFrame *line_3;
-    QSpacerItem *verticalSpacer_3;
     QGroupBox *groupBox_6;
     QGridLayout *gridLayout_13;
     QGridLayout *gridLayout_5;
@@ -126,8 +125,13 @@ public:
     QLabel *label_5;
     QLineEdit *lineEdit_4;
     QProgressBar *progressBar;
+    QHBoxLayout *horizontalLayout_10;
+    QVBoxLayout *verticalLayout_4;
+    QCheckBox *checkBox_3;
     QCheckBox *checkBox;
-    QHBoxLayout *horizontalLayout_11;
+    QVBoxLayout *verticalLayout;
+    QComboBox *comboBoxBackup;
+    QHBoxLayout *horizontalLayout_7;
     QLineEdit *lineEdit_5;
     QToolButton *toolButton;
     QGridLayout *gridLayout_4;
@@ -149,17 +153,21 @@ public:
     QPushButton *buttonSaveSettings;
     QGroupBox *groupBox_2;
     QGridLayout *gridLayout_24;
+    QCheckBox *checkBox_10;
+    QCheckBox *checkBox_4;
     QHBoxLayout *horizontalLayout_4;
     QVBoxLayout *verticalLayout_7;
     QLabel *label_3;
     QLabel *label;
+    QLabel *label_6;
     QVBoxLayout *verticalLayout_5;
     QLineEdit *editServerIP;
     QLineEdit *editServerPort;
+    QLineEdit *editServerPassword;
     QHBoxLayout *horizontalLayout_8;
     QCheckBox *checkBox_2;
     QPushButton *pushButton;
-    QCheckBox *checkBox_10;
+    QSpacerItem *verticalSpacer_3;
     QWidget *tab_5;
     QGridLayout *gridLayout_10;
     QScrollArea *scrollArea;
@@ -173,7 +181,7 @@ public:
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
         MainWindow->setEnabled(true);
-        MainWindow->resize(607, 490);
+        MainWindow->resize(607, 498);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         gridLayout_12 = new QGridLayout(centralwidget);
@@ -484,35 +492,22 @@ public:
         gridLayout_7->setObjectName(QString::fromUtf8("gridLayout_7"));
         tableView = new QTableView(tab_2);
         tableView->setObjectName(QString::fromUtf8("tableView"));
+        tableView->setSortingEnabled(true);
 
         gridLayout_7->addWidget(tableView, 0, 0, 2, 1);
 
         gridLayout = new QGridLayout();
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
-        editHex = new QLineEdit(tab_2);
-        editHex->setObjectName(QString::fromUtf8("editHex"));
+        colorWidget = new ColorWidget(tab_2);
+        colorWidget->setObjectName(QString::fromUtf8("colorWidget"));
         QSizePolicy sizePolicy3(QSizePolicy::Preferred, QSizePolicy::Fixed);
         sizePolicy3.setHorizontalStretch(0);
         sizePolicy3.setVerticalStretch(0);
-        sizePolicy3.setHeightForWidth(editHex->sizePolicy().hasHeightForWidth());
-        editHex->setSizePolicy(sizePolicy3);
-
-        gridLayout->addWidget(editHex, 1, 0, 1, 1);
-
-        colorWidget = new ColorWidget(tab_2);
-        colorWidget->setObjectName(QString::fromUtf8("colorWidget"));
         sizePolicy3.setHeightForWidth(colorWidget->sizePolicy().hasHeightForWidth());
         colorWidget->setSizePolicy(sizePolicy3);
         colorWidget->setMinimumSize(QSize(42, 0));
 
         gridLayout->addWidget(colorWidget, 1, 1, 1, 1);
-
-        editEmployeeName = new QLineEdit(tab_2);
-        editEmployeeName->setObjectName(QString::fromUtf8("editEmployeeName"));
-        sizePolicy3.setHeightForWidth(editEmployeeName->sizePolicy().hasHeightForWidth());
-        editEmployeeName->setSizePolicy(sizePolicy3);
-
-        gridLayout->addWidget(editEmployeeName, 0, 0, 1, 2);
 
         editSalary = new QLineEdit(tab_2);
         editSalary->setObjectName(QString::fromUtf8("editSalary"));
@@ -526,15 +521,35 @@ public:
 
         gridLayout->addWidget(buttonAdd, 3, 0, 1, 2);
 
-        buttonRemove = new QPushButton(tab_2);
-        buttonRemove->setObjectName(QString::fromUtf8("buttonRemove"));
+        editEmployeeName = new QLineEdit(tab_2);
+        editEmployeeName->setObjectName(QString::fromUtf8("editEmployeeName"));
+        sizePolicy3.setHeightForWidth(editEmployeeName->sizePolicy().hasHeightForWidth());
+        editEmployeeName->setSizePolicy(sizePolicy3);
 
-        gridLayout->addWidget(buttonRemove, 4, 0, 1, 2);
+        gridLayout->addWidget(editEmployeeName, 0, 0, 1, 2);
 
         buttonEdit = new QPushButton(tab_2);
         buttonEdit->setObjectName(QString::fromUtf8("buttonEdit"));
 
         gridLayout->addWidget(buttonEdit, 5, 0, 1, 2);
+
+        editHex = new QLineEdit(tab_2);
+        editHex->setObjectName(QString::fromUtf8("editHex"));
+        sizePolicy3.setHeightForWidth(editHex->sizePolicy().hasHeightForWidth());
+        editHex->setSizePolicy(sizePolicy3);
+
+        gridLayout->addWidget(editHex, 1, 0, 1, 1);
+
+        buttonRemove = new QPushButton(tab_2);
+        buttonRemove->setObjectName(QString::fromUtf8("buttonRemove"));
+
+        gridLayout->addWidget(buttonRemove, 4, 0, 1, 2);
+
+        buttonLoadEmployee = new QPushButton(tab_2);
+        buttonLoadEmployee->setObjectName(QString::fromUtf8("buttonLoadEmployee"));
+        buttonLoadEmployee->setEnabled(false);
+
+        gridLayout->addWidget(buttonLoadEmployee, 6, 0, 1, 2);
 
 
         gridLayout_7->addLayout(gridLayout, 0, 1, 1, 1);
@@ -550,6 +565,7 @@ public:
         gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
         tableViewPoints = new QTableView(tab_3);
         tableViewPoints->setObjectName(QString::fromUtf8("tableViewPoints"));
+        tableViewPoints->setSortingEnabled(true);
 
         gridLayout_2->addWidget(tableViewPoints, 0, 0, 1, 2);
 
@@ -625,6 +641,24 @@ public:
 
         gridLayout_8->addLayout(horizontalLayout, 0, 0, 1, 1);
 
+        horizontalLayout_24 = new QHBoxLayout();
+        horizontalLayout_24->setObjectName(QString::fromUtf8("horizontalLayout_24"));
+        editColorHoliday = new QLineEdit(groupBox_5);
+        editColorHoliday->setObjectName(QString::fromUtf8("editColorHoliday"));
+
+        horizontalLayout_24->addWidget(editColorHoliday);
+
+        colorWidgetHoliday = new ColorWidget(groupBox_5);
+        colorWidgetHoliday->setObjectName(QString::fromUtf8("colorWidgetHoliday"));
+        sizePolicy3.setHeightForWidth(colorWidgetHoliday->sizePolicy().hasHeightForWidth());
+        colorWidgetHoliday->setSizePolicy(sizePolicy3);
+        colorWidgetHoliday->setMinimumSize(QSize(42, 0));
+
+        horizontalLayout_24->addWidget(colorWidgetHoliday);
+
+
+        gridLayout_8->addLayout(horizontalLayout_24, 3, 0, 1, 1);
+
         horizontalLayout_9 = new QHBoxLayout();
         horizontalLayout_9->setObjectName(QString::fromUtf8("horizontalLayout_9"));
         editColorFinishedDay = new QLineEdit(groupBox_5);
@@ -661,35 +695,6 @@ public:
 
         gridLayout_8->addLayout(horizontalLayout_23, 2, 0, 1, 1);
 
-        horizontalLayout_24 = new QHBoxLayout();
-        horizontalLayout_24->setObjectName(QString::fromUtf8("horizontalLayout_24"));
-        editColorHoliday = new QLineEdit(groupBox_5);
-        editColorHoliday->setObjectName(QString::fromUtf8("editColorHoliday"));
-
-        horizontalLayout_24->addWidget(editColorHoliday);
-
-        colorWidgetHoliday = new ColorWidget(groupBox_5);
-        colorWidgetHoliday->setObjectName(QString::fromUtf8("colorWidgetHoliday"));
-        sizePolicy3.setHeightForWidth(colorWidgetHoliday->sizePolicy().hasHeightForWidth());
-        colorWidgetHoliday->setSizePolicy(sizePolicy3);
-        colorWidgetHoliday->setMinimumSize(QSize(42, 0));
-
-        horizontalLayout_24->addWidget(colorWidgetHoliday);
-
-
-        gridLayout_8->addLayout(horizontalLayout_24, 3, 0, 1, 1);
-
-        line_3 = new QFrame(groupBox_5);
-        line_3->setObjectName(QString::fromUtf8("line_3"));
-        line_3->setFrameShape(QFrame::HLine);
-        line_3->setFrameShadow(QFrame::Sunken);
-
-        gridLayout_8->addWidget(line_3, 4, 0, 1, 1);
-
-        verticalSpacer_3 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-
-        gridLayout_8->addItem(verticalSpacer_3, 5, 0, 1, 1);
-
 
         gridLayout_9->addWidget(groupBox_5, 0, 0, 1, 1);
 
@@ -723,30 +728,66 @@ public:
 
         gridLayout_13->addLayout(gridLayout_5, 0, 0, 1, 1);
 
+        horizontalLayout_10 = new QHBoxLayout();
+        horizontalLayout_10->setObjectName(QString::fromUtf8("horizontalLayout_10"));
+        verticalLayout_4 = new QVBoxLayout();
+        verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
+        checkBox_3 = new QCheckBox(groupBox_6);
+        checkBox_3->setObjectName(QString::fromUtf8("checkBox_3"));
+        checkBox_3->setEnabled(false);
+
+        verticalLayout_4->addWidget(checkBox_3);
+
         checkBox = new QCheckBox(groupBox_6);
         checkBox->setObjectName(QString::fromUtf8("checkBox"));
         checkBox->setEnabled(false);
+        QSizePolicy sizePolicy4(QSizePolicy::Minimum, QSizePolicy::Fixed);
+        sizePolicy4.setHorizontalStretch(0);
+        sizePolicy4.setVerticalStretch(0);
+        sizePolicy4.setHeightForWidth(checkBox->sizePolicy().hasHeightForWidth());
+        checkBox->setSizePolicy(sizePolicy4);
 
-        gridLayout_13->addWidget(checkBox, 1, 0, 1, 1);
+        verticalLayout_4->addWidget(checkBox);
 
-        horizontalLayout_11 = new QHBoxLayout();
-        horizontalLayout_11->setObjectName(QString::fromUtf8("horizontalLayout_11"));
+
+        horizontalLayout_10->addLayout(verticalLayout_4);
+
+        verticalLayout = new QVBoxLayout();
+        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        comboBoxBackup = new QComboBox(groupBox_6);
+        comboBoxBackup->addItem(QString());
+        comboBoxBackup->addItem(QString());
+        comboBoxBackup->addItem(QString());
+        comboBoxBackup->setObjectName(QString::fromUtf8("comboBoxBackup"));
+        comboBoxBackup->setEnabled(false);
+
+        verticalLayout->addWidget(comboBoxBackup);
+
+        horizontalLayout_7 = new QHBoxLayout();
+        horizontalLayout_7->setObjectName(QString::fromUtf8("horizontalLayout_7"));
         lineEdit_5 = new QLineEdit(groupBox_6);
         lineEdit_5->setObjectName(QString::fromUtf8("lineEdit_5"));
         lineEdit_5->setEnabled(false);
 
-        horizontalLayout_11->addWidget(lineEdit_5);
+        horizontalLayout_7->addWidget(lineEdit_5);
 
         toolButton = new QToolButton(groupBox_6);
         toolButton->setObjectName(QString::fromUtf8("toolButton"));
         toolButton->setEnabled(false);
 
-        horizontalLayout_11->addWidget(toolButton);
+        horizontalLayout_7->addWidget(toolButton);
 
 
-        gridLayout_13->addLayout(horizontalLayout_11, 2, 0, 1, 1);
+        verticalLayout->addLayout(horizontalLayout_7);
+
+
+        horizontalLayout_10->addLayout(verticalLayout);
+
+
+        gridLayout_13->addLayout(horizontalLayout_10, 1, 0, 1, 1);
 
         gridLayout_4 = new QGridLayout();
+        gridLayout_4->setSpacing(0);
         gridLayout_4->setObjectName(QString::fromUtf8("gridLayout_4"));
         horizontalLayout_5 = new QHBoxLayout();
         horizontalLayout_5->setObjectName(QString::fromUtf8("horizontalLayout_5"));
@@ -775,16 +816,18 @@ public:
         gridLayout_4->addLayout(horizontalLayout_5, 0, 0, 1, 1);
 
         verticalLayout_2 = new QVBoxLayout();
+        verticalLayout_2->setSpacing(0);
         verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
         horizontalLayout_13 = new QHBoxLayout();
+        horizontalLayout_13->setSpacing(7);
         horizontalLayout_13->setObjectName(QString::fromUtf8("horizontalLayout_13"));
         comboBoxSchedule = new QComboBox(groupBox_6);
         comboBoxSchedule->setObjectName(QString::fromUtf8("comboBoxSchedule"));
-        QSizePolicy sizePolicy4(QSizePolicy::Expanding, QSizePolicy::Fixed);
-        sizePolicy4.setHorizontalStretch(0);
-        sizePolicy4.setVerticalStretch(0);
-        sizePolicy4.setHeightForWidth(comboBoxSchedule->sizePolicy().hasHeightForWidth());
-        comboBoxSchedule->setSizePolicy(sizePolicy4);
+        QSizePolicy sizePolicy5(QSizePolicy::Expanding, QSizePolicy::Fixed);
+        sizePolicy5.setHorizontalStretch(0);
+        sizePolicy5.setVerticalStretch(0);
+        sizePolicy5.setHeightForWidth(comboBoxSchedule->sizePolicy().hasHeightForWidth());
+        comboBoxSchedule->setSizePolicy(sizePolicy5);
 
         horizontalLayout_13->addWidget(comboBoxSchedule);
 
@@ -817,7 +860,7 @@ public:
         labelShiftCount->setObjectName(QString::fromUtf8("labelShiftCount"));
         sizePolicy2.setHeightForWidth(labelShiftCount->sizePolicy().hasHeightForWidth());
         labelShiftCount->setSizePolicy(sizePolicy2);
-        labelShiftCount->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
+        labelShiftCount->setAlignment(Qt::AlignCenter);
 
         verticalLayout_2->addWidget(labelShiftCount);
 
@@ -825,17 +868,17 @@ public:
         gridLayout_4->addLayout(verticalLayout_2, 0, 1, 1, 1);
 
 
-        gridLayout_13->addLayout(gridLayout_4, 3, 0, 1, 1);
+        gridLayout_13->addLayout(gridLayout_4, 2, 0, 1, 1);
 
         verticalSpacer = new QSpacerItem(20, 35, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        gridLayout_13->addItem(verticalSpacer, 4, 0, 1, 1);
+        gridLayout_13->addItem(verticalSpacer, 3, 0, 1, 1);
 
         label_4 = new QLabel(groupBox_6);
         label_4->setObjectName(QString::fromUtf8("label_4"));
         label_4->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
-        gridLayout_13->addWidget(label_4, 5, 0, 1, 1);
+        gridLayout_13->addWidget(label_4, 4, 0, 1, 1);
 
         horizontalLayout_12 = new QHBoxLayout();
         horizontalLayout_12->setObjectName(QString::fromUtf8("horizontalLayout_12"));
@@ -854,7 +897,7 @@ public:
         horizontalLayout_12->addWidget(buttonSaveSettings);
 
 
-        gridLayout_13->addLayout(horizontalLayout_12, 6, 0, 1, 1);
+        gridLayout_13->addLayout(horizontalLayout_12, 5, 0, 1, 1);
 
 
         gridLayout_9->addWidget(groupBox_6, 0, 1, 2, 1);
@@ -863,6 +906,18 @@ public:
         groupBox_2->setObjectName(QString::fromUtf8("groupBox_2"));
         gridLayout_24 = new QGridLayout(groupBox_2);
         gridLayout_24->setObjectName(QString::fromUtf8("gridLayout_24"));
+        checkBox_10 = new QCheckBox(groupBox_2);
+        checkBox_10->setObjectName(QString::fromUtf8("checkBox_10"));
+        checkBox_10->setEnabled(false);
+
+        gridLayout_24->addWidget(checkBox_10, 2, 0, 1, 1);
+
+        checkBox_4 = new QCheckBox(groupBox_2);
+        checkBox_4->setObjectName(QString::fromUtf8("checkBox_4"));
+        checkBox_4->setEnabled(false);
+
+        gridLayout_24->addWidget(checkBox_4, 3, 0, 1, 1);
+
         horizontalLayout_4 = new QHBoxLayout();
         horizontalLayout_4->setObjectName(QString::fromUtf8("horizontalLayout_4"));
         verticalLayout_7 = new QVBoxLayout();
@@ -876,6 +931,11 @@ public:
         label->setObjectName(QString::fromUtf8("label"));
 
         verticalLayout_7->addWidget(label);
+
+        label_6 = new QLabel(groupBox_2);
+        label_6->setObjectName(QString::fromUtf8("label_6"));
+
+        verticalLayout_7->addWidget(label_6);
 
 
         horizontalLayout_4->addLayout(verticalLayout_7);
@@ -891,6 +951,11 @@ public:
         editServerPort->setObjectName(QString::fromUtf8("editServerPort"));
 
         verticalLayout_5->addWidget(editServerPort);
+
+        editServerPassword = new QLineEdit(groupBox_2);
+        editServerPassword->setObjectName(QString::fromUtf8("editServerPassword"));
+
+        verticalLayout_5->addWidget(editServerPassword);
 
 
         horizontalLayout_4->addLayout(verticalLayout_5);
@@ -921,11 +986,9 @@ public:
 
         gridLayout_24->addLayout(horizontalLayout_8, 1, 0, 1, 1);
 
-        checkBox_10 = new QCheckBox(groupBox_2);
-        checkBox_10->setObjectName(QString::fromUtf8("checkBox_10"));
-        checkBox_10->setEnabled(false);
+        verticalSpacer_3 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        gridLayout_24->addWidget(checkBox_10, 2, 0, 1, 1);
+        gridLayout_24->addItem(verticalSpacer_3, 4, 0, 1, 1);
 
 
         gridLayout_9->addWidget(groupBox_2, 1, 0, 1, 1);
@@ -943,7 +1006,7 @@ public:
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName(QString::fromUtf8("scrollAreaWidgetContents"));
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 603, 432));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 603, 440));
         gridLayout_11 = new QGridLayout(scrollAreaWidgetContents);
         gridLayout_11->setObjectName(QString::fromUtf8("gridLayout_11"));
         labelNews = new QLabel(scrollAreaWidgetContents);
@@ -1056,13 +1119,14 @@ public:
         toolButtonExportToExcel->setToolTip(QCoreApplication::translate("MainWindow", "\320\255\320\272\321\201\320\277\320\276\321\200\321\202 \320\262 Excel", nullptr));
 #endif // QT_CONFIG(tooltip)
         tabWidget->setTabText(tabWidget->indexOf(tab), QCoreApplication::translate("MainWindow", "\320\223\321\200\320\260\321\204\320\270\320\272", nullptr));
-        editHex->setPlaceholderText(QCoreApplication::translate("MainWindow", "\320\246\320\262\320\265\321\202", nullptr));
         colorWidget->setText(QString());
-        editEmployeeName->setPlaceholderText(QCoreApplication::translate("MainWindow", "\320\230\320\274\321\217 \321\201\320\276\321\202\321\200\321\203\320\264\320\275\320\270\320\272\320\260", nullptr));
         editSalary->setPlaceholderText(QCoreApplication::translate("MainWindow", "\320\241\321\202\320\260\320\262\320\272\320\260", nullptr));
         buttonAdd->setText(QCoreApplication::translate("MainWindow", "\320\224\320\276\320\261\320\260\320\262\320\270\321\202\321\214", nullptr));
-        buttonRemove->setText(QCoreApplication::translate("MainWindow", "\320\243\320\264\320\260\320\273\320\270\321\202\321\214", nullptr));
+        editEmployeeName->setPlaceholderText(QCoreApplication::translate("MainWindow", "\320\230\320\274\321\217 \321\201\320\276\321\202\321\200\321\203\320\264\320\275\320\270\320\272\320\260", nullptr));
         buttonEdit->setText(QCoreApplication::translate("MainWindow", "\320\230\320\267\320\274\320\265\320\275\320\270\321\202\321\214", nullptr));
+        editHex->setPlaceholderText(QCoreApplication::translate("MainWindow", "\320\246\320\262\320\265\321\202", nullptr));
+        buttonRemove->setText(QCoreApplication::translate("MainWindow", "\320\243\320\264\320\260\320\273\320\270\321\202\321\214", nullptr));
+        buttonLoadEmployee->setText(QCoreApplication::translate("MainWindow", "\320\227\320\260\320\263\321\200\321\203\320\267\320\270\321\202\321\214", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QCoreApplication::translate("MainWindow", "\320\241\320\276\321\202\321\200\321\203\320\264\320\275\320\270\320\272\320\270", nullptr));
         textBrowserStats->setHtml(QCoreApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
@@ -1082,6 +1146,11 @@ public:
         editColorPayedDay->setPlaceholderText(QCoreApplication::translate("MainWindow", "\320\246\320\262\320\265\321\202 \320\276\320\277\320\273\320\260\321\207\320\265\320\275\320\275\320\276\320\263\320\276 \320\264\320\275\321\217", nullptr));
         colorWidgetPayedDay->setText(QString());
 #if QT_CONFIG(tooltip)
+        editColorHoliday->setToolTip(QCoreApplication::translate("MainWindow", "\320\246\320\262\320\265\321\202 \320\262\321\213\321\205\320\276\320\264\320\275\320\276\320\263\320\276 \320\264\320\275\321\217", nullptr));
+#endif // QT_CONFIG(tooltip)
+        editColorHoliday->setPlaceholderText(QCoreApplication::translate("MainWindow", "\320\246\320\262\320\265\321\202 \320\262\321\213\321\205\320\276\320\264\320\275\320\276\320\263\320\276 \320\264\320\275\321\217", nullptr));
+        colorWidgetHoliday->setText(QString());
+#if QT_CONFIG(tooltip)
         editColorFinishedDay->setToolTip(QCoreApplication::translate("MainWindow", "\320\246\320\262\320\265\321\202 \320\276\321\202\321\200\320\260\320\261\320\276\321\202\320\260\320\275\320\275\320\276\320\263\320\276 \320\264\320\275\321\217", nullptr));
 #endif // QT_CONFIG(tooltip)
         editColorFinishedDay->setPlaceholderText(QCoreApplication::translate("MainWindow", "\320\246\320\262\320\265\321\202 \320\276\321\202\321\200\320\260\320\261\320\276\321\202\320\260\320\275\320\275\320\276\320\263\320\276 \320\264\320\275\321\217", nullptr));
@@ -1091,15 +1160,21 @@ public:
 #endif // QT_CONFIG(tooltip)
         editColorWorkDay->setPlaceholderText(QCoreApplication::translate("MainWindow", "\320\246\320\262\320\265\321\202 \321\200\320\260\320\261\320\276\321\207\320\265\320\263\320\276 \320\264\320\275\321\217", nullptr));
         colorWidgetWorkDay->setText(QString());
-#if QT_CONFIG(tooltip)
-        editColorHoliday->setToolTip(QCoreApplication::translate("MainWindow", "\320\246\320\262\320\265\321\202 \320\262\321\213\321\205\320\276\320\264\320\275\320\276\320\263\320\276 \320\264\320\275\321\217", nullptr));
-#endif // QT_CONFIG(tooltip)
-        editColorHoliday->setPlaceholderText(QCoreApplication::translate("MainWindow", "\320\246\320\262\320\265\321\202 \320\262\321\213\321\205\320\276\320\264\320\275\320\276\320\263\320\276 \320\264\320\275\321\217", nullptr));
-        colorWidgetHoliday->setText(QString());
         groupBox_6->setTitle(QCoreApplication::translate("MainWindow", "\320\236\320\261\321\211\320\270\320\265", nullptr));
         label_5->setText(QCoreApplication::translate("MainWindow", "convert to", nullptr));
-        checkBox->setText(QCoreApplication::translate("MainWindow", "\320\233\320\276\320\263\320\270\321\200\320\276\320\262\320\260\320\275\320\270\320\265 \320\270\320\267\320\274\320\265\320\275\320\265\320\275\320\270\320\271", nullptr));
-        lineEdit_5->setPlaceholderText(QCoreApplication::translate("MainWindow", "log file", nullptr));
+        checkBox_3->setText(QCoreApplication::translate("MainWindow", "backup", nullptr));
+#if QT_CONFIG(tooltip)
+        checkBox->setToolTip(QCoreApplication::translate("MainWindow", "\320\233\320\276\320\263\320\270\321\200\320\276\320\262\320\260\320\275\320\270\320\265 \320\270\320\267\320\274\320\265\320\275\320\265\320\275\320\270\320\271", nullptr));
+#endif // QT_CONFIG(tooltip)
+        checkBox->setText(QCoreApplication::translate("MainWindow", "logging", nullptr));
+        comboBoxBackup->setItemText(0, QCoreApplication::translate("MainWindow", "\320\232\320\260\320\266\320\264\321\213\320\271 \320\264\320\265\320\275\321\214", nullptr));
+        comboBoxBackup->setItemText(1, QCoreApplication::translate("MainWindow", "\320\232\320\260\320\266\320\264\321\203\321\216 \320\275\320\265\320\264\320\265\320\273\321\216", nullptr));
+        comboBoxBackup->setItemText(2, QCoreApplication::translate("MainWindow", "\320\232\320\260\320\266\320\264\321\213\320\271 \320\274\320\265\321\201\321\217\321\206", nullptr));
+
+#if QT_CONFIG(tooltip)
+        lineEdit_5->setToolTip(QCoreApplication::translate("MainWindow", "\320\233\320\276\320\263-\321\204\320\260\320\271\320\273", nullptr));
+#endif // QT_CONFIG(tooltip)
+        lineEdit_5->setPlaceholderText(QCoreApplication::translate("MainWindow", "\320\233\320\276\320\263-\321\204\320\260\320\271\320\273", nullptr));
         toolButton->setText(QCoreApplication::translate("MainWindow", "...", nullptr));
 #if QT_CONFIG(tooltip)
         buttonDeleteSchedule->setToolTip(QCoreApplication::translate("MainWindow", "\320\243\320\264\320\260\320\273\320\270\321\202\321\214 \321\200\320\260\321\201\320\277\320\270\321\201\320\260\320\275\320\270\320\265", nullptr));
@@ -1109,15 +1184,20 @@ public:
 #endif // QT_CONFIG(tooltip)
         labelSchedule->setText(QCoreApplication::translate("MainWindow", "0/0", nullptr));
         labelShiftCount->setText(QCoreApplication::translate("MainWindow", "Shift count per month", nullptr));
-        label_4->setText(QCoreApplication::translate("MainWindow", "current soft version: 3.0.2a", nullptr));
+        label_4->setText(QCoreApplication::translate("MainWindow", "current soft version: 3.0.3a", nullptr));
         pushButton_2->setText(QCoreApplication::translate("MainWindow", "\320\241\320\261\321\200\320\276\321\201", nullptr));
         buttonSaveSettings->setText(QCoreApplication::translate("MainWindow", "\320\241\320\276\321\205\321\200\320\260\320\275\320\270\321\202\321\214", nullptr));
         groupBox_2->setTitle(QCoreApplication::translate("MainWindow", "\320\241\320\265\321\202\321\214 \320\270 \321\201\320\265\321\200\320\262\320\265\321\200", nullptr));
+#if QT_CONFIG(tooltip)
+        checkBox_10->setToolTip(QCoreApplication::translate("MainWindow", "\320\227\320\260\320\277\321\203\321\201\320\272\320\260\321\202\321\214 \321\201\320\265\321\200\320\262\320\265\321\200 \320\277\321\200\320\270 \320\272\320\260\320\266\320\264\320\276\320\274 \320\267\320\260\320\277\321\203\321\201\320\272\320\265 \320\272\320\276\320\274\320\277\321\214\321\216\321\202\320\265\321\200\320\260", nullptr));
+#endif // QT_CONFIG(tooltip)
+        checkBox_10->setText(QCoreApplication::translate("MainWindow", "\320\227\320\260\320\277\321\203\321\201\320\272 \320\277\321\200\320\270 \321\201\321\202\320\260\321\200\321\202\320\265 \320\272\320\276\320\274\320\277\321\214\321\216\321\202\320\265\321\200\320\260", nullptr));
+        checkBox_4->setText(QCoreApplication::translate("MainWindow", "\320\241\320\276\321\205\321\200\320\260\320\275\321\217\321\202\321\214 \320\277\320\276\321\201\320\273\320\265\320\264\320\275\320\270\320\271 \320\276\321\202\320\262\320\265\321\202", nullptr));
         label_3->setText(QCoreApplication::translate("MainWindow", "IP \320\260\320\264\321\200\320\265\321\201 \321\201\320\265\321\200\320\262\320\265\321\200\320\260", nullptr));
         label->setText(QCoreApplication::translate("MainWindow", "\320\237\320\276\321\200\321\202 \321\201\320\265\321\200\320\262\320\265\321\200\320\260", nullptr));
+        label_6->setText(QCoreApplication::translate("MainWindow", "\320\237\320\260\321\200\320\276\320\273\321\214", nullptr));
         checkBox_2->setText(QCoreApplication::translate("MainWindow", "\320\241\321\202\320\260\321\202\321\203\321\201 \321\201\320\265\321\200\320\262\320\265\321\200\320\260", nullptr));
         pushButton->setText(QCoreApplication::translate("MainWindow", "check state", nullptr));
-        checkBox_10->setText(QCoreApplication::translate("MainWindow", "\320\227\320\260\320\277\321\203\321\201\320\272 \321\201\320\265\321\200\320\262\320\265\321\200\320\260 \320\277\321\200\320\270 \321\201\321\202\320\260\321\200\321\202\320\265 \320\272\320\276\320\274\320\277\321\214\321\216\321\202\320\265\321\200\320\260", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tab_4), QCoreApplication::translate("MainWindow", "\320\235\320\260\321\201\321\202\321\200\320\276\320\271\320\272\320\270", nullptr));
         labelNews->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p align=\"center\">\320\230\320\267\320\274\320\265\320\275\320\265\320\275\320\270\321\217 \320\262 \320\262\320\265\321\200\321\201\320\270\320\270 MAJOR.MINOR.RELEASE</p><p align=\"center\">Change list:</p><ul><li>change #1</li><li>change #2</li></ul></body></html>", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tab_5), QCoreApplication::translate("MainWindow", "\320\247\321\202\320\276 \320\275\320\276\320\262\320\276\320\263\320\276?", nullptr));
