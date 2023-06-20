@@ -2,16 +2,13 @@ QT       += core gui sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-MAJOR   = 3;
-MINOR   = 0;
-RELEASE = 2a;
-BUILD   = 23061713;
+#VERSION = 3.0.2a.23061717
+#QMAKE_TARGET_COMPANY = The_Zealot
+#QMAKE_TARGET_PRODUCT = WBScheduleManager
+#QMAKE_TARGET_DESCRIPTION = Managment the shifts of all employees involved in the WBPoint
+#QMAKE_TARGET_COPYRIGHT = Yaroslav Solovev
 
-VERSION = 3.0.2a.23061713
-QMAKE_TARGET_COMPANY = The_Zealot
-QMAKE_TARGET_PRODUCT = WBScheduleManager
-QMAKE_TARGET_DESCRIPTION = Managment the shifts of all employees involved in the WBPoint
-QMAKE_TARGET_COPYRIGHT = Yaroslav Solovev
+QMAKE_PRE_LINK += build.bat
 
 CONFIG += c++11
 
@@ -49,7 +46,8 @@ FORMS += \
     mainwindow.ui \
     salarydialog.ui
 
-RC_ICONS = app.ico
+#RC_ICONS = app.ico
+RC_FILE = resource.rc
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -57,6 +55,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
+    build.bat \
     icons/add.png \
     icons/bugReport.png \
     icons/delete.png \
