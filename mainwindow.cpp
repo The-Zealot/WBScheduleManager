@@ -95,6 +95,8 @@ MainWindow::MainWindow(const QString &databaseName, QWidget *parent)
 
     ui->colorWidgetPayedDay->setColor(PAYED_DAY_HEX);
     ui->colorWidgetFinishedDay->setColor(FINISHED_DAY_HEX);
+    ui->colorWidgetWorkDay->setColor(WORK_DAY_HEX);
+    ui->colorWidgetHoliday->setColor(HOLIDAY_HEX);
 
     ui->textBrowserStats->setFontFamily("consolas");
 
@@ -652,7 +654,25 @@ void MainWindow::saveSettings()
 {
     writeJson();
 
-    QMessageBox::information(this, "Успешный успех", "Настройки были успешно сохранены. Перезапустите программу, чтобы изменения вступили в силу.");
+    QFile file("schedle.txt");
+    if (file.open(QIODevice::WriteOnly))
+    {
+        QString list;
+        for (int i = 0; i < ui->comboBoxSchedule->count(); i++)
+        {
+            list += ui->comboBoxSchedule->itemText(i);
+            list += "\n";
+        }
+        list.resize(list.size() - 1);
+        file.write(list.toUtf8());
+        file.close();
+        QMessageBox::information(this, "Успешный успех", "Настройки были успешно сохранены. Перезапустите программу, чтобы изменения вступили в силу.");
+    }
+    else
+    {
+        QMessageBox::warning(this, "Внимание", "Упс, что-то пошло не так. Не удалось сохранить список расписаний");
+    }
+
 }
 
 void MainWindow::changeSchedule()
@@ -678,7 +698,19 @@ void MainWindow::onSliderValueChanged()
 
     ui->labelSchedule->setText(QString("%1/%2").arg(first).arg(second));
 
-    ui->labelShiftCount->setText(QString("First: %1\nSecond: %2").arg(int(sumPare * first)).arg(int(sumPare * second)));
+    QString info;
+    if (first + second == 0)
+    {
+        info = "Кто работать то будет?";
+    }
+    else
+    {
+        info = "Среднее количество смен за месяц\nПервый сотрудник: %1 смен\nВторой сотрудник: %2 смен";
+        info = info.arg(int(sumPare * first)).arg(int(sumPare * second));
+    }
+
+
+    ui->labelShiftCount->setText(info);
 }
 void MainWindow::openDocInfo()
 {
@@ -757,9 +789,16 @@ void MainWindow::writeJson()
 
     jObject["PayedDayColor"]    = PAYED_DAY_HEX;
     jObject["FinishedDayColor"] = FINISHED_DAY_HEX;
+    jObject["WorkDayColor"]     = ui->editColorWorkDay->text();
+    jObject["HolidayColor"]     = ui->editColorHoliday->text();
+
     jObject["StartDate"]        = _startDate.toString();
     jObject["OpenDate"]         = _openWBPoint.toString();
     jObject["currentSchedle"]   = _scheduleText;
+
+    jObject["serverIP"]         = ui->editServerIP->text();
+    jObject["serverPort"]       = ui->editServerPort->text();
+    jObject["serverPassword"]   = ui->editServerPassword->text();
 
     QJsonDocument jDoc(jObject);
     json.write(jDoc.toJson());
@@ -784,6 +823,12 @@ void MainWindow::readJson()
     _startDate          = QDate::fromString(jObject["StartDate"].toString());
     _openWBPoint        = QDate::fromString(jObject["OpenDate"].toString());
     _scheduleText       = jObject["currentSchedle"].toString();
+
+    WORK_DAY_HEX        = jObject["WorkDayColor"].toString();
+    HOLIDAY_HEX         = jObject["HolidayColor"].toString();
+    ui->editServerIP->setText(jObject["serverIP"].toString());
+    ui->editServerPort->setText(jObject["serverPort"].toString());
+    ui->editServerPassword->setText(jObject["serverPassword"].toString());
 }
 
 void MainWindow::readScheduleList()                                     // to remove
