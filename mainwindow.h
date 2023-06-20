@@ -27,6 +27,7 @@
 #include "defines.h"
 #include "deletedialog.h"
 #include "editpointdialog.h"
+#include "requesteditdialog.h"
 
 #undef FINISHED_DAY_HEX
 #undef PAYED_DAY_HEX

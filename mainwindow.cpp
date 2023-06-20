@@ -255,6 +255,10 @@ MainWindow::MainWindow(const QString &databaseName, QWidget *parent)
     connect(ui->toolButtonServerLoad, &QAbstractButton::clicked, [this](){
         AlertWidget::showAlert("In development");
     });
+    connect(ui->toolButtonRequestEditor, &QAbstractButton::clicked, [this](){
+        RequestEditDialog dialog(this);
+        dialog.exec();
+    });
 }
 
 MainWindow::~MainWindow()

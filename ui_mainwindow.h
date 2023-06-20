@@ -76,6 +76,7 @@ public:
     QToolButton *toolButtonSave;
     QToolButton *toolButtonLoad;
     QToolButton *toolButtonServerLoad;
+    QToolButton *toolButtonRequestEditor;
     QFrame *line_2;
     QToolButton *toolButtonExportToExcel;
     QSpacerItem *horizontalSpacer;
@@ -460,6 +461,16 @@ public:
 
         horizontalLayout_2->addWidget(toolButtonServerLoad);
 
+        toolButtonRequestEditor = new QToolButton(frame);
+        toolButtonRequestEditor->setObjectName(QString::fromUtf8("toolButtonRequestEditor"));
+        QIcon icon11;
+        icon11.addFile(QString::fromUtf8(":/image/icons/noIcon.png"), QSize(), QIcon::Normal, QIcon::Off);
+        toolButtonRequestEditor->setIcon(icon11);
+        toolButtonRequestEditor->setIconSize(QSize(24, 24));
+        toolButtonRequestEditor->setAutoRaise(true);
+
+        horizontalLayout_2->addWidget(toolButtonRequestEditor);
+
         line_2 = new QFrame(frame);
         line_2->setObjectName(QString::fromUtf8("line_2"));
         line_2->setFrameShadow(QFrame::Raised);
@@ -470,9 +481,9 @@ public:
         toolButtonExportToExcel = new QToolButton(frame);
         toolButtonExportToExcel->setObjectName(QString::fromUtf8("toolButtonExportToExcel"));
         toolButtonExportToExcel->setEnabled(false);
-        QIcon icon11;
-        icon11.addFile(QString::fromUtf8(":/image/toolBar/toExcel.png"), QSize(), QIcon::Normal, QIcon::Off);
-        toolButtonExportToExcel->setIcon(icon11);
+        QIcon icon12;
+        icon12.addFile(QString::fromUtf8(":/image/toolBar/toExcel.png"), QSize(), QIcon::Normal, QIcon::Off);
+        toolButtonExportToExcel->setIcon(icon12);
         toolButtonExportToExcel->setIconSize(QSize(24, 24));
         toolButtonExportToExcel->setAutoRaise(true);
 
@@ -833,17 +844,17 @@ public:
 
         buttonDeleteSchedule = new QToolButton(groupBox_6);
         buttonDeleteSchedule->setObjectName(QString::fromUtf8("buttonDeleteSchedule"));
-        QIcon icon12;
-        icon12.addFile(QString::fromUtf8(":/image/icons/delete.png"), QSize(), QIcon::Normal, QIcon::Off);
-        buttonDeleteSchedule->setIcon(icon12);
+        QIcon icon13;
+        icon13.addFile(QString::fromUtf8(":/image/icons/delete.png"), QSize(), QIcon::Normal, QIcon::Off);
+        buttonDeleteSchedule->setIcon(icon13);
 
         horizontalLayout_13->addWidget(buttonDeleteSchedule);
 
         buttonAddSchedule = new QToolButton(groupBox_6);
         buttonAddSchedule->setObjectName(QString::fromUtf8("buttonAddSchedule"));
-        QIcon icon13;
-        icon13.addFile(QString::fromUtf8(":/image/icons/add.png"), QSize(), QIcon::Normal, QIcon::Off);
-        buttonAddSchedule->setIcon(icon13);
+        QIcon icon14;
+        icon14.addFile(QString::fromUtf8(":/image/icons/add.png"), QSize(), QIcon::Normal, QIcon::Off);
+        buttonAddSchedule->setIcon(icon14);
 
         horizontalLayout_13->addWidget(buttonAddSchedule);
 
@@ -1115,6 +1126,10 @@ public:
 #if QT_CONFIG(tooltip)
         toolButtonServerLoad->setToolTip(QCoreApplication::translate("MainWindow", "\320\227\320\260\320\263\321\200\321\203\320\267\320\270\321\202\321\214 \321\201 \321\201\320\265\321\200\320\262\320\265\321\200\320\260", nullptr));
 #endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        toolButtonRequestEditor->setToolTip(QCoreApplication::translate("MainWindow", "\320\236\321\202\320\272\321\200\321\213\321\202\321\214 \321\200\320\265\320\264\320\260\320\272\321\202\320\276\321\200 \320\267\320\260\320\277\321\200\320\276\321\201\320\276\320\262", nullptr));
+#endif // QT_CONFIG(tooltip)
+        toolButtonRequestEditor->setText(QString());
 #if QT_CONFIG(tooltip)
         toolButtonExportToExcel->setToolTip(QCoreApplication::translate("MainWindow", "\320\255\320\272\321\201\320\277\320\276\321\200\321\202 \320\262 Excel", nullptr));
 #endif // QT_CONFIG(tooltip)
