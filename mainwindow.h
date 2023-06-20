@@ -83,6 +83,8 @@ private:
 
     QString FINISHED_DAY_HEX;
     QString PAYED_DAY_HEX;
+    QString WORK_DAY_HEX;
+    QString HOLIDAY_HEX;
 
     Ui::MainWindow *ui;
     QPushButton* _buttonHelp;
