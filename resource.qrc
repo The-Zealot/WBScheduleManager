@@ -15,11 +15,13 @@
         <file alias="employeeNew.png">toolBar/icons/employeeNew.png</file>
         <file alias="point.png">toolBar/icons/point.png</file>
         <file alias="toExcel.png">toolBar/icons/toExcel.png</file>
+        <file alias="requestEdit.png">toolBar/icons/requestEdit.png</file>
     </qresource>
     <qresource prefix="/image/icons">
         <file alias="help.png">icons/help.png</file>
         <file alias="bugReport.png">icons/bugReport.png</file>
         <file alias="delete.png">icons/delete.png</file>
         <file alias="add.png">icons/add.png</file>
+        <file alias="noIcon.png">icons/noIcon.png</file>
     </qresource>
 </RCC>
