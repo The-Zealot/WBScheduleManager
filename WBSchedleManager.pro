@@ -24,6 +24,7 @@ SOURCES += \
     employeedialog.cpp \
     main.cpp \
     mainwindow.cpp \
+    requesteditdialog.cpp \
     salarydialog.cpp \
     toolbar.cpp
 
@@ -36,6 +37,7 @@ HEADERS += \
     employee.h \
     employeedialog.h \
     mainwindow.h \
+    requesteditdialog.h \
     salarydialog.h \
     toolbar.h
 
@@ -44,6 +46,7 @@ FORMS += \
     editpointdialog.ui \
     employeedialog.ui \
     mainwindow.ui \
+    requesteditdialog.ui \
     salarydialog.ui
 
 #RC_ICONS = app.ico
@@ -60,6 +63,7 @@ DISTFILES += \
     icons/bugReport.png \
     icons/delete.png \
     icons/help.png \
+    icons/noIcon.png \
     readme.html \
     toolBar/icons/arrow.png \
     toolBar/icons/calculate.png \
@@ -73,6 +77,7 @@ DISTFILES += \
     toolBar/icons/paymentGeneral.png \
     toolBar/icons/paymentTarget.png \
     toolBar/icons/point.png \
+    toolBar/icons/requestEdit.png \
     toolBar/icons/salary.png \
     toolBar/icons/save.png \
     toolBar/icons/serverLoad.png \
