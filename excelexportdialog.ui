@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ExcelExportDialog</class>
+ <widget class="QDialog" name="ExcelExportDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>387</width>
+    <height>172</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Экспортировать в книгу Excel</string>
+  </property>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>11</x>
+     <y>11</y>
+     <width>99</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Название пункта</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>11</x>
+     <y>42</y>
+     <width>43</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Период</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>11</x>
+     <y>74</y>
+     <width>99</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Экспортировать в</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="editFolderPath">
+   <property name="geometry">
+    <rect>
+     <x>124</x>
+     <y>74</y>
+     <width>201</width>
+     <height>24</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QToolButton" name="toolButtonBrowse">
+   <property name="geometry">
+    <rect>
+     <x>348</x>
+     <y>74</y>
+     <width>28</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>...</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="buttonSubmit">
+   <property name="geometry">
+    <rect>
+     <x>296</x>
+     <y>136</y>
+     <width>80</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Экспорт</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>11</x>
+     <y>105</y>
+     <width>65</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Имя файла</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="editFileName">
+   <property name="geometry">
+    <rect>
+     <x>124</x>
+     <y>105</y>
+     <width>108</width>
+     <height>24</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="buttonCancel">
+   <property name="geometry">
+    <rect>
+     <x>209</x>
+     <y>136</y>
+     <width>80</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Отмена</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="editPointName">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>124</x>
+     <y>11</y>
+     <width>108</width>
+     <height>24</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QDateEdit" name="dateEditLeftBound">
+   <property name="geometry">
+    <rect>
+     <x>124</x>
+     <y>42</y>
+     <width>78</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="correctionMode">
+    <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
+   </property>
+   <property name="showGroupSeparator" stdset="0">
+    <bool>false</bool>
+   </property>
+   <property name="minimumDate">
+    <date>
+     <year>2000</year>
+     <month>1</month>
+     <day>1</day>
+    </date>
+   </property>
+   <property name="displayFormat">
+    <string>MM.yyyy</string>
+   </property>
+   <property name="calendarPopup">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QDateEdit" name="dateEditRightBound">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>40</y>
+     <width>78</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="correctionMode">
+    <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
+   </property>
+   <property name="showGroupSeparator" stdset="0">
+    <bool>false</bool>
+   </property>
+   <property name="minimumDate">
+    <date>
+     <year>2000</year>
+     <month>1</month>
+     <day>1</day>
+    </date>
+   </property>
+   <property name="displayFormat">
+    <string>MM.yyyy</string>
+   </property>
+   <property name="calendarPopup">
+    <bool>true</bool>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
