@@ -480,7 +480,6 @@ public:
 
         toolButtonExportToExcel = new QToolButton(frame);
         toolButtonExportToExcel->setObjectName(QString::fromUtf8("toolButtonExportToExcel"));
-        toolButtonExportToExcel->setEnabled(false);
         QIcon icon12;
         icon12.addFile(QString::fromUtf8(":/image/toolBar/toExcel.png"), QSize(), QIcon::Normal, QIcon::Off);
         toolButtonExportToExcel->setIcon(icon12);

@@ -8,6 +8,7 @@ MainWindow::MainWindow(const QString &databaseName, QWidget *parent)
     ui->setupUi(this);
 
     this->setFixedSize(this->size());
+    ui->toolButtonRequestEditor->setVisible(false);
 
     int sizeButton = 24;
     _buttonHelp = new QPushButton(this);
@@ -254,6 +255,14 @@ MainWindow::MainWindow(const QString &databaseName, QWidget *parent)
     });
     connect(ui->toolButtonServerLoad, &QAbstractButton::clicked, [this](){
         AlertWidget::showAlert("In development");
+    });
+    connect(ui->toolButtonExportToExcel, &QAbstractButton::clicked, [this](){
+        ExcelExportDialog dialog(this);
+        dialog.setPointName(ui->comboBoxPoint->currentText());
+        dialog.setDateBound(_openWBPoint, _startDate);
+        dialog.setEmployeeShifts(_editedDays);
+        dialog.setEmployeeList(_employees);
+        dialog.exec();
     });
     connect(ui->toolButtonRequestEditor, &QAbstractButton::clicked, [this](){
         RequestEditDialog dialog(this);
