@@ -22,6 +22,7 @@ SOURCES += \
     deletedialog.cpp \
     editpointdialog.cpp \
     employeedialog.cpp \
+    excelexportdialog.cpp \
     main.cpp \
     mainwindow.cpp \
     requesteditdialog.cpp \
@@ -36,6 +37,7 @@ HEADERS += \
     editpointdialog.h \
     employee.h \
     employeedialog.h \
+    excelexportdialog.h \
     mainwindow.h \
     requesteditdialog.h \
     salarydialog.h \
@@ -45,6 +47,7 @@ FORMS += \
     deletedialog.ui \
     editpointdialog.ui \
     employeedialog.ui \
+    excelexportdialog.ui \
     mainwindow.ui \
     requesteditdialog.ui \
     salarydialog.ui
@@ -85,3 +88,16 @@ DISTFILES += \
 
 RESOURCES += \
     resource.qrc
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../AlienProject/build-QXlsx-Desktop_Qt_5_12_3_MinGW_64_bit-Release/lib-release/ -lQXlsx
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../AlienProject/build-QXlsx-Desktop_Qt_5_12_3_MinGW_64_bit-Release/lib-release/ -lQXlsxd
+else:unix: LIBS += -L$$PWD/../../AlienProject/build-QXlsx-Desktop_Qt_5_12_3_MinGW_64_bit-Release/lib-release/ -lQXlsx
+
+INCLUDEPATH += $$PWD/../../AlienProject/QXlsx/header
+DEPENDPATH += $$PWD/../../AlienProject/QXlsx/header
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../AlienProject/build-QXlsx-Desktop_Qt_5_12_3_MinGW_64_bit-Release/lib-release/libQXlsx.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../AlienProject/build-QXlsx-Desktop_Qt_5_12_3_MinGW_64_bit-Release/lib-release/libQXlsxd.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../AlienProject/build-QXlsx-Desktop_Qt_5_12_3_MinGW_64_bit-Release/lib-release/QXlsx.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../AlienProject/build-QXlsx-Desktop_Qt_5_12_3_MinGW_64_bit-Release/lib-release/QXlsxd.lib
+else:unix: PRE_TARGETDEPS += $$PWD/../../AlienProject/build-QXlsx-Desktop_Qt_5_12_3_MinGW_64_bit-Release/lib-release/libQXlsx.a
