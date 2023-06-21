@@ -70,7 +70,7 @@ public:
     {
         RequestEditDialog->setWindowTitle(QCoreApplication::translate("RequestEditDialog", "Dialog", nullptr));
         buttonSend->setText(QCoreApplication::translate("RequestEditDialog", "\320\236\321\202\320\277\321\200\320\260\320\262\320\270\321\202\321\214", nullptr));
-        label->setText(QCoreApplication::translate("RequestEditDialog", "<html><head/><body><p>Server info: %s:%s / %s</p></body></html>", nullptr));
+        label->setText(QCoreApplication::translate("RequestEditDialog", "<html><head/><body><p>Server info: 127.0.0.1:53000</p></body></html>", nullptr));
     } // retranslateUi
 
 };
