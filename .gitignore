@@ -1,0 +1,4 @@
+release/
+schedle.*
+Makefile*.*
+object_script*.*
