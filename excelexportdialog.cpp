@@ -388,13 +388,11 @@ void ExcelExportDialog::fillTable(QXlsx::Document &document, QXlsx::Format &form
     int index                       = 0;
     for (auto iter : list)
     {
-        qDebug() << "range-based cycle |" << iter;
         QXlsx::Format employeeFormat(format);
         employeeFormat.setPatternBackgroundColor(employee[iter]);
         document.write(5 + _borderOffset + index, 1 + _borderOffset, iter, employeeFormat);
         for (int i = 0; i < date.daysInMonth(); i++)
         {
-            qDebug() << "default cycle";
             QDate temp(date.year(), date.month(), i + 1);
             QString dayCost;
             if (_shifts[temp].name != iter)
