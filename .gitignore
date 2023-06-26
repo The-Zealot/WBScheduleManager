@@ -1,4 +1,4 @@
 release/
 schedle.*
-Makefile*.*
-object_script*.*
+Makefile*
+object_script*
