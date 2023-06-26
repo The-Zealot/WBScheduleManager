@@ -8,9 +8,12 @@ ExcelExportDialog::ExcelExportDialog(QWidget *parent) :
     ui->setupUi(this);
 
     _monthCount = 1;
+    _borderOffset    = 1;
+    _rows            = 4;
+    _columns         = 32;
 
     ui->editFileName->setText(QVariant(QDate::currentDate().year()).toString());
-    ui->editFolderPath->setText("C:/Users/Sensei/Desktop");
+    ui->dateEditRightBound->hide();
 
     connect(ui->buttonSubmit, &QPushButton::clicked, this, &ExcelExportDialog::onButtonSubmit);
     connect(ui->toolButtonBrowse, &QAbstractButton::clicked, this, &ExcelExportDialog::onToolButtonBrowse);
@@ -84,7 +87,7 @@ void ExcelExportDialog::submitExport(QString fileName)
     QDate finish    = ui->dateEditRightBound->date();
     int months      = calculateMouths(start, finish);
 
-    for (int rowOffset = 0; rowOffset < months; rowOffset++)
+    /*for (int rowOffset = 0; rowOffset < months; rowOffset++)
     {
         QDate date = start.addMonths(rowOffset);
 
@@ -125,9 +128,12 @@ void ExcelExportDialog::submitExport(QString fileName)
                     document.write(6 + i + offset, 3 + j, "", borderFormat);
             }
         }
-    }
+    }*/
 
-    document.autosizeColumnWidth(1, EXCEL_WIDTH);
+    drawTable(document, borderFormat);
+    fillTable(document, borderFormat);
+//    document.autosizeColumnWidth(1, EXCEL_WIDTH);
+    document.autosizeColumnWidth();
 
     document.saveAs(fileName);
 }
@@ -313,6 +319,20 @@ QString ExcelExportDialog::getDayOfWeek(QDate date, QString format)
     return result;
 }
 
+QXlsx::Format ExcelExportDialog::getDayFormat(QDate date, QXlsx::Format format)
+{
+    QXlsx::Format dayFormat(format);
+    if (date.dayOfWeek() > 5)
+    {
+        dayFormat.setPatternBackgroundColor("#e80000");
+    }
+    else
+    {
+        dayFormat.setPatternBackgroundColor("#d8e2ed");
+    }
+    return dayFormat;
+}
+
 int ExcelExportDialog::calculateMouths(QDate begin, QDate end)
 {
     int result  = 0;
@@ -328,4 +348,82 @@ int ExcelExportDialog::calculateMouths(QDate begin, QDate end)
     }
 
     return result;
+}
+
+void ExcelExportDialog::drawTable(QXlsx::Document &document, QXlsx::Format &format)
+{
+    for (int i = 1; i <= _rows; i++)
+    {
+        for (int j = 1; j <= _columns; j++)
+        {
+            document.write(_borderOffset + i, _borderOffset + j, "", format);
+        }
+    }
+
+    document.mergeCells(QXlsx::CellRange(1 + _borderOffset, 1 + _borderOffset, 1 + _borderOffset, _columns + _borderOffset));
+    document.mergeCells(QXlsx::CellRange(2 + _borderOffset, 2 + _borderOffset, 2 + _borderOffset, _columns + _borderOffset));
+    document.mergeCells(QXlsx::CellRange(2 + _borderOffset, 1 + _borderOffset, 4 + _borderOffset, 1 + _borderOffset));
+}
+
+void ExcelExportDialog::fillTable(QXlsx::Document &document, QXlsx::Format &format)
+{
+    QXlsx::Format pointFormat(format);
+    pointFormat.setPatternBackgroundColor("#BC3D96");
+    pointFormat.setFontColor("#ffffff");
+
+    QDate date = ui->dateEditLeftBound->date();
+    for (int i = 0; i < date.daysInMonth(); i++)
+    {
+        QDate processedDate = QDate(date.year(), date.month(), i + 1);
+        document.write(3 + _borderOffset, 2 + _borderOffset + i, i + 1, format);
+        document.write(4 + _borderOffset, 2 + _borderOffset + i, getDayOfWeek(processedDate), getDayFormat(processedDate, format));
+    }
+
+    document.write(1 + _borderOffset, 1 + _borderOffset, ui->editPointName->text(), pointFormat);
+    document.write(2 + _borderOffset, 2 + _borderOffset, getMonthName(date), getMonthFormat(date, format));
+    document.write(2 + _borderOffset, 1 + _borderOffset, "Сотрудники", format);
+
+    QMap<QString, QColor> employee  = calculateEmployeesPerMonth(_shifts, date);
+    auto list                       = employee.keys();
+    int index                       = 0;
+    for (auto iter : list)
+    {
+        qDebug() << "range-based cycle |" << iter;
+        QXlsx::Format employeeFormat(format);
+        employeeFormat.setPatternBackgroundColor(employee[iter]);
+        document.write(5 + _borderOffset + index, 1 + _borderOffset, iter, employeeFormat);
+        for (int i = 0; i < date.daysInMonth(); i++)
+        {
+            qDebug() << "default cycle";
+            QDate temp(date.year(), date.month(), i + 1);
+            QString dayCost;
+            if (_shifts[temp].name != iter)
+            {
+                dayCost = "";
+            }
+            else
+            {
+                dayCost = QVariant(_shifts[temp].salary).toString();
+            }
+            document.write(5 + _borderOffset + index, 2 + _borderOffset + i, dayCost, format);
+        }
+        index++;
+    }
+}
+
+QMap<QString, QColor> ExcelExportDialog::calculateEmployeesPerMonth(const QMap<QDate, EmployeeShift> &shifts, QDate date)
+{
+    QMap<QString, QColor> employees;
+
+    int days = date.daysInMonth();
+    for (int i = 0; i < days; i++)
+    {
+        QDate temp(date.year(), date.month(), i + 1);
+        if (shifts[temp].name != "")
+        {
+            employees[shifts[temp].name] = shifts[temp].colorHex;
+        }
+    }
+
+    return employees;
 }

@@ -2,7 +2,7 @@
 set MAJ=3
 set MIN=1
 set RLS=3b
-set BLD=23062116
+set BLD=23062611
 echo #include ^<windows.h^> >resource.rc
 echo IDI_ICON1	ICON	"app.ico" >>resource.rc
 echo VS_VERSION_INFO VERSIONINFO >>resource.rc

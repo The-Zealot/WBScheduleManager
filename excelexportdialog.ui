@@ -6,195 +6,155 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>387</width>
-    <height>172</height>
+    <width>329</width>
+    <height>178</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Экспортировать в книгу Excel</string>
   </property>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>11</x>
-     <y>11</y>
-     <width>99</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Название пункта</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_2">
-   <property name="geometry">
-    <rect>
-     <x>11</x>
-     <y>42</y>
-     <width>43</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Период</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_3">
-   <property name="geometry">
-    <rect>
-     <x>11</x>
-     <y>74</y>
-     <width>99</width>
-     <height>24</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Экспортировать в</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="editFolderPath">
-   <property name="geometry">
-    <rect>
-     <x>124</x>
-     <y>74</y>
-     <width>201</width>
-     <height>24</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QToolButton" name="toolButtonBrowse">
-   <property name="geometry">
-    <rect>
-     <x>348</x>
-     <y>74</y>
-     <width>28</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>...</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="buttonSubmit">
-   <property name="geometry">
-    <rect>
-     <x>296</x>
-     <y>136</y>
-     <width>80</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Экспорт</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_4">
-   <property name="geometry">
-    <rect>
-     <x>11</x>
-     <y>105</y>
-     <width>65</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Имя файла</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="editFileName">
-   <property name="geometry">
-    <rect>
-     <x>124</x>
-     <y>105</y>
-     <width>108</width>
-     <height>24</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="buttonCancel">
-   <property name="geometry">
-    <rect>
-     <x>209</x>
-     <y>136</y>
-     <width>80</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Отмена</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="editPointName">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>124</x>
-     <y>11</y>
-     <width>108</width>
-     <height>24</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QDateEdit" name="dateEditLeftBound">
-   <property name="geometry">
-    <rect>
-     <x>124</x>
-     <y>42</y>
-     <width>78</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="correctionMode">
-    <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
-   </property>
-   <property name="showGroupSeparator" stdset="0">
-    <bool>false</bool>
-   </property>
-   <property name="minimumDate">
-    <date>
-     <year>2000</year>
-     <month>1</month>
-     <day>1</day>
-    </date>
-   </property>
-   <property name="displayFormat">
-    <string>MM.yyyy</string>
-   </property>
-   <property name="calendarPopup">
-    <bool>true</bool>
-   </property>
-  </widget>
-  <widget class="QDateEdit" name="dateEditRightBound">
-   <property name="geometry">
-    <rect>
-     <x>230</x>
-     <y>40</y>
-     <width>78</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="correctionMode">
-    <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
-   </property>
-   <property name="showGroupSeparator" stdset="0">
-    <bool>false</bool>
-   </property>
-   <property name="minimumDate">
-    <date>
-     <year>2000</year>
-     <month>1</month>
-     <day>1</day>
-    </date>
-   </property>
-   <property name="displayFormat">
-    <string>MM.yyyy</string>
-   </property>
-   <property name="calendarPopup">
-    <bool>true</bool>
-   </property>
-  </widget>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Название пункта</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Период</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Экспортировать в</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Имя файла</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="0">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>130</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="1">
+    <widget class="QPushButton" name="buttonCancel">
+     <property name="text">
+      <string>Отмена</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QPushButton" name="buttonSubmit">
+     <property name="text">
+      <string>Экспорт</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1" colspan="2">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QLineEdit" name="editPointName">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QDateEdit" name="dateEditLeftBound">
+         <property name="correctionMode">
+          <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
+         </property>
+         <property name="showGroupSeparator" stdset="0">
+          <bool>false</bool>
+         </property>
+         <property name="minimumDate">
+          <date>
+           <year>2000</year>
+           <month>1</month>
+           <day>1</day>
+          </date>
+         </property>
+         <property name="displayFormat">
+          <string>MM.yyyy</string>
+         </property>
+         <property name="calendarPopup">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QDateEdit" name="dateEditRightBound">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="correctionMode">
+          <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
+         </property>
+         <property name="showGroupSeparator" stdset="0">
+          <bool>false</bool>
+         </property>
+         <property name="minimumDate">
+          <date>
+           <year>2000</year>
+           <month>1</month>
+           <day>1</day>
+          </date>
+         </property>
+         <property name="displayFormat">
+          <string>MM.yyyy</string>
+         </property>
+         <property name="calendarPopup">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QLineEdit" name="editFolderPath"/>
+       </item>
+       <item>
+        <widget class="QToolButton" name="toolButtonBrowse">
+         <property name="text">
+          <string>...</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="editFileName"/>
+     </item>
+    </layout>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>
