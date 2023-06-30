@@ -5,8 +5,11 @@
 #include <QMap>
 #include <QDate>
 #include <QFileDialog>
+#include <QMessageBox>
 
 #include "employee.h"
+#include "defines.h"
+#include "alertwidget.h"
 
 #include "xlsxdocument.h"
 #include "xlsxchartsheet.h"
@@ -32,7 +35,7 @@ public:
     void setPointName(QString pointName);
     void setEmployeeShifts(const QMap<QDate, EmployeeShift> &shifts);
     void setEmployeeList(const QMap<QString, Employee> &employees);
-    void submitExport(QString fileName);
+    bool submitExport(QString fileName);
 
 public slots:
     void onButtonSubmit();

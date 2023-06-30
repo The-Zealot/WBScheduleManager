@@ -7,18 +7,18 @@ ExcelExportDialog::ExcelExportDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    _monthCount = 1;
-    _borderOffset    = 1;
-    _rows            = 4;
-    _columns         = 32;
+    _monthCount         = 1;
+    _borderOffset       = 1;
+    _rows               = 4;
+    _columns            = 32;
 
-    ui->editFileName->setText(QVariant(QDate::currentDate().year()).toString());
+    ui->editFileName->setText("Excel book");
     ui->dateEditRightBound->hide();
 
     connect(ui->buttonSubmit, &QPushButton::clicked, this, &ExcelExportDialog::onButtonSubmit);
     connect(ui->toolButtonBrowse, &QAbstractButton::clicked, this, &ExcelExportDialog::onToolButtonBrowse);
-    connect(ui->dateEditLeftBound, &QDateEdit::dateChanged, this, &ExcelExportDialog::onDateEditValueChanged);
-    connect(ui->dateEditRightBound, &QDateEdit::dateChanged, this, &ExcelExportDialog::onDateEditValueChanged);
+//    connect(ui->dateEditLeftBound, &QDateEdit::dateChanged, this, &ExcelExportDialog::onDateEditValueChanged);
+//    connect(ui->dateEditRightBound, &QDateEdit::dateChanged, this, &ExcelExportDialog::onDateEditValueChanged);
 }
 
 ExcelExportDialog::~ExcelExportDialog()
@@ -50,7 +50,7 @@ void ExcelExportDialog::setEmployeeList(const QMap<QString, Employee> &employees
     _employees = employees;
 }
 
-void ExcelExportDialog::submitExport(QString fileName)
+bool ExcelExportDialog::submitExport(QString fileName)
 {
     int EXCEL_WIDTH = 33;
 
@@ -78,10 +78,6 @@ void ExcelExportDialog::submitExport(QString fileName)
     }
 
     int activeEmployeeCount = employeeColors.size();
-
-
-
-
 
     QDate start     = ui->dateEditLeftBound->date();
     QDate finish    = ui->dateEditRightBound->date();
@@ -135,12 +131,19 @@ void ExcelExportDialog::submitExport(QString fileName)
 //    document.autosizeColumnWidth(1, EXCEL_WIDTH);
     document.autosizeColumnWidth();
 
-    document.saveAs(fileName);
+    return document.saveAs(fileName);
 }
 
 void ExcelExportDialog::onButtonSubmit()
 {
-    submitExport(ui->editFolderPath->text() + "/" + ui->editFileName->text() + ".xlsx");
+    if (submitExport(ui->editFolderPath->text() + "/" + ui->editFileName->text() + ".xlsx"))
+    {
+        AlertWidget::showAlert("Данные экспортированы");
+    }
+    else
+    {
+        QMessageBox::critical(this, "Error", "Failed export");
+    }
     this->close();
 }
 
@@ -360,6 +363,11 @@ void ExcelExportDialog::drawTable(QXlsx::Document &document, QXlsx::Format &form
         }
     }
 
+    for (int i = 0; i < 4; i++)
+    {
+//        document.write(4 +_borderOffset, 33 + _borderOffset * 2 + i, "", format);
+    }
+
     document.mergeCells(QXlsx::CellRange(1 + _borderOffset, 1 + _borderOffset, 1 + _borderOffset, _columns + _borderOffset));
     document.mergeCells(QXlsx::CellRange(2 + _borderOffset, 2 + _borderOffset, 2 + _borderOffset, _columns + _borderOffset));
     document.mergeCells(QXlsx::CellRange(2 + _borderOffset, 1 + _borderOffset, 4 + _borderOffset, 1 + _borderOffset));
@@ -368,7 +376,7 @@ void ExcelExportDialog::drawTable(QXlsx::Document &document, QXlsx::Format &form
 void ExcelExportDialog::fillTable(QXlsx::Document &document, QXlsx::Format &format)
 {
     QXlsx::Format pointFormat(format);
-    pointFormat.setPatternBackgroundColor("#BC3D96");
+    pointFormat.setPatternBackgroundColor("#0070c0");
     pointFormat.setFontColor("#ffffff");
 
     QDate date = ui->dateEditLeftBound->date();
@@ -383,6 +391,11 @@ void ExcelExportDialog::fillTable(QXlsx::Document &document, QXlsx::Format &form
     document.write(2 + _borderOffset, 2 + _borderOffset, getMonthName(date), getMonthFormat(date, format));
     document.write(2 + _borderOffset, 1 + _borderOffset, "Сотрудники", format);
 
+//    document.write(4 + _borderOffset, 33 + _borderOffset * 2, "К оплате", format);
+//    document.write(4 + _borderOffset, 34 + _borderOffset * 2, "Оплачено", format);
+//    document.write(4 + _borderOffset, 35 + _borderOffset * 2, "Ставка", format);
+//    document.write(4 + _borderOffset, 36 + _borderOffset * 2, "Вычтено", format);
+
     QMap<QString, QColor> employee  = calculateEmployeesPerMonth(_shifts, date);
     auto list                       = employee.keys();
     int index                       = 0;
@@ -390,21 +403,31 @@ void ExcelExportDialog::fillTable(QXlsx::Document &document, QXlsx::Format &form
     {
         QXlsx::Format employeeFormat(format);
         employeeFormat.setPatternBackgroundColor(employee[iter]);
+        QXlsx::Format payFormat(format);
+        payFormat.setPatternBackgroundColor(PAYED_DAY_HEX);
         document.write(5 + _borderOffset + index, 1 + _borderOffset, iter, employeeFormat);
         for (int i = 0; i < date.daysInMonth(); i++)
         {
             QDate temp(date.year(), date.month(), i + 1);
-            QString dayCost;
+            quint32 dayCost;
             if (_shifts[temp].name != iter)
             {
-                dayCost = "";
+                document.write(5 + _borderOffset + index, 2 + _borderOffset + i, "", format);
             }
             else
             {
-                dayCost = QVariant(_shifts[temp].salary).toString();
+                dayCost = _shifts[temp].salary;
+                if (_shifts[temp].isPayed)
+                {
+                    document.write(5 + _borderOffset + index, 2 + _borderOffset + i, dayCost, payFormat);
+                }
+                else
+                {
+                    document.write(5 + _borderOffset + index, 2 + _borderOffset + i, dayCost, format);
+                }
             }
-            document.write(5 + _borderOffset + index, 2 + _borderOffset + i, dayCost, format);
         }
+
         index++;
     }
 }
