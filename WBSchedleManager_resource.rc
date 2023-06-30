@@ -1,10 +1,10 @@
 #include <windows.h>
 
-IDI_ICON1	ICON	"D:\\Qt\\QtProjects\\WBSchedleManager\\app.ico"
+IDI_ICON1	ICON	"D:\\Qt\\QtProjects\\ReposFromGithub\\WBScheduleManager\\app.ico"
 
 VS_VERSION_INFO VERSIONINFO
-	FILEVERSION 2,2,4,230418
-	PRODUCTVERSION 2,2,4,230418
+	FILEVERSION 3,0,2a,23061717
+	PRODUCTVERSION 3,0,2a,23061717
 	FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
 	FILEFLAGS VS_FF_DEBUG
@@ -21,11 +21,11 @@ VS_VERSION_INFO VERSIONINFO
 			BEGIN
 				VALUE "CompanyName", "The_Zealot\0"
 				VALUE "FileDescription", "Managment the shifts of all employees involved in the WBPoint\0"
-				VALUE "FileVersion", "2.2.4.230418\0"
+				VALUE "FileVersion", "3.0.2a.23061717\0"
 				VALUE "LegalCopyright", "Yaroslav Solovev\0"
 				VALUE "OriginalFilename", "WBSchedleManager.exe\0"
-				VALUE "ProductName", "WBSchedleManager\0"
-				VALUE "ProductVersion", "2.2.4.230418\0"
+				VALUE "ProductName", "WBScheduleManager\0"
+				VALUE "ProductVersion", "3.0.2a.23061717\0"
 				VALUE "InternalName", "\0"
 				VALUE "Comments", "\0"
 				VALUE "LegalTrademarks", "\0"
