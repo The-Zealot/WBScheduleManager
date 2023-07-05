@@ -1,8 +1,8 @@
 #include <windows.h> 
 IDI_ICON1	ICON	"app.ico" 
 VS_VERSION_INFO VERSIONINFO 
-       FILEVERSION 3,1,3b,23063013
-       PRODUCTVERSION 3,1,3b,23063013
+       FILEVERSION 3,1,4,23070519
+       PRODUCTVERSION 3,1,4,23070519
        FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
        FILEFLAGS VS_FF_DEBUG
@@ -19,11 +19,11 @@ VS_VERSION_INFO VERSIONINFO
                        BEGIN
                                VALUE "CompanyName", "The_Zealot\0"
                                VALUE "FileDescription", "Managment the shifts of all employees involved in the WBPoint\0"
-                               VALUE "FileVersion", "3.1.3b.23063013\0"
+                               VALUE "FileVersion", "3.1.4.23070519\0"
                                VALUE "LegalCopyright", "Yaroslav Solovev\0"
                                VALUE "OriginalFilename", "WBSchedleManager.exe\0"
                                VALUE "ProductName", "WBScheduleManager\0"
-                               VALUE "ProductVersion", "3.1.3b.23063013\0"
+                               VALUE "ProductVersion", "3.1.4.23070519\0"
                                VALUE "InternalName", "\0"
                                VALUE "Comments", "\0"
                                VALUE "LegalTrademarks", "\0"
