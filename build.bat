@@ -3,7 +3,7 @@ set MAJ=3
 set MIN=2
 set RLS=4
 set /p BLD=< build.txt
-set /a BLD = %BLD%+1
+set /a BLD= %BLD%+1
 echo %BLD% >build.txt
 echo #define MAJOR %MAJ% >version.h
 echo #define MINOR %MIN% >>version.h
