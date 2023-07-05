@@ -1,8 +1,12 @@
 @echo off
 set MAJ=3
 set MIN=1
-set RLS=3b
-set BLD=23063013
+set RLS=4
+set BLD=23070519
+echo #define MAJOR %MAJ% >version.h
+echo #define MINOR %MIN% >>version.h
+echo #define RELEASE %RLS% >>version.h
+echo #define BUILD %BLD% >>version.h
 echo #include ^<windows.h^> >resource.rc
 echo IDI_ICON1	ICON	"app.ico" >>resource.rc
 echo VS_VERSION_INFO VERSIONINFO >>resource.rc

@@ -29,6 +29,7 @@
 #include "editpointdialog.h"
 #include "requesteditdialog.h"
 #include "excelexportdialog.h"
+#include "version.h"
 
 #undef FINISHED_DAY_HEX
 #undef PAYED_DAY_HEX
