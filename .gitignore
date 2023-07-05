@@ -3,3 +3,5 @@ schedle.*
 Makefile*
 object_script*
 WBSchedleManager_resource.rc
+build.txt
+resource.rc

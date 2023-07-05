@@ -87,7 +87,8 @@ MainWindow::MainWindow(const QString &databaseName, QWidget *parent)
     setStatusBarMessage();
 
     QString versionString = QVariant(MAJOR).toString() + "." + QVariant(MINOR).toString() + "." + QVariant(RELEASE).toString();
-    ui->labelVersion->setText("current soft version: " + versionString);
+    versionString.append(" build " + QVariant(BUILD).toString());
+    ui->labelVersion->setText("soft version " + versionString);
 
     qDebug() << "Initialization class members...";
 
