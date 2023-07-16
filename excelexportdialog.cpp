@@ -17,6 +17,9 @@ ExcelExportDialog::ExcelExportDialog(QWidget *parent) :
     connect(ui->buttonSubmit, &QPushButton::clicked, this, &ExcelExportDialog::onButtonSubmit);
     connect(ui->toolButtonBrowse, &QAbstractButton::clicked, this, &ExcelExportDialog::onToolButtonBrowse);
     connect(ui->buttonCancel, &QPushButton::clicked, this, &ExcelExportDialog::onButtonCancel);
+    connect(ui->dateEditLeftBound, &QDateEdit::dateChanged, [this](){
+        setFileName(ui->dateEditLeftBound->date().toString("MMMM yyyy"));
+    });
 //    connect(ui->dateEditLeftBound, &QDateEdit::dateChanged, this, &ExcelExportDialog::onDateEditValueChanged);
 //    connect(ui->dateEditRightBound, &QDateEdit::dateChanged, this, &ExcelExportDialog::onDateEditValueChanged);
 }
