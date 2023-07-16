@@ -8,7 +8,12 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 #QMAKE_TARGET_DESCRIPTION = Managment the shifts of all employees involved in the WBPoint
 #QMAKE_TARGET_COPYRIGHT = Yaroslav Solovev
 
-QMAKE_PRE_LINK += build.bat
+build_nr.commands = build.bat
+build_nr.depends = FORCE
+QMAKE_EXTRA_TARGETS += build_nr
+PRE_TARGETDEPS += build_nr
+
+#QMAKE_PRE_LINK += build.bat
 
 CONFIG += c++11
 

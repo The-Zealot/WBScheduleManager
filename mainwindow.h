@@ -29,6 +29,7 @@
 #include "editpointdialog.h"
 #include "requesteditdialog.h"
 #include "excelexportdialog.h"
+#include "version.h"
 
 #undef FINISHED_DAY_HEX
 #undef PAYED_DAY_HEX
@@ -98,6 +99,8 @@ private:
     QMap<QDate, EmployeeShift> _editedDays;
     QMap<QString, Employee> _employees;
     QString _scheduleText;
+    QString _excelExportPath;
+    QStringList _log;
 
     quint32 _pointID;
     quint32 _employeeID;

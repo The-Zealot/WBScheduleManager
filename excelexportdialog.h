@@ -36,11 +36,14 @@ public:
     void setEmployeeShifts(const QMap<QDate, EmployeeShift> &shifts);
     void setEmployeeList(const QMap<QString, Employee> &employees);
     bool submitExport(QString fileName);
+    void setRootPath(const QString &path);
+    void setFileName(const QString &filename);
 
 public slots:
     void onButtonSubmit();
     void onToolButtonBrowse();
     void onDateEditValueChanged();
+    void onButtonCancel();
 
 private:
     QXlsx::Format getMonthFormat(QDate date, QXlsx::Format format = QXlsx::Format());

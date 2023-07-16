@@ -12,6 +12,7 @@
 #include <QtCore/QDate>
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QCheckBox>
 #include <QtWidgets/QDateEdit>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QGridLayout>
@@ -34,9 +35,6 @@ public:
     QLabel *label_2;
     QLabel *label_3;
     QLabel *label_4;
-    QSpacerItem *horizontalSpacer;
-    QPushButton *buttonCancel;
-    QPushButton *buttonSubmit;
     QVBoxLayout *verticalLayout;
     QLineEdit *editPointName;
     QHBoxLayout *horizontalLayout_2;
@@ -46,12 +44,18 @@ public:
     QLineEdit *editFolderPath;
     QToolButton *toolButtonBrowse;
     QLineEdit *editFileName;
+    QVBoxLayout *verticalLayout_3;
+    QCheckBox *checkBoxHideDayCost;
+    QCheckBox *checkBoxFinalTable;
+    QPushButton *buttonSubmit;
+    QPushButton *buttonCancel;
+    QSpacerItem *horizontalSpacer;
 
     void setupUi(QDialog *ExcelExportDialog)
     {
         if (ExcelExportDialog->objectName().isEmpty())
             ExcelExportDialog->setObjectName(QString::fromUtf8("ExcelExportDialog"));
-        ExcelExportDialog->resize(329, 178);
+        ExcelExportDialog->resize(448, 178);
         gridLayout = new QGridLayout(ExcelExportDialog);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         verticalLayout_2 = new QVBoxLayout();
@@ -78,20 +82,6 @@ public:
 
 
         gridLayout->addLayout(verticalLayout_2, 0, 0, 1, 1);
-
-        horizontalSpacer = new QSpacerItem(130, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        gridLayout->addItem(horizontalSpacer, 1, 0, 1, 1);
-
-        buttonCancel = new QPushButton(ExcelExportDialog);
-        buttonCancel->setObjectName(QString::fromUtf8("buttonCancel"));
-
-        gridLayout->addWidget(buttonCancel, 1, 1, 1, 1);
-
-        buttonSubmit = new QPushButton(ExcelExportDialog);
-        buttonSubmit->setObjectName(QString::fromUtf8("buttonSubmit"));
-
-        gridLayout->addWidget(buttonSubmit, 1, 2, 1, 1);
 
         verticalLayout = new QVBoxLayout();
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
@@ -148,6 +138,36 @@ public:
 
         gridLayout->addLayout(verticalLayout, 0, 1, 1, 2);
 
+        verticalLayout_3 = new QVBoxLayout();
+        verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
+        checkBoxHideDayCost = new QCheckBox(ExcelExportDialog);
+        checkBoxHideDayCost->setObjectName(QString::fromUtf8("checkBoxHideDayCost"));
+
+        verticalLayout_3->addWidget(checkBoxHideDayCost);
+
+        checkBoxFinalTable = new QCheckBox(ExcelExportDialog);
+        checkBoxFinalTable->setObjectName(QString::fromUtf8("checkBoxFinalTable"));
+        checkBoxFinalTable->setEnabled(false);
+
+        verticalLayout_3->addWidget(checkBoxFinalTable);
+
+
+        gridLayout->addLayout(verticalLayout_3, 0, 3, 1, 2);
+
+        buttonSubmit = new QPushButton(ExcelExportDialog);
+        buttonSubmit->setObjectName(QString::fromUtf8("buttonSubmit"));
+
+        gridLayout->addWidget(buttonSubmit, 1, 4, 1, 1);
+
+        buttonCancel = new QPushButton(ExcelExportDialog);
+        buttonCancel->setObjectName(QString::fromUtf8("buttonCancel"));
+
+        gridLayout->addWidget(buttonCancel, 1, 3, 1, 1);
+
+        horizontalSpacer = new QSpacerItem(130, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        gridLayout->addItem(horizontalSpacer, 1, 0, 1, 3);
+
 
         retranslateUi(ExcelExportDialog);
 
@@ -161,11 +181,13 @@ public:
         label_2->setText(QCoreApplication::translate("ExcelExportDialog", "\320\237\320\265\321\200\320\270\320\276\320\264", nullptr));
         label_3->setText(QCoreApplication::translate("ExcelExportDialog", "\320\255\320\272\321\201\320\277\320\276\321\200\321\202\320\270\321\200\320\276\320\262\320\260\321\202\321\214 \320\262", nullptr));
         label_4->setText(QCoreApplication::translate("ExcelExportDialog", "\320\230\320\274\321\217 \321\204\320\260\320\271\320\273\320\260", nullptr));
-        buttonCancel->setText(QCoreApplication::translate("ExcelExportDialog", "\320\236\321\202\320\274\320\265\320\275\320\260", nullptr));
-        buttonSubmit->setText(QCoreApplication::translate("ExcelExportDialog", "\320\255\320\272\321\201\320\277\320\276\321\200\321\202", nullptr));
         dateEditLeftBound->setDisplayFormat(QCoreApplication::translate("ExcelExportDialog", "MM.yyyy", nullptr));
         dateEditRightBound->setDisplayFormat(QCoreApplication::translate("ExcelExportDialog", "MM.yyyy", nullptr));
         toolButtonBrowse->setText(QCoreApplication::translate("ExcelExportDialog", "...", nullptr));
+        checkBoxHideDayCost->setText(QCoreApplication::translate("ExcelExportDialog", "\320\241\320\272\321\200\321\213\321\202\321\214 \320\267\320\260\321\200\320\277\320\273\320\260\321\202\321\203", nullptr));
+        checkBoxFinalTable->setText(QCoreApplication::translate("ExcelExportDialog", "\320\230\321\202\320\276\320\263\320\276\320\262\320\260\321\217 \321\202\320\260\320\261\320\273\320\270\321\206\320\260", nullptr));
+        buttonSubmit->setText(QCoreApplication::translate("ExcelExportDialog", "\320\255\320\272\321\201\320\277\320\276\321\200\321\202", nullptr));
+        buttonCancel->setText(QCoreApplication::translate("ExcelExportDialog", "\320\236\321\202\320\274\320\265\320\275\320\260", nullptr));
     } // retranslateUi
 
 };

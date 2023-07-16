@@ -9,6 +9,7 @@ MainWindow::MainWindow(const QString &databaseName, QWidget *parent)
 
     this->setFixedSize(this->size());
     ui->toolButtonRequestEditor->setVisible(false);
+    ui->tabWidget->setCurrentIndex(0);
 
     int sizeButton = 24;
     _buttonHelp = new QPushButton(this);
@@ -68,6 +69,8 @@ MainWindow::MainWindow(const QString &databaseName, QWidget *parent)
     ui->tableViewPoints->hideColumn(DB_TABLE_POINTS_START_DATE);
     ui->tableViewPoints->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
+    ui->convertFrame->setVisible(false);
+
     updatePointList();
 
     qDebug() << "Reading file data...";
@@ -81,10 +84,20 @@ MainWindow::MainWindow(const QString &databaseName, QWidget *parent)
     _daysOfFirstEmployee    = 0;
     _daysOfSecondEmployee   = 0;
 
+    ui->editExcelExportPath->setText(_excelExportPath);
+    if (_excelExportPath.isEmpty())
+    {
+        _excelExportPath = QDir::homePath();
+    }
+
     loadPointData(_pointID);
 
     _toolBar.setTool(ToolBar::Arrow);
     setStatusBarMessage();
+
+    QString versionString = QVariant(MAJOR).toString() + "." + QVariant(MINOR).toString() + "." + QVariant(RELEASE).toString();
+    versionString.append(" build " + QVariant(BUILD).toString());
+    ui->labelVersion->setText("soft version " + versionString);
 
     qDebug() << "Initialization class members...";
 
@@ -150,6 +163,9 @@ MainWindow::MainWindow(const QString &databaseName, QWidget *parent)
     });
     connect(ui->sliderFirst, &QSlider::valueChanged, this, &MainWindow::onSliderValueChanged);
     connect(ui->sliderSecond, &QSlider::valueChanged, this, &MainWindow::onSliderValueChanged);
+    connect(ui->toolButtonSelectExcelExportPath, &QAbstractButton::clicked, [this](){
+        ui->editExcelExportPath->setText(QFileDialog::getExistingDirectory(this, "Выбор папки"));
+    });
 
     readScheduleList();
 
@@ -262,6 +278,7 @@ MainWindow::MainWindow(const QString &databaseName, QWidget *parent)
         dialog.setDateBound(_openWBPoint, _startDate);
         dialog.setEmployeeShifts(_editedDays);
         dialog.setEmployeeList(_employees);
+        dialog.setRootPath(_excelExportPath);
         dialog.exec();
     });
     connect(ui->toolButtonRequestEditor, &QAbstractButton::clicked, [this](){
@@ -459,6 +476,8 @@ void MainWindow::doActionToolbar()
 {
     QDate date = ui->calendarWidget->selectedDate();
 
+    auto temp = _editedDays[date];                                      // variable for logger
+
     switch(_toolBar.getTool())
     {
     case ToolBar::Arrow:
@@ -491,6 +510,18 @@ void MainWindow::doActionToolbar()
     default:
         QMessageBox::critical(this, "Error", "Unkwonw tool selected");
     }
+
+    QString logRecord;
+    if (_toolBar.getTool() != ToolBar::Arrow)
+    {
+        logRecord.append("Edited date: " + date.toString("dd.MM.yyyy"));
+        logRecord.append("| switch: Name        " + temp.name + " to " + _editedDays[date].name);
+        logRecord.append("| switch: Day cost    " + QVariant(temp.salary).toString() + " to " + QVariant(_editedDays[date].salary).toString());
+        logRecord.append("| switch: Shift state " + QVariant(temp.isPayed).toString() + " to " + QVariant(_editedDays[date].isPayed).toString());
+        logRecord.append("| end;");
+    }
+                                                                                                // TODO
+    _log.append(logRecord);                                                                     // logging
 
     updateCalendar();
 
@@ -813,6 +844,8 @@ void MainWindow::writeJson()
     jObject["serverPort"]       = ui->editServerPort->text();
     jObject["serverPassword"]   = ui->editServerPassword->text();
 
+    jObject["excelExport"]      = ui->editExcelExportPath->text();
+
     QJsonDocument jDoc(jObject);
     json.write(jDoc.toJson());
     json.close();
@@ -836,6 +869,7 @@ void MainWindow::readJson()
     _startDate          = QDate::fromString(jObject["StartDate"].toString());
     _openWBPoint        = QDate::fromString(jObject["OpenDate"].toString());
     _scheduleText       = jObject["currentSchedle"].toString();
+    _excelExportPath    = jObject["excelExport"].toString();
 
     WORK_DAY_HEX        = jObject["WorkDayColor"].toString();
     HOLIDAY_HEX         = jObject["HolidayColor"].toString();

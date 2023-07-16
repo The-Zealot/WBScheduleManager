@@ -12,11 +12,14 @@ ExcelExportDialog::ExcelExportDialog(QWidget *parent) :
     _rows               = 4;
     _columns            = 32;
 
-    ui->editFileName->setText("Excel book");
     ui->dateEditRightBound->hide();
 
     connect(ui->buttonSubmit, &QPushButton::clicked, this, &ExcelExportDialog::onButtonSubmit);
     connect(ui->toolButtonBrowse, &QAbstractButton::clicked, this, &ExcelExportDialog::onToolButtonBrowse);
+    connect(ui->buttonCancel, &QPushButton::clicked, this, &ExcelExportDialog::onButtonCancel);
+    connect(ui->dateEditLeftBound, &QDateEdit::dateChanged, [this](){
+        setFileName(ui->dateEditLeftBound->date().toString("MMMM yyyy"));
+    });
 //    connect(ui->dateEditLeftBound, &QDateEdit::dateChanged, this, &ExcelExportDialog::onDateEditValueChanged);
 //    connect(ui->dateEditRightBound, &QDateEdit::dateChanged, this, &ExcelExportDialog::onDateEditValueChanged);
 }
@@ -52,7 +55,7 @@ void ExcelExportDialog::setEmployeeList(const QMap<QString, Employee> &employees
 
 bool ExcelExportDialog::submitExport(QString fileName)
 {
-    int EXCEL_WIDTH = 33;
+//    int EXCEL_WIDTH = 33;
 
     QXlsx::Document document;
 
@@ -77,54 +80,11 @@ bool ExcelExportDialog::submitExport(QString fileName)
             employeeColors[iter.name] = iter.colorHex;
     }
 
-    int activeEmployeeCount = employeeColors.size();
+//    int activeEmployeeCount = employeeColors.size();
 
-    QDate start     = ui->dateEditLeftBound->date();
-    QDate finish    = ui->dateEditRightBound->date();
-    int months      = calculateMouths(start, finish);
-
-    /*for (int rowOffset = 0; rowOffset < months; rowOffset++)
-    {
-        QDate date = start.addMonths(rowOffset);
-
-        int offset = rowOffset * (activeEmployeeCount + 5);
-
-        ////////////////////// cell merge //////////////////////
-
-        document.mergeCells(QXlsx::CellRange(2 + offset, 2, 2 + offset, EXCEL_WIDTH));
-        document.mergeCells(QXlsx::CellRange(3 + offset, 3, 3 + offset, EXCEL_WIDTH));
-        document.mergeCells(QXlsx::CellRange(3 + offset, 2, 5 + offset, 2));
-
-        ///////////////////////// write /////////////////////////
-
-        //    QDate date = start;
-        document.write(2 + offset, 2, ui->editPointName->text(), pointFormat);
-        document.write(3 + offset, 3, getMonthName(date), getMonthFormat(date, borderFormat));
-        document.write(3 + offset, 2, "Сотрудники", borderFormat);
-
-        for (int i = 0; i < date.daysInMonth(); i++)
-        {
-            document.write(4 + offset, 3 + i, i + 1, borderFormat);
-            document.write(5 + offset, 3 + i, getDayOfWeek(QDate(date.year(), date.month(), i + 1)), borderFormat);
-        }
-
-        QList<QString> list = employeeColors.keys();
-        for (int i = 0; i < list.size(); i++)
-        {
-            QString name = list.at(i);
-            QXlsx::Format format(borderFormat);
-            format.setPatternBackgroundColor(employeeColors[name]);
-            document.write(6 + i + offset, 2, name, format);
-            for (int j = 0; j < date.daysInMonth(); j++)
-            {
-                QDate temp(date.year(), date.month(), j + 1);
-                if (name == _shifts[temp].name)
-                    document.write(6 + i + offset, 3 + j, _shifts[temp].salary, borderFormat);
-                else
-                    document.write(6 + i + offset, 3 + j, "", borderFormat);
-            }
-        }
-    }*/
+//    QDate start     = ui->dateEditLeftBound->date();
+//    QDate finish    = ui->dateEditRightBound->date();
+//    int months      = calculateMouths(start, finish);
 
     drawTable(document, borderFormat);
     fillTable(document, borderFormat);
@@ -132,6 +92,16 @@ bool ExcelExportDialog::submitExport(QString fileName)
     document.autosizeColumnWidth();
 
     return document.saveAs(fileName);
+}
+
+void ExcelExportDialog::setRootPath(const QString &path)
+{
+    ui->editFolderPath->setText(path);
+}
+
+void ExcelExportDialog::setFileName(const QString &filename)
+{
+    ui->editFileName->setText(filename);
 }
 
 void ExcelExportDialog::onButtonSubmit()
@@ -156,6 +126,11 @@ void ExcelExportDialog::onDateEditValueChanged()
 {
     if (ui->dateEditLeftBound->date() > ui->dateEditRightBound->date())
         ui->dateEditLeftBound->setDate(ui->dateEditRightBound->date());
+}
+
+void ExcelExportDialog::onButtonCancel()
+{
+    this->close();
 }
 
 QXlsx::Format ExcelExportDialog::getMonthFormat(QDate date, QXlsx::Format format)
@@ -416,7 +391,15 @@ void ExcelExportDialog::fillTable(QXlsx::Document &document, QXlsx::Format &form
             }
             else
             {
-                dayCost = _shifts[temp].salary;
+                if (!ui->checkBoxHideDayCost->isChecked())
+                {
+                    dayCost = _shifts[temp].salary;
+                }
+                else
+                {
+                    dayCost = 1;
+                }
+
                 if (_shifts[temp].isPayed)
                 {
                     document.write(5 + _borderOffset + index, 2 + _borderOffset + i, dayCost, payFormat);
