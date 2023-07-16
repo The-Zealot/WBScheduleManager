@@ -1214,6 +1214,27 @@ QAbstractScrollArea {
             </layout>
            </item>
            <item row="1" column="0">
+            <layout class="QHBoxLayout" name="horizontalLayout_10">
+             <item>
+              <widget class="QLabel" name="label_4">
+               <property name="text">
+                <string>Путь эксель экспорта</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="editExcelExportPath"/>
+             </item>
+             <item>
+              <widget class="QToolButton" name="toolButtonSelectExcelExportPath">
+               <property name="text">
+                <string>...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="2" column="0">
             <layout class="QHBoxLayout" name="horizontalLayout_7">
              <item>
               <widget class="QCheckBox" name="checkBox">
@@ -1268,7 +1289,7 @@ QAbstractScrollArea {
              </item>
             </layout>
            </item>
-           <item row="2" column="0">
+           <item row="3" column="0">
             <layout class="QGridLayout" name="gridLayout_4">
              <property name="spacing">
               <number>0</number>
@@ -1392,7 +1413,7 @@ QAbstractScrollArea {
              </item>
             </layout>
            </item>
-           <item row="3" column="0">
+           <item row="4" column="0">
             <spacer name="verticalSpacer">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
@@ -1405,7 +1426,7 @@ QAbstractScrollArea {
              </property>
             </spacer>
            </item>
-           <item row="4" column="0">
+           <item row="5" column="0">
             <widget class="QLabel" name="labelVersion">
              <property name="text">
               <string>current soft version: MAJ.MIN.RLS</string>
@@ -1415,7 +1436,7 @@ QAbstractScrollArea {
              </property>
             </widget>
            </item>
-           <item row="5" column="0">
+           <item row="6" column="0">
             <layout class="QHBoxLayout" name="horizontalLayout_12">
              <item>
               <spacer name="horizontalSpacer_2">

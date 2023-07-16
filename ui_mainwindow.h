@@ -139,6 +139,10 @@ public:
     QLabel *label_5;
     QLineEdit *lineEdit_4;
     QProgressBar *progressBar;
+    QHBoxLayout *horizontalLayout_10;
+    QLabel *label_4;
+    QLineEdit *editExcelExportPath;
+    QToolButton *toolButtonSelectExcelExportPath;
     QHBoxLayout *horizontalLayout_7;
     QCheckBox *checkBox;
     QCheckBox *checkBox_3;
@@ -871,6 +875,26 @@ public:
 
         gridLayout_13->addLayout(gridLayout_5, 0, 0, 1, 1);
 
+        horizontalLayout_10 = new QHBoxLayout();
+        horizontalLayout_10->setObjectName(QString::fromUtf8("horizontalLayout_10"));
+        label_4 = new QLabel(groupBox_6);
+        label_4->setObjectName(QString::fromUtf8("label_4"));
+
+        horizontalLayout_10->addWidget(label_4);
+
+        editExcelExportPath = new QLineEdit(groupBox_6);
+        editExcelExportPath->setObjectName(QString::fromUtf8("editExcelExportPath"));
+
+        horizontalLayout_10->addWidget(editExcelExportPath);
+
+        toolButtonSelectExcelExportPath = new QToolButton(groupBox_6);
+        toolButtonSelectExcelExportPath->setObjectName(QString::fromUtf8("toolButtonSelectExcelExportPath"));
+
+        horizontalLayout_10->addWidget(toolButtonSelectExcelExportPath);
+
+
+        gridLayout_13->addLayout(horizontalLayout_10, 1, 0, 1, 1);
+
         horizontalLayout_7 = new QHBoxLayout();
         horizontalLayout_7->setObjectName(QString::fromUtf8("horizontalLayout_7"));
         checkBox = new QCheckBox(groupBox_6);
@@ -900,7 +924,7 @@ public:
         horizontalLayout_7->addWidget(comboBoxBackup);
 
 
-        gridLayout_13->addLayout(horizontalLayout_7, 1, 0, 1, 1);
+        gridLayout_13->addLayout(horizontalLayout_7, 2, 0, 1, 1);
 
         gridLayout_4 = new QGridLayout();
         gridLayout_4->setSpacing(0);
@@ -984,17 +1008,17 @@ public:
         gridLayout_4->addLayout(verticalLayout_2, 0, 1, 1, 1);
 
 
-        gridLayout_13->addLayout(gridLayout_4, 2, 0, 1, 1);
+        gridLayout_13->addLayout(gridLayout_4, 3, 0, 1, 1);
 
         verticalSpacer = new QSpacerItem(20, 35, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        gridLayout_13->addItem(verticalSpacer, 3, 0, 1, 1);
+        gridLayout_13->addItem(verticalSpacer, 4, 0, 1, 1);
 
         labelVersion = new QLabel(groupBox_6);
         labelVersion->setObjectName(QString::fromUtf8("labelVersion"));
         labelVersion->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
-        gridLayout_13->addWidget(labelVersion, 4, 0, 1, 1);
+        gridLayout_13->addWidget(labelVersion, 5, 0, 1, 1);
 
         horizontalLayout_12 = new QHBoxLayout();
         horizontalLayout_12->setObjectName(QString::fromUtf8("horizontalLayout_12"));
@@ -1013,7 +1037,7 @@ public:
         horizontalLayout_12->addWidget(buttonSaveSettings);
 
 
-        gridLayout_13->addLayout(horizontalLayout_12, 5, 0, 1, 1);
+        gridLayout_13->addLayout(horizontalLayout_12, 6, 0, 1, 1);
 
 
         gridLayout_9->addWidget(groupBox_6, 0, 1, 2, 1);
@@ -1297,6 +1321,8 @@ public:
         colorWidgetYandexPoint->setText(QString());
         groupBox_6->setTitle(QCoreApplication::translate("MainWindow", "\320\236\320\261\321\211\320\270\320\265", nullptr));
         label_5->setText(QCoreApplication::translate("MainWindow", "convert to", nullptr));
+        label_4->setText(QCoreApplication::translate("MainWindow", "\320\237\321\203\321\202\321\214 \321\215\320\272\321\201\320\265\320\273\321\214 \321\215\320\272\321\201\320\277\320\276\321\200\321\202\320\260", nullptr));
+        toolButtonSelectExcelExportPath->setText(QCoreApplication::translate("MainWindow", "...", nullptr));
 #if QT_CONFIG(tooltip)
         checkBox->setToolTip(QCoreApplication::translate("MainWindow", "\320\233\320\276\320\263\320\270\321\200\320\276\320\262\320\260\320\275\320\270\320\265 \320\270\320\267\320\274\320\265\320\275\320\265\320\275\320\270\320\271", nullptr));
 #endif // QT_CONFIG(tooltip)

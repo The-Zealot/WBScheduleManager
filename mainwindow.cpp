@@ -81,9 +81,10 @@ MainWindow::MainWindow(const QString &databaseName, QWidget *parent)
     _daysOfFirstEmployee    = 0;
     _daysOfSecondEmployee   = 0;
 
-    if (_excelExportRootPath.isEmpty())
+    ui->editExcelExportPath->setText(_excelExportPath);
+    if (_excelExportPath.isEmpty())
     {
-        _excelExportRootPath = QDir::homePath();
+        _excelExportPath = QDir::homePath();
     }
 
     loadPointData(_pointID);
@@ -159,6 +160,9 @@ MainWindow::MainWindow(const QString &databaseName, QWidget *parent)
     });
     connect(ui->sliderFirst, &QSlider::valueChanged, this, &MainWindow::onSliderValueChanged);
     connect(ui->sliderSecond, &QSlider::valueChanged, this, &MainWindow::onSliderValueChanged);
+    connect(ui->toolButtonSelectExcelExportPath, &QAbstractButton::clicked, [this](){
+        ui->editExcelExportPath->setText(QFileDialog::getExistingDirectory(this, "Выбор папки"));
+    });
 
     readScheduleList();
 
@@ -271,7 +275,7 @@ MainWindow::MainWindow(const QString &databaseName, QWidget *parent)
         dialog.setDateBound(_openWBPoint, _startDate);
         dialog.setEmployeeShifts(_editedDays);
         dialog.setEmployeeList(_employees);
-        dialog.setRootPath(_excelExportRootPath);
+        dialog.setRootPath(_excelExportPath);
         dialog.setFileName(QDate::currentDate().toString("MMMM yyyy"));
         dialog.exec();
     });
@@ -824,6 +828,8 @@ void MainWindow::writeJson()
     jObject["serverPort"]       = ui->editServerPort->text();
     jObject["serverPassword"]   = ui->editServerPassword->text();
 
+    jObject["excelExport"]      = ui->editExcelExportPath->text();
+
     QJsonDocument jDoc(jObject);
     json.write(jDoc.toJson());
     json.close();
@@ -847,6 +853,7 @@ void MainWindow::readJson()
     _startDate          = QDate::fromString(jObject["StartDate"].toString());
     _openWBPoint        = QDate::fromString(jObject["OpenDate"].toString());
     _scheduleText       = jObject["currentSchedle"].toString();
+    _excelExportPath    = jObject["excelExport"].toString();
 
     WORK_DAY_HEX        = jObject["WorkDayColor"].toString();
     HOLIDAY_HEX         = jObject["HolidayColor"].toString();
