@@ -9,6 +9,7 @@ MainWindow::MainWindow(const QString &databaseName, QWidget *parent)
 
     this->setFixedSize(this->size());
     ui->toolButtonRequestEditor->setVisible(false);
+    ui->tabWidget->setCurrentIndex(0);
 
     int sizeButton = 24;
     _buttonHelp = new QPushButton(this);
@@ -67,6 +68,8 @@ MainWindow::MainWindow(const QString &databaseName, QWidget *parent)
     ui->tableViewPoints->hideColumn(DB_TABLE_POINTS_OPEN_DATE);
     ui->tableViewPoints->hideColumn(DB_TABLE_POINTS_START_DATE);
     ui->tableViewPoints->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+    ui->convertFrame->setVisible(false);
 
     updatePointList();
 
@@ -276,7 +279,6 @@ MainWindow::MainWindow(const QString &databaseName, QWidget *parent)
         dialog.setEmployeeShifts(_editedDays);
         dialog.setEmployeeList(_employees);
         dialog.setRootPath(_excelExportPath);
-        dialog.setFileName(QDate::currentDate().toString("MMMM yyyy"));
         dialog.exec();
     });
     connect(ui->toolButtonRequestEditor, &QAbstractButton::clicked, [this](){
@@ -474,6 +476,8 @@ void MainWindow::doActionToolbar()
 {
     QDate date = ui->calendarWidget->selectedDate();
 
+    auto temp = _editedDays[date];                                      // variable for logger
+
     switch(_toolBar.getTool())
     {
     case ToolBar::Arrow:
@@ -506,6 +510,18 @@ void MainWindow::doActionToolbar()
     default:
         QMessageBox::critical(this, "Error", "Unkwonw tool selected");
     }
+
+    QString logRecord;
+    if (_toolBar.getTool() != ToolBar::Arrow)
+    {
+        logRecord.append("Edited date: " + date.toString("dd.MM.yyyy"));
+        logRecord.append("| switch: Name        " + temp.name + " to " + _editedDays[date].name);
+        logRecord.append("| switch: Day cost    " + QVariant(temp.salary).toString() + " to " + QVariant(_editedDays[date].salary).toString());
+        logRecord.append("| switch: Shift state " + QVariant(temp.isPayed).toString() + " to " + QVariant(_editedDays[date].isPayed).toString());
+        logRecord.append("| end;");
+    }
+                                                                                                // TODO
+    _log.append(logRecord);                                                                     // logging
 
     updateCalendar();
 

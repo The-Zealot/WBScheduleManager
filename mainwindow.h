@@ -100,6 +100,7 @@ private:
     QMap<QString, Employee> _employees;
     QString _scheduleText;
     QString _excelExportPath;
+    QStringList _log;
 
     quint32 _pointID;
     quint32 _employeeID;

@@ -134,11 +134,6 @@ public:
     ColorWidget *colorWidgetYandexPoint;
     QGroupBox *groupBox_6;
     QGridLayout *gridLayout_13;
-    QGridLayout *gridLayout_5;
-    QLineEdit *lineEdit_3;
-    QLabel *label_5;
-    QLineEdit *lineEdit_4;
-    QProgressBar *progressBar;
     QHBoxLayout *horizontalLayout_10;
     QLabel *label_4;
     QLineEdit *editExcelExportPath;
@@ -164,6 +159,12 @@ public:
     QSpacerItem *horizontalSpacer_2;
     QPushButton *pushButton_2;
     QPushButton *buttonSaveSettings;
+    QFrame *convertFrame;
+    QGridLayout *gridLayout_5;
+    QLineEdit *lineEdit_3;
+    QLabel *label_5;
+    QLineEdit *lineEdit_4;
+    QProgressBar *progressBar;
     QGroupBox *groupBox_2;
     QGridLayout *gridLayout_24;
     QCheckBox *checkBox_4;
@@ -702,7 +703,7 @@ public:
         scrollArea_2->setWidgetResizable(true);
         scrollAreaWidgetContents_2 = new QWidget();
         scrollAreaWidgetContents_2->setObjectName(QString::fromUtf8("scrollAreaWidgetContents_2"));
-        scrollAreaWidgetContents_2->setGeometry(QRect(0, 0, 244, 263));
+        scrollAreaWidgetContents_2->setGeometry(QRect(0, 0, 246, 263));
         verticalLayout_6 = new QVBoxLayout(scrollAreaWidgetContents_2);
         verticalLayout_6->setObjectName(QString::fromUtf8("verticalLayout_6"));
         horizontalLayout = new QHBoxLayout();
@@ -849,32 +850,6 @@ public:
         groupBox_6->setObjectName(QString::fromUtf8("groupBox_6"));
         gridLayout_13 = new QGridLayout(groupBox_6);
         gridLayout_13->setObjectName(QString::fromUtf8("gridLayout_13"));
-        gridLayout_5 = new QGridLayout();
-        gridLayout_5->setObjectName(QString::fromUtf8("gridLayout_5"));
-        lineEdit_3 = new QLineEdit(groupBox_6);
-        lineEdit_3->setObjectName(QString::fromUtf8("lineEdit_3"));
-
-        gridLayout_5->addWidget(lineEdit_3, 0, 0, 1, 1);
-
-        label_5 = new QLabel(groupBox_6);
-        label_5->setObjectName(QString::fromUtf8("label_5"));
-
-        gridLayout_5->addWidget(label_5, 0, 1, 1, 1);
-
-        lineEdit_4 = new QLineEdit(groupBox_6);
-        lineEdit_4->setObjectName(QString::fromUtf8("lineEdit_4"));
-
-        gridLayout_5->addWidget(lineEdit_4, 0, 2, 1, 1);
-
-        progressBar = new QProgressBar(groupBox_6);
-        progressBar->setObjectName(QString::fromUtf8("progressBar"));
-        progressBar->setValue(0);
-
-        gridLayout_5->addWidget(progressBar, 1, 0, 1, 3);
-
-
-        gridLayout_13->addLayout(gridLayout_5, 0, 0, 1, 1);
-
         horizontalLayout_10 = new QHBoxLayout();
         horizontalLayout_10->setObjectName(QString::fromUtf8("horizontalLayout_10"));
         label_4 = new QLabel(groupBox_6);
@@ -1039,6 +1014,36 @@ public:
 
         gridLayout_13->addLayout(horizontalLayout_12, 6, 0, 1, 1);
 
+        convertFrame = new QFrame(groupBox_6);
+        convertFrame->setObjectName(QString::fromUtf8("convertFrame"));
+        gridLayout_5 = new QGridLayout(convertFrame);
+        gridLayout_5->setSpacing(7);
+        gridLayout_5->setObjectName(QString::fromUtf8("gridLayout_5"));
+        gridLayout_5->setContentsMargins(0, 0, 0, 0);
+        lineEdit_3 = new QLineEdit(convertFrame);
+        lineEdit_3->setObjectName(QString::fromUtf8("lineEdit_3"));
+
+        gridLayout_5->addWidget(lineEdit_3, 0, 0, 1, 1);
+
+        label_5 = new QLabel(convertFrame);
+        label_5->setObjectName(QString::fromUtf8("label_5"));
+
+        gridLayout_5->addWidget(label_5, 0, 1, 1, 1);
+
+        lineEdit_4 = new QLineEdit(convertFrame);
+        lineEdit_4->setObjectName(QString::fromUtf8("lineEdit_4"));
+
+        gridLayout_5->addWidget(lineEdit_4, 0, 2, 1, 1);
+
+        progressBar = new QProgressBar(convertFrame);
+        progressBar->setObjectName(QString::fromUtf8("progressBar"));
+        progressBar->setValue(0);
+
+        gridLayout_5->addWidget(progressBar, 1, 0, 1, 3);
+
+
+        gridLayout_13->addWidget(convertFrame, 0, 0, 1, 1);
+
 
         gridLayout_9->addWidget(groupBox_6, 0, 1, 2, 1);
 
@@ -1188,7 +1193,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(3);
         buttonReport->setDefault(false);
 
 
@@ -1320,7 +1325,6 @@ public:
         editColorYandexPoint->setPlaceholderText(QCoreApplication::translate("MainWindow", "\320\246\320\262\320\265\321\202 \320\277\321\203\320\275\320\272\321\202\320\260 \320\257\320\275\320\264\320\265\320\272\321\201.\320\234\320\260\321\200\320\272\320\265\321\202", nullptr));
         colorWidgetYandexPoint->setText(QString());
         groupBox_6->setTitle(QCoreApplication::translate("MainWindow", "\320\236\320\261\321\211\320\270\320\265", nullptr));
-        label_5->setText(QCoreApplication::translate("MainWindow", "convert to", nullptr));
         label_4->setText(QCoreApplication::translate("MainWindow", "\320\237\321\203\321\202\321\214 \321\215\320\272\321\201\320\265\320\273\321\214 \321\215\320\272\321\201\320\277\320\276\321\200\321\202\320\260", nullptr));
         toolButtonSelectExcelExportPath->setText(QCoreApplication::translate("MainWindow", "...", nullptr));
 #if QT_CONFIG(tooltip)
@@ -1343,6 +1347,7 @@ public:
         labelVersion->setText(QCoreApplication::translate("MainWindow", "current soft version: MAJ.MIN.RLS", nullptr));
         pushButton_2->setText(QCoreApplication::translate("MainWindow", "\320\241\320\261\321\200\320\276\321\201", nullptr));
         buttonSaveSettings->setText(QCoreApplication::translate("MainWindow", "\320\241\320\276\321\205\321\200\320\260\320\275\320\270\321\202\321\214", nullptr));
+        label_5->setText(QCoreApplication::translate("MainWindow", "convert to", nullptr));
         groupBox_2->setTitle(QCoreApplication::translate("MainWindow", "\320\241\320\265\321\202\321\214 \320\270 \321\201\320\265\321\200\320\262\320\265\321\200", nullptr));
         checkBox_4->setText(QCoreApplication::translate("MainWindow", "\320\241\320\276\321\205\321\200\320\260\320\275\321\217\321\202\321\214 \320\277\320\276\321\201\320\273\320\265\320\264\320\275\320\270\320\271 \320\276\321\202\320\262\320\265\321\202", nullptr));
         label_3->setText(QCoreApplication::translate("MainWindow", "IP \320\260\320\264\321\200\320\265\321\201 \321\201\320\265\321\200\320\262\320\265\321\200\320\260", nullptr));
