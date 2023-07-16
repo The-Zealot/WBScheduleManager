@@ -99,6 +99,7 @@ private:
     QMap<QDate, EmployeeShift> _editedDays;
     QMap<QString, Employee> _employees;
     QString _scheduleText;
+    QString _excelExportRootPath;
 
     quint32 _pointID;
     quint32 _employeeID;

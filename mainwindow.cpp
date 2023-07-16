@@ -81,6 +81,11 @@ MainWindow::MainWindow(const QString &databaseName, QWidget *parent)
     _daysOfFirstEmployee    = 0;
     _daysOfSecondEmployee   = 0;
 
+    if (_excelExportRootPath.isEmpty())
+    {
+        _excelExportRootPath = QDir::homePath();
+    }
+
     loadPointData(_pointID);
 
     _toolBar.setTool(ToolBar::Arrow);
@@ -266,6 +271,8 @@ MainWindow::MainWindow(const QString &databaseName, QWidget *parent)
         dialog.setDateBound(_openWBPoint, _startDate);
         dialog.setEmployeeShifts(_editedDays);
         dialog.setEmployeeList(_employees);
+        dialog.setRootPath(_excelExportRootPath);
+        dialog.setFileName(QDate::currentDate().toString("MMMM yyyy"));
         dialog.exec();
     });
     connect(ui->toolButtonRequestEditor, &QAbstractButton::clicked, [this](){

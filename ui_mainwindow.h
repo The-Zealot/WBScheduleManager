@@ -139,11 +139,9 @@ public:
     QLabel *label_5;
     QLineEdit *lineEdit_4;
     QProgressBar *progressBar;
-    QHBoxLayout *horizontalLayout_10;
-    QVBoxLayout *verticalLayout_4;
-    QCheckBox *checkBox_3;
+    QHBoxLayout *horizontalLayout_7;
     QCheckBox *checkBox;
-    QVBoxLayout *verticalLayout;
+    QCheckBox *checkBox_3;
     QComboBox *comboBoxBackup;
     QGridLayout *gridLayout_4;
     QHBoxLayout *horizontalLayout_5;
@@ -873,16 +871,8 @@ public:
 
         gridLayout_13->addLayout(gridLayout_5, 0, 0, 1, 1);
 
-        horizontalLayout_10 = new QHBoxLayout();
-        horizontalLayout_10->setObjectName(QString::fromUtf8("horizontalLayout_10"));
-        verticalLayout_4 = new QVBoxLayout();
-        verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
-        checkBox_3 = new QCheckBox(groupBox_6);
-        checkBox_3->setObjectName(QString::fromUtf8("checkBox_3"));
-        checkBox_3->setEnabled(false);
-
-        verticalLayout_4->addWidget(checkBox_3);
-
+        horizontalLayout_7 = new QHBoxLayout();
+        horizontalLayout_7->setObjectName(QString::fromUtf8("horizontalLayout_7"));
         checkBox = new QCheckBox(groupBox_6);
         checkBox->setObjectName(QString::fromUtf8("checkBox"));
         checkBox->setEnabled(false);
@@ -892,13 +882,14 @@ public:
         sizePolicy4.setHeightForWidth(checkBox->sizePolicy().hasHeightForWidth());
         checkBox->setSizePolicy(sizePolicy4);
 
-        verticalLayout_4->addWidget(checkBox);
+        horizontalLayout_7->addWidget(checkBox);
 
+        checkBox_3 = new QCheckBox(groupBox_6);
+        checkBox_3->setObjectName(QString::fromUtf8("checkBox_3"));
+        checkBox_3->setEnabled(false);
 
-        horizontalLayout_10->addLayout(verticalLayout_4);
+        horizontalLayout_7->addWidget(checkBox_3);
 
-        verticalLayout = new QVBoxLayout();
-        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         comboBoxBackup = new QComboBox(groupBox_6);
         comboBoxBackup->addItem(QString());
         comboBoxBackup->addItem(QString());
@@ -906,13 +897,10 @@ public:
         comboBoxBackup->setObjectName(QString::fromUtf8("comboBoxBackup"));
         comboBoxBackup->setEnabled(false);
 
-        verticalLayout->addWidget(comboBoxBackup);
+        horizontalLayout_7->addWidget(comboBoxBackup);
 
 
-        horizontalLayout_10->addLayout(verticalLayout);
-
-
-        gridLayout_13->addLayout(horizontalLayout_10, 1, 0, 1, 1);
+        gridLayout_13->addLayout(horizontalLayout_7, 1, 0, 1, 1);
 
         gridLayout_4 = new QGridLayout();
         gridLayout_4->setSpacing(0);
@@ -1176,7 +1164,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(3);
+        tabWidget->setCurrentIndex(0);
         buttonReport->setDefault(false);
 
 
@@ -1309,11 +1297,11 @@ public:
         colorWidgetYandexPoint->setText(QString());
         groupBox_6->setTitle(QCoreApplication::translate("MainWindow", "\320\236\320\261\321\211\320\270\320\265", nullptr));
         label_5->setText(QCoreApplication::translate("MainWindow", "convert to", nullptr));
-        checkBox_3->setText(QCoreApplication::translate("MainWindow", "backup", nullptr));
 #if QT_CONFIG(tooltip)
         checkBox->setToolTip(QCoreApplication::translate("MainWindow", "\320\233\320\276\320\263\320\270\321\200\320\276\320\262\320\260\320\275\320\270\320\265 \320\270\320\267\320\274\320\265\320\275\320\265\320\275\320\270\320\271", nullptr));
 #endif // QT_CONFIG(tooltip)
         checkBox->setText(QCoreApplication::translate("MainWindow", "logging", nullptr));
+        checkBox_3->setText(QCoreApplication::translate("MainWindow", "backup", nullptr));
         comboBoxBackup->setItemText(0, QCoreApplication::translate("MainWindow", "\320\240\320\260\320\267 \320\262 \320\264\320\265\320\275\321\214", nullptr));
         comboBoxBackup->setItemText(1, QCoreApplication::translate("MainWindow", "\320\240\320\260\320\267 \320\262 \320\275\320\265\320\264\320\265\320\273\321\216", nullptr));
         comboBoxBackup->setItemText(2, QCoreApplication::translate("MainWindow", "\320\240\320\260\320\267 \320\262 \320\274\320\265\321\201\321\217\321\206", nullptr));
