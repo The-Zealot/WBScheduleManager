@@ -71,14 +71,15 @@ private slots:
     void openDocInfo();
 
 private:
-    void calculateWorks(QMap<QDate, EmployeeShift> &editDays, QMap<QString, Employee> &employyes);
+    void calculateWorks(QMap<QDate, EmployeeShift> &editDays, QMap<QString, Employee> &employees);
     void calculateFinishedDays(QMap<QDate, EmployeeShift> &editDays);
-    void fillTextBrowse(QMap<QString, Employee> &employyes);
+    void fillTextBrowse(QMap<QString, Employee> &employees);
     void writeJson();
     void readJson();
     void readScheduleList();
     void loadCalendarStyle();
     void loadEditedDaysFromDB(int pointID, QMap<QDate, EmployeeShift> &editDays);
+    void loadEmployeeSalarys(QMap<QString, Employee> &employees);
     void loadPointData(int selectedPoint);
     void editPointData(const QModelIndex &index);
     void calculateStats();

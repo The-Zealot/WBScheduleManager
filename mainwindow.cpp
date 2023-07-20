@@ -765,10 +765,10 @@ void MainWindow::openDocInfo()
     }
 }
 
-void MainWindow::calculateWorks(QMap<QDate, EmployeeShift> &editDays, QMap<QString, Employee> &employyes)
+void MainWindow::calculateWorks(QMap<QDate, EmployeeShift> &editDays, QMap<QString, Employee> &employees)
 {
     int days = _openWBPoint.daysTo(QDate::currentDate());
-    _employees.clear();
+    loadEmployeeSalarys(employees);
 
     if (QTime::currentTime().hour() >= END_OF_SHIFT)
         days++;
@@ -779,10 +779,18 @@ void MainWindow::calculateWorks(QMap<QDate, EmployeeShift> &editDays, QMap<QStri
         QString name = editDays[date].name;
         if (!editDays[date].isPayed)
         {
-            employyes[name].salary += editDays[date].salary;
-            employyes[name].shifts++;
+            employees[name].unpayedMoney += editDays[date].salary;
+            employees[name].shifts++;
         }
     }
+
+    /*for (auto & iter : employees)
+    {
+        if (iter.shifts == 0)
+        {
+            employees.remove(employees.key(iter));
+        }
+    }*/
 }
 
 void MainWindow::calculateFinishedDays(QMap<QDate, EmployeeShift> &editDays)
@@ -801,23 +809,23 @@ void MainWindow::calculateFinishedDays(QMap<QDate, EmployeeShift> &editDays)
     }
 }
 
-void MainWindow::fillTextBrowse(QMap<QString, Employee> &employyes)
+void MainWindow::fillTextBrowse(QMap<QString, Employee> &employees)
 {
     ui->textBrowserLoggs->clear();
 
-    if (employyes.isEmpty())
+    if (employees.isEmpty())
     {
         ui->textBrowserLoggs->setText("Долгов по выплатам нет");
         return;
     }
 
-    for (auto iter : employyes.keys())
+    for (auto iter : employees.keys())
     {
-        if (iter == "")
+        if (iter == "" or employees[iter].shifts == 0)
             continue;
         ui->textBrowserLoggs->append("Сотрудник <b>" + iter + "</b>");
-        ui->textBrowserLoggs->append("   Заработано: " + QVariant(employyes[iter].salary).toString() + " руб.");
-        ui->textBrowserLoggs->append("   Смен: " + QVariant(employyes[iter].shifts).toString());
+        ui->textBrowserLoggs->append("   Заработано: " + QVariant(employees[iter].unpayedMoney).toString() + " руб.");
+        ui->textBrowserLoggs->append("   Смен: " + QVariant(employees[iter].shifts).toString());
     }
 }
 
@@ -945,6 +953,18 @@ void MainWindow::loadEditedDaysFromDB(int pointID, QMap<QDate, EmployeeShift> &e
     qDebug() << "Rows loaded from EMPLOYEES:" << employees;
 
     calculateFinishedDays(editDays);
+}
+
+void MainWindow::loadEmployeeSalarys(QMap<QString, Employee> &employees)
+{
+    _query->exec("SELECT * FROM Employees");
+    employees.clear();
+
+    for (int i = 0; _query->next(); i++)
+    {
+        QString name = _query->value(DB_TABLE_EMPLOYEE_NAME).toString();
+        employees[name].salary = _query->value(DB_TABLE_EMPLOYEE_SALARY).toUInt();
+    }
 }
 
 void MainWindow::loadPointData(int selectedPoint)
