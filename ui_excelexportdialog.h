@@ -55,7 +55,7 @@ public:
     {
         if (ExcelExportDialog->objectName().isEmpty())
             ExcelExportDialog->setObjectName(QString::fromUtf8("ExcelExportDialog"));
-        ExcelExportDialog->resize(448, 178);
+        ExcelExportDialog->resize(478, 178);
         gridLayout = new QGridLayout(ExcelExportDialog);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         verticalLayout_2 = new QVBoxLayout();
@@ -147,7 +147,7 @@ public:
 
         checkBoxFinalTable = new QCheckBox(ExcelExportDialog);
         checkBoxFinalTable->setObjectName(QString::fromUtf8("checkBoxFinalTable"));
-        checkBoxFinalTable->setEnabled(false);
+        checkBoxFinalTable->setEnabled(true);
 
         verticalLayout_3->addWidget(checkBoxFinalTable);
 

@@ -55,7 +55,7 @@ void ExcelExportDialog::setEmployeeList(const QMap<QString, Employee> &employees
 
 bool ExcelExportDialog::submitExport(QString fileName)
 {
-//    int EXCEL_WIDTH = 33;
+    int EXCEL_WIDTH = 38;
 
     QXlsx::Document document;
 
@@ -88,8 +88,8 @@ bool ExcelExportDialog::submitExport(QString fileName)
 
     drawTable(document, borderFormat);
     fillTable(document, borderFormat);
-//    document.autosizeColumnWidth(1, EXCEL_WIDTH);
-    document.autosizeColumnWidth();
+    document.autosizeColumnWidth(1, EXCEL_WIDTH);
+//    document.autosizeColumnWidth();
 
     return document.saveAs(fileName);
 }
@@ -346,6 +346,15 @@ void ExcelExportDialog::drawTable(QXlsx::Document &document, QXlsx::Format &form
     document.mergeCells(QXlsx::CellRange(1 + _borderOffset, 1 + _borderOffset, 1 + _borderOffset, _columns + _borderOffset));
     document.mergeCells(QXlsx::CellRange(2 + _borderOffset, 2 + _borderOffset, 2 + _borderOffset, _columns + _borderOffset));
     document.mergeCells(QXlsx::CellRange(2 + _borderOffset, 1 + _borderOffset, 4 + _borderOffset, 1 + _borderOffset));
+
+    if (ui->checkBoxFinalTable->isChecked())
+    {
+        int secondOffset = _columns + _borderOffset * 2;
+        document.write(5, 1 + secondOffset, "К оплате", format);
+        document.write(5, 2 + secondOffset, "Оплачено", format);
+        document.write(5, 3 + secondOffset, "Ставка", format);
+        document.write(5, 4 + secondOffset, "Вычтено", format);
+    }
 }
 
 void ExcelExportDialog::fillTable(QXlsx::Document &document, QXlsx::Format &format)
@@ -374,6 +383,11 @@ void ExcelExportDialog::fillTable(QXlsx::Document &document, QXlsx::Format &form
     QMap<QString, QColor> employee  = calculateEmployeesPerMonth(_shifts, date);
     auto list                       = employee.keys();
     int index                       = 0;
+    int payValue                    = 0;
+    int paidValue                   = 0;
+    int salary                      = 0;
+    int daysWorked                  = 0;
+
     for (auto iter : list)
     {
         QXlsx::Format employeeFormat(format);
@@ -381,6 +395,8 @@ void ExcelExportDialog::fillTable(QXlsx::Document &document, QXlsx::Format &form
         QXlsx::Format payFormat(format);
         payFormat.setPatternBackgroundColor(PAYED_DAY_HEX);
         document.write(5 + _borderOffset + index, 1 + _borderOffset, iter, employeeFormat);
+        salary = _employees[iter].salary;
+
         for (int i = 0; i < date.daysInMonth(); i++)
         {
             QDate temp(date.year(), date.month(), i + 1);
@@ -403,14 +419,29 @@ void ExcelExportDialog::fillTable(QXlsx::Document &document, QXlsx::Format &form
                 if (_shifts[temp].isPayed)
                 {
                     document.write(5 + _borderOffset + index, 2 + _borderOffset + i, dayCost, payFormat);
+                    paidValue += _shifts[temp].salary;
                 }
                 else
                 {
                     document.write(5 + _borderOffset + index, 2 + _borderOffset + i, dayCost, format);
                 }
+                payValue += _shifts[temp].salary;
+                daysWorked++;
             }
         }
 
+        if (ui->checkBoxFinalTable->isChecked())
+        {
+            int fine = daysWorked * salary - payValue;
+            document.write(5 + _borderOffset + index, 1 + _columns + _borderOffset * 2, payValue, format);
+            document.write(5 + _borderOffset + index, 2 + _columns + _borderOffset * 2, paidValue, format);
+            document.write(5 + _borderOffset + index, 3 + _columns + _borderOffset * 2, salary, format);
+            document.write(5 + _borderOffset + index, 4 + _columns + _borderOffset * 2, fine, format);
+        }
+
+        payValue    = 0;
+        paidValue   = 0;
+        daysWorked  = 0;
         index++;
     }
 }
